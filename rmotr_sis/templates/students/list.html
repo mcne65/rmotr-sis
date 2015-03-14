@@ -1,0 +1,11 @@
+{% extends 'bare.html' %}
+
+{% block main_container %}
+    <ul>
+    {% for person in object_list %}
+        <li>{{ person.full_name }}</li>
+    {% empty %}
+        <li>No articles yet.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

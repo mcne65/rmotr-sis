@@ -4,5 +4,5 @@ from students import views
 
 
 urlpatterns = patterns('',
-    url(r'^$', views.persons_list),
+    url(r'^$', views.PersonListView.as_view()),
 )

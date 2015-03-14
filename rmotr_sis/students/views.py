@@ -1,5 +1,15 @@
-from django.shortcuts import render
+from __future__ import division, unicode_literals, absolute_import
+
+from django.views.generic import (CreateView, UpdateView, DeleteView,
+                                  ListView, FormView)
+
+from students.models import Person
 
 
-def persons_list(request):
-    return render(request, 'bare.html', {})
+class PersonListView(ListView):
+    model = Person
+    template_name = 'students/list.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Person.objects.all()

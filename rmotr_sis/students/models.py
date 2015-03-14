@@ -30,3 +30,13 @@ class Person(TimeStampedModel):
     # legacy
     lg_full_name = models.CharField(max_length=150, blank=True, null=True)
     lg_timezone = models.CharField(max_length=50, blank=True, null=True)
+
+    @property
+    def full_name(self):
+        if self.first_name and self.last_name:
+            return '{0} {1}'.format(self.first_name, self.last_name)
+        else:
+            return self.lg_full_name
+
+    def __str__(self):
+        return self.full_name
