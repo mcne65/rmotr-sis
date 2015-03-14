@@ -16,11 +16,14 @@ class TimeStampedModel(models.Model):
 
 
 class Person(TimeStampedModel):
+    # required
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     email = models.EmailField(max_length=150, unique=True)
-    birth_date = models.DateField()
     timezone = models.CharField(max_length=150, choices=TIMEZONE_CHOICES)
-    twitter_handle = models.CharField(max_length=50)
-    github_handle = models.CharField(max_length=50)
-    cloud9_handle = models.CharField(max_length=50)
+
+    # optional
+    birth_date = models.DateField(blank=True, null=True)
+    twitter_handle = models.CharField(max_length=50, blank=True, null=True)
+    github_handle = models.CharField(max_length=50, blank=True, null=True)
+    cloud9_handle = models.CharField(max_length=50, blank=True, null=True)
