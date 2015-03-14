@@ -9,7 +9,7 @@ from students.models import Person
 class PersonListView(ListView):
     model = Person
     template_name = 'students/list.html'
-    paginate_by = 10
+    paginate_by = 50
 
     def get_queryset(self):
         return Person.objects.all()

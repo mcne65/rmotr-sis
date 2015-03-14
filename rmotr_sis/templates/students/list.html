@@ -1,11 +1,46 @@
 {% extends 'bare.html' %}
 
 {% block main_container %}
-    <ul>
-    {% for person in object_list %}
-        <li>{{ person.full_name }}</li>
-    {% empty %}
-        <li>No articles yet.</li>
-    {% endfor %}
+<p>Showing {{ object_list|length }} of {{ page_obj.paginator.count }} persons...</p>
+
+<table class="table table-striped">
+    <thead>
+        <th>id</th>
+        <th>full name</th>
+        <th>email</th>
+        <th>timezone</th>
+    </thead>
+    <tbody>
+        {% for person in object_list %}
+        <tr>
+            <td>{{ person.id }}</td>
+            <td>{{ person.full_name }}</td>
+            <td>{{ person.email }}</td>
+            {% if person.timezone %}
+            <td>{{ person.timezone }}</td>
+            {% else %}
+            <td>{{ person.lg_timezone }}</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="text-center">
+    <ul class="pagination pagination-centered">
+        {% if page_obj.has_previous %}
+            <li><a href="?page=1">&laquo;&laquo;</a></li>
+            <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+        {% endif %}
+
+        {% for i in paginator.page_range %}
+            <li {% if page_obj.number == i %} class="active" {% endif %}><a href="?page={{i}}">{{i}}</a></li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+            <li><a href="?page={{ page_obj.paginator.num_pages }}">&raquo;&raquo;</a></li>
+        {% endif %}
     </ul>
+</div>
 {% endblock %}
