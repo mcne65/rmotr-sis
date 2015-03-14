@@ -1,1 +1,2 @@
 -r base.txt
+smartcsv==0.2.3
