@@ -55,3 +55,6 @@ target/
 
 # Sqlite3
 *.db
+
+# Bower
+bower_components

@@ -1,0 +1,20 @@
+{
+  "name": "rmotr-sis",
+  "version": "0.0.1",
+  "homepage": "https://github.com/rmotr/rmotr-sis",
+  "authors": [
+    "Martin Zugnoni <martin.zugnoni@gmail.com>",
+    "Santiago Basulto <santiago.basulto@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.2"
+  }
+}
