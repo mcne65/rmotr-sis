@@ -1,0 +1,20 @@
+{% extends 'bare.html' %}
+
+{% block main_container %}
+{% if lecture %}
+<h1>{{ lecture.subject }}</h1>
+
+    {% if lecture.notes %}
+    {% endif %}
+
+    {% if lecture.video %}
+    {% endif %}
+
+{% else %}
+
+<h1>Shouldnt be seeing this</h1>
+
+{% endif %}
+
+
+{% endblock %}

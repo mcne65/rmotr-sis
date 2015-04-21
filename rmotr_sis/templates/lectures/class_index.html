@@ -5,7 +5,7 @@
 {% if lecture_list %}
     <ul>
         {% for class in lecture_list %}
-        <li>Class: {{ class.subject }} </li>
+        <li>Class: <a href="{% url 'lectures:class_detail' class.id %}">{{ class.subject }}</a></li>
         {% endfor %}
     </ul>
 {% endif %}
