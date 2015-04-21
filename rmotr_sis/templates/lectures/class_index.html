@@ -1,0 +1,13 @@
+{% extends 'bare.html' %}
+
+{% block main_container %}
+<h1>Class Directory</h1>
+{% if lecture_list %}
+    <ul>
+        {% for class in lecture_list %}
+        <li>Class: {{ class.subject }} </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% endblock %}
