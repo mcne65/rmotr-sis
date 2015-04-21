@@ -18,8 +18,8 @@ class TimeStampedModel(models.Model):
 class Person(TimeStampedModel):
 
     email = models.EmailField(max_length=150, unique=True)
-    first_name = models.CharField(max_length=150, blank=False, null=True)
-    last_name = models.CharField(max_length=150, blank=False, null=True)
+    first_name = models.CharField(max_length=150, blank=True, null=True)
+    last_name = models.CharField(max_length=150, blank=True, null=True)
     timezone = models.CharField(max_length=150, choices=TIMEZONE_CHOICES,
                                 blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)
