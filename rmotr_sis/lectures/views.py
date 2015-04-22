@@ -17,5 +17,6 @@ def class_detail(request, class_id):
     except Lecture.DoesNotExist:
         raise Http404("This class does not exist")
     return render(request, 'lectures/class_detail.html', {'lecture':lecture})
+                                                          
 
 
