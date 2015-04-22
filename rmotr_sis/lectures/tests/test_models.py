@@ -1,6 +1,5 @@
 from django.test import TestCase
-from lectures.models import Lecture
-from students.models import Person
+from lectures.models import Lecture, Course
 
 
 class LectureTests(TestCase):
@@ -11,25 +10,24 @@ class LectureTests(TestCase):
         lecture.save()
         self.assertEqual(Lecture.objects.count(), 1)
 
-    def test_students_attended_class(self):
-        """Tests whether student(Person) instances are stored as having
-        attended a particular lecture"""
-        student1 = Person(email="student@gmail.com",
-                          first_name="Bob",
-                          last_name="Saget")
-        student2 = Person(email="student2@gmail.com",
-                          first_name="Jim",
-                          last_name="Jeffries")
-        student1.save()
-        student2.save()
+    def test_lecture_was_created_all_parameters(self):
+        """Tests creation of a lecture object with all parameters"""
+        import django.utils.timezone as time 
 
-        lecture1 = Lecture(subject="functions")
-        lecture1.save()
+        course = Course(name="Advanced Python")
+        course.save()
 
-        lecture1.attended.add(student1)
-        lecture1.attended.add(student2)
+        lecture = Lecture(
+            subject="Flask",
+            date=time.now(),
+            notes="Notes",
+            video_url="www.youtube.com",
+            slides_url="www.rmotr.com",
+            summary = "The flask framework",
+            course=course)
 
-        self.assertIn(student1, lecture1.attended.all())
-        self.assertIn(student2, lecture1.attended.all())
-        self.assertEqual(lecture1.attended.count(), 2)
+        lecture.save()
+
+        self.assertEqual(Lecture.objects.count(), 1)
+        self.assertIn(lecture.subject, "Flask")
 
