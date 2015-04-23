@@ -1,0 +1,14 @@
+{% extends 'bare.html' %}
+
+{% block main_container %}
+<h1> Course Directory </h1>
+{% if course_list %}
+    <ul>
+        {% for course in course_list %}
+        <li><a href="{% url 'lectures:class_index' course.id %}">{{ course }}</a></li>
+        {% endfor %}
+
+    </ul>
+{% endif %}
+
+{% endblock %}
