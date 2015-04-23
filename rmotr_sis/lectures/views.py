@@ -20,7 +20,7 @@ def class_index(request, course_id):
         lecture_list = [course.lecture_set.get(pk=x) for x in range(1, num_courses +1)]
     except Course.DoesnNotExist or Lecture.DoesNotExist:
         lecture_list = ['No classes found.']
-    context = {'lecture_list':lecture_list}
+    context = {'lecture_list':lecture_list, 'course':course}
     return render(request, 'lectures/class_index.html', context)
 
 def class_detail(request, class_id):
