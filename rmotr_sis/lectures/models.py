@@ -13,8 +13,7 @@ class Course(TimeStampedModel):
         return self.name
 
 class Lecture(TimeStampedModel):
-    #subject may be represented as a many-to-many relationship with another table
-    #for subjects.
+    #subject may be represented by a relationship to another model.
     subject = models.CharField(max_length=150, blank=False, unique=False, null=True)
     date = models.DateField('Class date', default=timezone.now)
     notes = models.TextField(blank=True, null=True)

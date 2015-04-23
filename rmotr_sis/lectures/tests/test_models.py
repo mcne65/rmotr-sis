@@ -2,6 +2,20 @@ from django.test import TestCase
 from lectures.models import Lecture, Course
 
 
+
+class CourseTests(TestCase):
+
+    def test_course_was_created(self):
+        """Tests whether a course object is created"""
+        course = Course(name="Advanced Python",
+                        description="Learn advanced python techniques",
+                        code="12345")
+        course.save()
+        self.assertEqual(Course.objects.count(),1)
+        self.assertEqual(course.name, "Advanced Python")
+
+
+
 class LectureTests(TestCase):
 
     def test_lecture_was_created(self):
