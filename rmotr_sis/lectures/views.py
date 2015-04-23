@@ -23,7 +23,7 @@ def class_index(request, course_id):
     context = {'lecture_list':lecture_list, 'course':course}
     return render(request, 'lectures/class_index.html', context)
 
-def class_detail(request, class_id):
+def class_detail(request, course_id, class_id):
     try:
         lecture = Lecture.objects.get(pk=class_id)
     except Lecture.DoesNotExist:
