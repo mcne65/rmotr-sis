@@ -8,6 +8,8 @@
         <li>Class: <a href="{% url 'lectures:class_detail' course.id class.id %}">{{ class.subject }}</a></li>
         {% endfor %}
     </ul>
+{% else %}
+<p>No classes found</p>
 {% endif %}
 <br><br>
 <p><a href="{% url 'lectures:course_index' %}">Back to courses</a></p>

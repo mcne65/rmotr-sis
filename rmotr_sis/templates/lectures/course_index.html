@@ -7,8 +7,9 @@
         {% for course in course_list %}
         <li><a href="{% url 'lectures:class_index' course.id %}">{{ course }}</a></li>
         {% endfor %}
-
     </ul>
+{% else %}
+    <p>No courses found</p>
 {% endif %}
 
 {% endblock %}
