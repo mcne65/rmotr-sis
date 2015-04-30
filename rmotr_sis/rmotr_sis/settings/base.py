@@ -41,6 +41,7 @@ INSTALLED_APPS = (
 
     # Own apps
     'students',
+    'courses',
 )
 
 MIDDLEWARE_CLASSES = (
