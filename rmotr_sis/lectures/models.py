@@ -13,14 +13,13 @@ class Course(TimeStampedModel):
         return self.name
 
 class Lecture(TimeStampedModel):
-    #subject may be represented by a relationship to another model.
     subject = models.CharField(max_length=150, blank=False, unique=False, null=True)
     date = models.DateField('Class date', default=timezone.now)
     notes = models.TextField(blank=True, null=True)
     video_url = models.CharField(max_length=200, blank=True, unique=False, null=True)
     slides_url = models.CharField(max_length=200, blank=True, unique=False, null=True)
     summary = models.TextField(blank=True, null=True)
-    course = models.ForeignKey('Course', default=1) 
+    course = models.ForeignKey('Course') 
 
     @property
     def lecture_handle(self):

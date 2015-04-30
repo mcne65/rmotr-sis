@@ -7,7 +7,7 @@
     {% if course_list %}
         <ul>
             {% for course in course_list %}
-                <li><a href="{% url 'lectures:class_index' course.id %}">{{ course }}</a></li>
+                <li><a href="{% url 'courses:class_index' course.id %}">{{ course }}</a></li>
             {% endfor %}
         </ul>
     {% else %}

@@ -20,7 +20,9 @@ class LectureTests(TestCase):
 
     def test_lecture_was_created(self):
         """Tests whether a lecture object is created."""
-        lecture = Lecture(subject="Flask")
+        course = Course(name="Advanced Python")
+        course.save()
+        lecture = Lecture(subject="Flask", course=course)
         lecture.save()
         self.assertEqual(Lecture.objects.count(), 1)
 
