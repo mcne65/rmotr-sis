@@ -35,8 +35,10 @@ class Person(TimeStampedModel):
     def full_name(self):
         if self.first_name and self.last_name:
             return '{0} {1}'.format(self.first_name, self.last_name)
-        else:
+        elif self.lg_full_name:
             return self.lg_full_name
+        else:
+            return self.email
 
     def __str__(self):
         return self.full_name
