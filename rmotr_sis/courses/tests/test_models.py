@@ -1,5 +1,5 @@
 from django.test import TestCase
-from lectures.models import Lecture, Course
+from courses.models import Lecture, Course
 
 
 

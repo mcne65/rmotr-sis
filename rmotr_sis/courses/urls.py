@@ -1,8 +1,8 @@
 from django.conf.urls import patterns, include, url
 
-from lectures import views
+from courses import views
 
-urlpatterns = patterns('lectures.views',
+urlpatterns = patterns('courses.views',
     #/courses/
     url(r'^$', views.CourseListView.as_view(), name="course_index"),
     #/courses/<course_id>/

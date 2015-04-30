@@ -6,7 +6,7 @@ from django.views.generic import ListView, DetailView
 
 class CourseListView(ListView):
     model = Course
-    template_name = 'lectures/course_index.html'
+    template_name = 'courses/course_index.html'
     paginate_by = 20
 
     def get_queryset(self):
@@ -20,10 +20,10 @@ def class_index(request, course_id):
     except Course.DoesnNotExist or Lecture.DoesNotExist:
         lecture_list = None
     context = {'lecture_list':lecture_list, 'course':course}
-    return render(request, 'lectures/class_index.html', context)
+    return render(request, 'courses/class_index.html', context)
 
 
 class ClassDetailView(DetailView):
     model = Lecture
-    template_name = 'lectures/class_detail.html'
+    template_name = 'courses/class_detail.html'
 
