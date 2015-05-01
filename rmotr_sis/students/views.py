@@ -1,14 +1,14 @@
 from __future__ import division, unicode_literals, absolute_import
 
-from braces.views import LoginRequiredMixin
+from braces.views import StaffuserRequiredMixin, LoginRequiredMixin
 
 from django.db.models import Q
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 
 from students.models import Profile
 
 
-class ProfileListView(LoginRequiredMixin, ListView):
+class ProfileListView(StaffuserRequiredMixin, ListView):
     model = Profile
     template_name = 'students/list.html'
     paginate_by = 50
@@ -24,3 +24,13 @@ class ProfileListView(LoginRequiredMixin, ListView):
             )
         else:
             return Profile.objects.all()
+
+
+class StudentHomeView(LoginRequiredMixin, TemplateView):
+    template_name = 'students/home.html'
+
+    def get_context_data(self, **kwargs):
+        context = {
+            'courses': self.request.user.profile.courseinstance_set.all()
+        }
+        return context

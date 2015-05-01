@@ -1,6 +1,9 @@
+from __future__ import division, unicode_literals, absolute_import
+
 from django.db import models
-from students.models import TimeStampedModel
 from django.utils import timezone
+
+from students.models import TimeStampedModel, Profile
 
 
 class Course(TimeStampedModel):
@@ -10,6 +13,17 @@ class Course(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+
+class CourseInstance(TimeStampedModel):
+    course = models.ForeignKey(Course)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    students = models.ManyToManyField(Profile)
+
+    def __str__(self):
+        return '{} ({} - {})'.format(self.course.name,
+                                     self.start_date, self.end_date)
 
 
 class Lecture(TimeStampedModel):
@@ -22,7 +36,7 @@ class Lecture(TimeStampedModel):
     slides_url = models.CharField(max_length=200, blank=True,
                                   unique=False, null=True)
     summary = models.TextField(blank=True, null=True)
-    course = models.ForeignKey('Course')
+    course_instance = models.ForeignKey(CourseInstance)
 
     @property
     def lecture_handle(self):

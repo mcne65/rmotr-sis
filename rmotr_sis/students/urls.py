@@ -4,5 +4,6 @@ from students import views
 
 
 urlpatterns = patterns('',
-    url(r'^$', views.ProfileListView.as_view(), name='list'),
+    url(r'students$', views.ProfileListView.as_view(), name='student_list'),
+    url(r'$', views.StudentHomeView.as_view(), name='student_home'),
 )
