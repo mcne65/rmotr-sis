@@ -3,6 +3,7 @@ from __future__ import division, unicode_literals, absolute_import
 import pytz
 
 from django.db import models
+from django.contrib.auth.models import User
 
 TIMEZONE_CHOICES = tuple([(tz, tz) for tz in pytz.common_timezones])
 
@@ -15,8 +16,9 @@ class TimeStampedModel(models.Model):
         abstract = True
 
 
-class Person(TimeStampedModel):
+class Profile(TimeStampedModel):
 
+    user = models.OneToOneField(User, null=True, blank=True)
     email = models.EmailField(max_length=150, unique=True)
     first_name = models.CharField(max_length=150, blank=True, null=True)
     last_name = models.CharField(max_length=150, blank=True, null=True)

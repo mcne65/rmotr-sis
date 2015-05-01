@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from students.models import Person
+from students.models import Profile
 
-admin.site.register(Person)
+admin.site.register(Profile)

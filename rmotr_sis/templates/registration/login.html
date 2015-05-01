@@ -1,0 +1,28 @@
+{% extends "bare.html" %}
+
+{% block main_container %}
+<div class="col-sm-6">
+    <div class="row">
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">Your username and password didn't match. Please try again.</div>
+        {% endif %}
+
+        <form method="POST" action="{% url 'django.contrib.auth.views.login' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_username">{{ form.username.label_tag }}</label>
+                <input class="form-control" placeholder="Enter email" type="text" id="id_username" maxlength="254" name="username" autofocus>
+            </div>
+
+            <div class="form-group">
+                <label for="id_password">{{ form.password.label_tag }}</label>
+                <input class="form-control" placeholder="Enter password" id="id_password" name="password" type="password">
+            </div>
+
+            <input type="hidden" name="next" value="{{ next }}" />
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
