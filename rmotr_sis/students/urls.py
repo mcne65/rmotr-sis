@@ -1,10 +1,8 @@
-from django.conf.urls import patterns, url, include
+from django.conf.urls import patterns, url
 
 from students import views
 
 
 urlpatterns = patterns('',
-    url('^', include('django.contrib.auth.urls')),
-    url(r'^$', views.ProfileListView.as_view()),
+    url(r'^$', views.ProfileListView.as_view(), name='list'),
 )
-

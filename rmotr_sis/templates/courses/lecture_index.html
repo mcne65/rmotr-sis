@@ -1,11 +1,11 @@
 {% extends 'bare.html' %}
 
 {% block main_container %}
-<h1>Class Directory</h1>
+<h1>Lecture Directory</h1>
 {% if lecture_list %}
     <ul>
-        {% for class in lecture_list %}
-        <li>Class: <a href="{% url 'courses:class_detail' course.id class.id %}">{{ class.subject }}</a></li>
+        {% for lecture in lecture_list %}
+        <li>Class: <a href="{% url 'courses:lecture_detail' lecture.course.id lecture.id %}">{{ lecture.subject }}</a></li>
         {% endfor %}
     </ul>
 {% else %}

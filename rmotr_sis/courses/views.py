@@ -1,10 +1,14 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Lecture, Course
-from django.http import Http404
+from __future__ import division, unicode_literals, absolute_import
+
+from braces.views import LoginRequiredMixin
+
 from django.views.generic import ListView, DetailView
+from django.shortcuts import get_object_or_404
+
+from .models import Lecture, Course
 
 
-class CourseListView(ListView):
+class CourseListView(LoginRequiredMixin, ListView):
     model = Course
     template_name = 'courses/course_index.html'
     paginate_by = 20
@@ -13,17 +17,15 @@ class CourseListView(ListView):
         return Course.objects.order_by("pk")
 
 
-def class_index(request, course_id):
-    try:    
-        course = Course.objects.get(pk=course_id)
-        lecture_list = course.lecture_set.order_by("pk")
-    except Course.DoesnNotExist or Lecture.DoesNotExist:
-        lecture_list = None
-    context = {'lecture_list':lecture_list, 'course':course}
-    return render(request, 'courses/class_index.html', context)
-
-
-class ClassDetailView(DetailView):
+class LectureListView(LoginRequiredMixin, ListView):
     model = Lecture
-    template_name = 'courses/class_detail.html'
+    template_name = 'courses/lecture_index.html'
 
+    def get_queryset(self):
+        course = get_object_or_404(Course, pk=self.kwargs['course_id'])
+        return course.lecture_set.order_by("pk")
+
+
+class LectureDetailView(LoginRequiredMixin, DetailView):
+    model = Lecture
+    template_name = 'courses/lecture_detail.html'
