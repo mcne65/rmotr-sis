@@ -8,4 +8,7 @@ urlpatterns = patterns('courses.views',
 
     url(r'^lectures/(?P<pk>[0-9]+)/$',
         views.LectureDetailView.as_view(), name="lecture_detail"),
+
+    url(r'^assignments/(?P<pk>[0-9]+)/$',
+        views.ResolveAssignmentView.as_view(), name="resolve_assignment"),
 )

@@ -39,6 +39,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Thirt part apps
+    'taggit',
+
     # Own apps
     'students',
     'courses',

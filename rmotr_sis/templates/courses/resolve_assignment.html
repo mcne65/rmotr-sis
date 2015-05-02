@@ -1,0 +1,12 @@
+{% extends "bare.html" %}
+
+{% block main_container %}
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_source">{{ form.source.label_tag }}</label>
+            <textarea class="form-control" cols="40" id="id_source" name="source" rows="10">{{ form.source.value }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+{% endblock %}

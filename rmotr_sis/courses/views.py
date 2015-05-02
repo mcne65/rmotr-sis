@@ -2,10 +2,13 @@ from __future__ import division, unicode_literals, absolute_import
 
 from braces.views import LoginRequiredMixin
 
-from django.views.generic import DetailView
+from django.views.generic import DetailView, FormView
 from django.http import Http404
+from django.shortcuts import get_object_or_404
 
-from .models import Lecture, CourseInstance
+from .models import Lecture, CourseInstance, Assignment
+from .forms import ResolveAssignmentForm
+
 
 class StudentRequiredMixin(object):
     """Allows access to the view only to current students of the course instance
@@ -44,3 +47,12 @@ class LectureDetailView(StudentRequiredMixin, LoginRequiredMixin,
         instance = self.object.course_instance
         if self.request.user.profile not in instance.students.all():
             raise Http404
+
+
+class ResolveAssignmentView(LoginRequiredMixin, FormView):
+    form_class = ResolveAssignmentForm
+    template_name = 'courses/resolve_assignment.html'
+
+    def get_initial(self):
+        assignment = get_object_or_404(Assignment, pk=self.kwargs['pk'])
+        return {'source': assignment.source}

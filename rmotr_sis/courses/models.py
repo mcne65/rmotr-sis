@@ -1,9 +1,19 @@
 from __future__ import division, unicode_literals, absolute_import
 
+from taggit.managers import TaggableManager
+
 from django.db import models
 from django.utils import timezone
 
 from students.models import TimeStampedModel, Profile
+
+DIFFICULTY_CHOICES = (
+    ('VE', 'Very easy'),
+    ('E', 'Easy'),
+    ('M', 'Medium'),
+    ('H', 'Hard'),
+    ('VH', 'Very hard'),
+)
 
 
 class Course(TimeStampedModel):
@@ -47,3 +57,30 @@ class Lecture(TimeStampedModel):
 
     def __str__(self):
         return self.lecture_handle
+
+
+class Assignment(TimeStampedModel):
+    lecture = models.ForeignKey(Lecture)
+    difficulty = models.CharField(max_length=2, choices=DIFFICULTY_CHOICES)
+    source = models.TextField()
+    footer = models.TextField()
+
+    tags = TaggableManager()
+
+    def __str__(self):
+        return '{} ({})'.format(
+            ', '.join([t.name for t in self.tags.all()]),
+            self.difficulty
+        )
+
+
+class AssignmentAttempt(TimeStampedModel):
+    assignment = models.ForeignKey(Assignment)
+    student = models.ForeignKey(Profile)
+    source = models.TextField()
+    start_datetime = models.DateTimeField()
+    end_datetime = models.DateTimeField(null=True, blank=True)
+    output = models.TextField(null=True, blank=True)
+    errors = models.TextField(null=True, blank=True)
+    execution_time = models.FloatField(null=True, blank=True)
+    resolved = models.BooleanField(default=False)

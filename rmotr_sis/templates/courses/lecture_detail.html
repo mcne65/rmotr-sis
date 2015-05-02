@@ -31,6 +31,17 @@
         <p>Notes coming soon!</p>
     {% endif %}
 
+    <h2>Assignments</h2>
+    {% if lecture.assignment_set.all %}
+        <ol>
+        {% for assignment in lecture.assignment_set.all %}
+            <li><a href="{% url 'courses:resolve_assignment' assignment.id %}">{{ assignment }}</a></li>
+        {% endfor %}
+        </ol>
+    {% else %}
+        <p>Assignments coming soon!</p>
+    {% endif %}
+
     <br><br>
     <p><a href="{% url 'courses:course_detail' lecture.course_instance.id %}">Back to classes</a></p>
 

@@ -2,3 +2,4 @@ Django==1.8
 pytz==2014.10
 django-disqus==0.5
 django-braces==1.8.0
+django-taggit==0.14.0
