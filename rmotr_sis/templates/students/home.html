@@ -3,10 +3,14 @@
 {% block main_container %}
     <h3>Hello {{ user.profile.full_name }}!</h3>
 
+    {% if courses %}
     <p>These are the courses you are currently participating in:</p>
     <ul>
     {% for course in courses %}
         <li><a href="{% url 'courses:course_detail' course.id %}">{{ course }}</a></li>
     {% endfor %}
     </ul>
+    {% else %}
+    <p>You are currently participating in no couses.</p>
+    {% endif %}
 {% endblock %}
