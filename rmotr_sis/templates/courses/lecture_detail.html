@@ -1,7 +1,8 @@
 {% extends 'bare.html' %}
 
 {% block main_container %}
-{% if lecture %}
+
+<div class="row">
 <h1>{{ lecture.subject }} - {{ lecture.date }}</h1>
 
     {% if lecture.summary %}
@@ -30,24 +31,29 @@
     {% else %}
         <p>Notes coming soon!</p>
     {% endif %}
+</div>
 
-    <h2>Assignments</h2>
-    {% if lecture.assignment_set.all %}
-        <ol>
-        {% for assignment in lecture.assignment_set.all %}
-            <li><a href="{% url 'courses:resolve_assignment' assignment.id %}">{{ assignment }}</a></li>
-        {% endfor %}
-        </ol>
-    {% else %}
+<div class="row">
+    <div class="col-sm-6">
+        <h2>Assignments</h2>
+        {% if lecture.assignment_set.all %}
+        <table class="table table-striped">
+            <tbody>
+                {% for assignment in assignments %}
+                <tr>
+                    <td><a href="{% url 'courses:resolve_assignment' assignment.id %}">Assignment {{forloop.counter}}</a></td>
+                    <td>{{ assignment.difficulty}}</td>
+                    <td>{% for tag in assignment.tags.all %}{{ tag }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                    <td>{% if assignment.resolved %}Resolved{% else %}Pending{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
         <p>Assignments coming soon!</p>
-    {% endif %}
-
+        {% endif %}
+    </div>
+</div>
     <br><br>
     <p><a href="{% url 'courses:course_detail' lecture.course_instance.id %}">Back to classes</a></p>
-
-{% else %}
-
-<h1>Shouldnt be seeing this</h1>
-
-{% endif %}
 {% endblock %}

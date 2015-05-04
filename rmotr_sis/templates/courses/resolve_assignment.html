@@ -1,8 +1,14 @@
 {% extends "bare.html" %}
 
 {% block main_container %}
+    {% if previous_attempt %}
+        <p>You have started resolving this assignment on {{previous_attempt.start_datetime}}</p>
+    {% endif %}
     <form method="POST">
         {% csrf_token %}
+        {% if form.source.errors %}
+            <div class="alert alert-danger" role="alert">{{ form.source.errors.0|escape }}</div>
+        {% endif %}
         <div class="form-group">
             <label for="id_source">{{ form.source.label_tag }}</label>
             <textarea class="form-control" cols="40" id="id_source" name="source" rows="10">{{ form.source.value }}</textarea>

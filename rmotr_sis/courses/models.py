@@ -73,6 +73,13 @@ class Assignment(TimeStampedModel):
             self.difficulty
         )
 
+    def is_resolved_by_student(self, student):
+        """Returns True if the student has already resolved the assignment,
+           or False otherwise
+        """
+        return AssignmentAttempt.objects.filter(
+            student=student, assignment=self, resolved=True).exists()
+
 
 class AssignmentAttempt(TimeStampedModel):
     assignment = models.ForeignKey(Assignment)
