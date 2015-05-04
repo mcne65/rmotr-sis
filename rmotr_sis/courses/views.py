@@ -102,10 +102,11 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
             assignment=self.assignment, student=self.request.user.profile,
             end_datetime=None, resolved=False)
         attempt.source = result['code']
-        attempt.errors = result['errors']
         attempt.output = result['output']
-        attempt.execution_time = float(result['time'].rstrip('\n'))
-        if not result['errors'] and not result['output']:
+        attempt.errors = result.get('errors')
+        if result.get('time'):
+            attempt.execution_time = float(result['time'].rstrip('\n'))
+        if not attempt.errors and not attempt.output:
             # no assert failed, the solution is correct
             attempt.resolved = True
             messages.success(
