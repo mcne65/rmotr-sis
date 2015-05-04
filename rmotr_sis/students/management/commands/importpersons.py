@@ -4,7 +4,7 @@ import smartcsv
 from django.core.management.base import BaseCommand, CommandError
 from django.db.utils import IntegrityError
 
-from students.models import Person
+from students.models import Profile
 
 COLUMNS = [
     {'name': 'name'},
@@ -32,7 +32,7 @@ class Command(BaseCommand):
 
             for person in reader:
                 try:
-                    Person.objects.create(
+                    Profile.objects.create(
                         email=person['email'],
                         lg_full_name=person['name'],
                         lg_timezone=person['timezone']

@@ -1,0 +1,23 @@
+{% extends 'bare.html' %}
+
+{% block main_container %}
+    <h3>{{ object }}</h3>
+
+    <p>Lecture history:</p>
+    <ol>
+        {% for lecture in object.lecture_set.all %}
+            <li><a href="{% url 'courses:lecture_detail' lecture.id %}">{{lecture}}</a></li>
+        {% endfor %}
+    </ol>
+
+    {% if object.students.all|length > 1 %}
+    <p>Other students in this course:</p>
+    <ul>
+        {% for student in object.students.all %}
+            {% if student.full_name != user.profile.full_name %}
+            <li>{{ student.full_name }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endblock %}

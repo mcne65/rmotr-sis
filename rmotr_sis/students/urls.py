@@ -1,8 +1,9 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
 
 from students import views
 
 
 urlpatterns = patterns('',
-    url(r'^$', views.PersonListView.as_view()),
+    url(r'students$', views.ProfileListView.as_view(), name='student_list'),
+    url(r'$', views.StudentHomeView.as_view(), name='student_home'),
 )

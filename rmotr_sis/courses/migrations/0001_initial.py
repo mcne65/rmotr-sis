@@ -8,18 +8,34 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('students', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
             name='Course',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('name', models.CharField(max_length=150, null=True)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('code', models.CharField(blank=True, max_length=45, null=True)),
+                ('description', models.TextField(null=True, blank=True)),
+                ('code', models.CharField(max_length=45, null=True, blank=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+        ),
+        migrations.CreateModel(
+            name='CourseInstance',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created', models.DateTimeField(auto_now_add=True)),
+                ('modified', models.DateTimeField(auto_now=True)),
+                ('start_date', models.DateField(null=True, blank=True)),
+                ('end_date', models.DateField(null=True, blank=True)),
+                ('course', models.ForeignKey(to='courses.Course')),
+                ('students', models.ManyToManyField(to='students.Profile')),
             ],
             options={
                 'abstract': False,
@@ -28,16 +44,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Lecture',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('subject', models.CharField(max_length=150, null=True)),
                 ('date', models.DateField(default=django.utils.timezone.now, verbose_name='Class date')),
-                ('notes', models.TextField(blank=True, null=True)),
-                ('video_url', models.CharField(blank=True, max_length=200, null=True)),
-                ('slides_url', models.CharField(blank=True, max_length=200, null=True)),
-                ('summary', models.TextField(blank=True, null=True)),
-                ('course', models.ForeignKey(to='courses.Course')),
+                ('notes', models.TextField(null=True, blank=True)),
+                ('video_url', models.CharField(max_length=200, null=True, blank=True)),
+                ('slides_url', models.CharField(max_length=200, null=True, blank=True)),
+                ('summary', models.TextField(null=True, blank=True)),
+                ('course_instance', models.ForeignKey(to='courses.CourseInstance')),
             ],
             options={
                 'abstract': False,

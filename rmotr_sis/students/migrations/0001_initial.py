@@ -2,16 +2,18 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Person',
+            name='Profile',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
@@ -26,10 +28,10 @@ class Migration(migrations.Migration):
                 ('cloud9_handle', models.CharField(max_length=50, null=True, blank=True)),
                 ('lg_full_name', models.CharField(max_length=150, null=True, blank=True)),
                 ('lg_timezone', models.CharField(max_length=50, null=True, blank=True)),
+                ('user', models.OneToOneField(null=True, blank=True, to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'abstract': False,
             },
-            bases=(models.Model,),
         ),
     ]
