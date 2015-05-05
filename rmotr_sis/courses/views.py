@@ -55,10 +55,21 @@ class LectureDetailView(StudentRequiredMixin, LoginRequiredMixin,
 
     def get_context_data(self, **kwargs):
         context = super(LectureDetailView, self).get_context_data(**kwargs)
+
         assignments = self.object.assignment_set.all()
         for a in assignments:
             a.resolved = a.is_resolved_by_student(self.request.user.profile)
         context['assignments'] = assignments
+
+        # if user is staff show the summary of all assignments per student
+        if self.request.user.is_staff:
+            all_assignments = {}
+            for student in self.object.course_instance.students.all():
+                all_assignments.setdefault(student, {})
+                for a in assignments:
+                    all_assignments[student][a] = a.is_resolved_by_student(student)
+            context['all_assignments'] = all_assignments
+
         return context
 
 
@@ -93,8 +104,8 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
 
-        code = '{}\n{}'.format(form.cleaned_data['source'],
-                               self.assignment.footer)
+        code = '{}\n\n{}'.format(form.cleaned_data['source'],
+                                 self.assignment.footer)
         result = run_code(code)
 
         # finish the attempt and check if it's a valid solution or not
@@ -113,7 +124,8 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
                 self.request, 'Excelent! You have resolved the assignment.')
         else:
             messages.error(
-                self.request, 'Ouch! The solution you posted was incorrect, please try again.')
+                self.request,
+                'Ouch! The solution you posted was incorrect, please try again.')
         attempt.end_datetime = datetime.now()
         attempt.save()
 
