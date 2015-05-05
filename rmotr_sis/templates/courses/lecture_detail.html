@@ -45,8 +45,19 @@
                 <tr>
                     <td><a href="{% url 'courses:resolve_assignment' assignment.id %}">Assignment {{forloop.counter}}</a></td>
                     <td>{{ assignment.difficulty}}</td>
-                    <td>{% for tag in assignment.tags.all %}{{ tag }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
-                    <td>{% if assignment.resolved %}Resolved{% else %}Pending{% endif %}</td>
+                    <td>
+                        {% for tag in assignment.tags.all %}
+                        <span class="label label-default">{{ tag }}</span>
+                        {% endfor %}
+                    </td>
+                    {% if assignment.resolved %}
+                    <td class="text-success">
+                        <span class="glyphicon glyphicon-ok"></span>
+                    </td>
+                    {% else %}
+                    <td>-</td>
+                    {% endif %}
+                    <td><a class="btn btn-default btn-xs" href="{% url 'courses:resolve_assignment' assignment.id %}" role="button">Start »</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
