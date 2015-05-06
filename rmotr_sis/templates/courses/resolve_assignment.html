@@ -1,18 +1,45 @@
 {% extends "bare.html" %}
+{% load staticfiles %}
+
+{% block extra_header_styles %}
+    <link href="{% static 'css/codemirror.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block main_container %}
-    {% if previous_attempt %}
-        <p>You have started resolving this assignment on {{previous_attempt.start_datetime}}</p>
-    {% endif %}
-    <form method="POST">
-        {% csrf_token %}
-        {% if form.source.errors %}
-            <div class="alert alert-danger" role="alert">{{ form.source.errors.0|escape }}</div>
-        {% endif %}
-        <div class="form-group">
-            <label for="id_source">{{ form.source.label_tag }}</label>
-            <textarea class="form-control" cols="40" id="id_source" name="source" rows="10">{{ form.source.value }}</textarea>
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-    </form>
+<div class="row">
+    <div class="col-sm-12">
+        <form method="POST">
+            {% csrf_token %}
+            {% if form.source.errors %}
+                <div class="alert alert-danger" role="alert">{{ form.source.errors.0|escape }}</div>
+            {% endif %}
+            <div class="form-group">
+                <textarea class="form-control" cols="40" id="id_source" name="source" rows="10">{{ form.source.value }}</textarea>
+            </div>
+            {% if previous_attempt %}
+            <blockquote><small>You have started resolving this assignment on {{previous_attempt.start_datetime}}</small></blockquote>
+            {% endif %}
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+    <a href="{% url 'courses:lecture_detail' lecture.id %}">« Back to assignments</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_footer_scripts %}
+    <script src="{% static 'js/codemirror.js' %}"></script>
+    <script src="{% static 'js/python.js' %}"></script>
+    <script type="text/javascript">
+        var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("id_source"), {
+            lineNumbers: true,
+            mode: "python",
+            indentWithTabs: false,
+            indentUnit: 4,
+        });
+    </script>
 {% endblock %}

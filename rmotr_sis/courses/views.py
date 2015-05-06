@@ -79,6 +79,9 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
 
     def get_initial(self):
         self.assignment = get_object_or_404(Assignment, pk=self.kwargs['pk'])
+        allowed_students = self.assignment.lecture.course_instance.students.all()
+        if self.request.user.profile not in allowed_students:
+            raise Http404
         return {'source': self.assignment.source}
 
     def get_context_data(self, **kwargs):
@@ -95,6 +98,7 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
         )
         if not created:
             context['previous_attempt'] = obj
+        context['lecture'] = self.assignment.lecture
 
         return context
 

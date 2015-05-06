@@ -13,6 +13,7 @@
 
     <link href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/main.css' %}" rel="stylesheet">
+    {% block extra_header_styles %}{% endblock %}
   </head>
 
   <body>
@@ -79,5 +80,6 @@
     <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    {% block extra_footer_scripts %}{% endblock %}
   </body>
 </html>
