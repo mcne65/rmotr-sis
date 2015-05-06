@@ -1,42 +1,112 @@
 {% extends 'bare.html' %}
 
 {% block main_container %}
-{% if lecture %}
-<h1>{{ lecture.subject }} - {{ lecture.date }}</h1>
 
-    {% if lecture.summary %}
-        <p> {{ lecture.summary }} </p>
-    {% else %}
-        <p>Summary coming soon!</p>
-    {% endif %}
+<div class="row">
+    <div class="col-sm-12">
+        <h3>{{ lecture.subject }}</h3>
+        <p>{{ lecture.date }}</p>
+    </div>
+</div>
 
-     <h2>Video</h2>
-    {% if lecture.video_url %}
-     <iframe width="560" height="315" src="{{ lecture.video_url }}" frameborder="0" allowfullscreen></iframe>
-    {% else %}
-    <p>Video coming soon!</p>
-    {% endif %}
+<div class="row">
+    <div class="col-sm-12">
+        {% if lecture.summary %}
+            <p> {{ lecture.summary }} </p>
+        {% else %}
+            <p>Summary coming soon!</p>
+        {% endif %}
 
-    <h2>Slides</h2>
-    {% if lecture.slides_url %}
-       <a href="{{ lecture.slides_url}}">Look at the slides</a>
-    {% else %}
-       <p>Slides coming soon!</p>
-    {% endif %}
+        {% if lecture.video_url %}
+        <a class="btn btn-default" target="_blank" href="{{ lecture.video_url }}" role="button">
+            <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Recorded video
+        </a>
+        {% endif %}
 
-    <h2>Lecture Notes</h2>
-    {% if lecture.notes %}
-        {{ lecture.notes }}
-    {% else %}
-        <p>Notes coming soon!</p>
-    {% endif %}
+        {% if lecture.slides_url %}
+        <a class="btn btn-default" target="_blank" href="{{ lecture.slides_url}}" role="button">
+        <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span> Slides
+        </a>
+        {% endif %}
 
-    <br><br>
-    <p><a href="{% url 'courses:course_detail' lecture.course_instance.id %}">Back to classes</a></p>
+        {% if lecture.notes %}
+        <p>{{ lecture.notes }}</p>
+        {% endif %}
+    </div>
+</div>
 
-{% else %}
+<div class="row">
+    <div class="col-sm-6">
+        <h4>Assignments</h4>
+        {% if assignments %}
+        <table class="table table-striped">
+            <tbody>
+                {% for assignment in assignments %}
+                <tr>
+                    <td><a href="{% url 'courses:resolve_assignment' assignment.id %}">Assignment {{forloop.counter}}</a></td>
+                    <td>{{ assignment.difficulty}}</td>
+                    <td>
+                        {% for tag in assignment.tags.all %}
+                        <span class="label label-default">{{ tag }}</span>
+                        {% endfor %}
+                    </td>
+                    {% if assignment.resolved %}
+                    <td class="text-success">
+                        <span class="glyphicon glyphicon-ok"></span>
+                    </td>
+                    {% else %}
+                    <td>-</td>
+                    {% endif %}
+                    <td><a class="btn btn-default btn-xs" href="{% url 'courses:resolve_assignment' assignment.id %}" role="button">Start »</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Assignments coming soon!</p>
+        {% endif %}
+    </div>
+</div>
 
-<h1>Shouldnt be seeing this</h1>
-
+{% if user.is_staff and assignments %}
+<div class="row">
+    <div class="col-sm-6">
+        <h4>Assignment summary</h4>
+        <table class="table table-bordered table-striped assignment-summary">
+            <thead>
+                <td></td>
+                {% for student, assignments in all_assignments.items %}
+                {% if forloop.counter == 1 %}
+                {% for assignment in assignments %}
+                <td><a target="_blank" href="{% url 'admin:courses_assignment_change' assignment.id %}">A{{ forloop.counter }}</a></td>
+                {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </thead>
+            <tbody>
+                {% for student, assignments in all_assignments.items %}
+                <tr>
+                    <td>{{ student }}</td>
+                    {% for assignment, resolved in assignments.items %}
+                    {% if resolved %}
+                    <td class="text-success">
+                        <span class="glyphicon glyphicon-ok"></span>
+                    </td>
+                    {% else %}
+                    <td>-</td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endif %}
+
+<div class="row">
+    <div class="col-sm-6">
+    <a href="{% url 'courses:course_detail' lecture.course_instance.id %}">« Back to lectures</a>
+    </div>
+</div>
 {% endblock %}

@@ -13,6 +13,7 @@
 
     <link href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/main.css' %}" rel="stylesheet">
+    {% block extra_header_styles %}{% endblock %}
   </head>
 
   <body>
@@ -62,11 +63,23 @@
     </nav>
 
     <div class="container">
+
+      {% if messages %}
+      <div class="row">
+          <div class="col-sm-12">
+              {% for message in messages %}
+              <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+              {% endfor %}
+          </div>
+      </div>
+      {% endif %}
+
       {% block main_container %}{% endblock %}
     </div> <!-- /container -->
 
     <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    {% block extra_footer_scripts %}{% endblock %}
   </body>
 </html>

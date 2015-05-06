@@ -6,3 +6,11 @@ body {
 div.row {
   margin-bottom: 10px;
 }
+
+/* Lecture detail */
+.assignment-summary td {
+   text-align: center;
+}
+.assignment-summary td:nth-child(1) {
+    text-align: left;
+}

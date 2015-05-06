@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.views.generic import ListView, TemplateView
 
 from students.models import Profile
+from courses.models import CourseInstance
 
 
 class ProfileListView(StaffuserRequiredMixin, ListView):
@@ -30,7 +31,11 @@ class StudentHomeView(LoginRequiredMixin, TemplateView):
     template_name = 'students/home.html'
 
     def get_context_data(self, **kwargs):
+        if self.request.user.is_staff:
+            courses = CourseInstance.objects.all()
+        else:
+            courses = self.request.user.profile.courseinstance_set.all()
         context = {
-            'courses': self.request.user.profile.courseinstance_set.all()
+            'courses': courses
         }
         return context
