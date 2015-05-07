@@ -13,8 +13,6 @@
     <div class="col-sm-12">
         {% if lecture.summary %}
             <p> {{ lecture.summary }} </p>
-        {% else %}
-            <p>Summary coming soon!</p>
         {% endif %}
 
         {% if lecture.video_url %}
@@ -30,7 +28,9 @@
         {% endif %}
 
         {% if lecture.notes %}
-        <p>{{ lecture.notes }}</p>
+        <div>
+            <p>{{ lecture.notes|safe }}</p>
+        </div>
         {% endif %}
     </div>
 </div>
