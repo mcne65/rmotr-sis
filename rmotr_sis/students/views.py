@@ -5,26 +5,25 @@ from braces.views import StaffuserRequiredMixin, LoginRequiredMixin
 from django.db.models import Q
 from django.views.generic import ListView, TemplateView
 
-from students.models import Profile
+from accounts.models import User
 from courses.models import CourseInstance
 
 
-class ProfileListView(StaffuserRequiredMixin, ListView):
-    model = Profile
+class StudentListView(StaffuserRequiredMixin, ListView):
+    model = User
     template_name = 'students/list.html'
     paginate_by = 50
 
     def get_queryset(self):
         query = self.request.GET.get('q')
         if query:
-            return Profile.objects.filter(
+            return User.objects.filter(
                 Q(first_name__icontains=query) |
                 Q(last_name__icontains=query) |
-                Q(lg_full_name__icontains=query) |
                 Q(email__icontains=query)
             )
         else:
-            return Profile.objects.all()
+            return User.objects.all()
 
 
 class StudentHomeView(LoginRequiredMixin, TemplateView):
@@ -34,7 +33,7 @@ class StudentHomeView(LoginRequiredMixin, TemplateView):
         if self.request.user.is_staff:
             courses = CourseInstance.objects.all()
         else:
-            courses = self.request.user.profile.courseinstance_set.all()
+            courses = self.request.user.courseinstance_set.all()
         context = {
             'courses': courses
         }
