@@ -4,15 +4,15 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <h3>{{ lecture.subject }}</h3>
+        <h3>{{ lecture.title }}</h3>
         <p>{{ lecture.date }}</p>
     </div>
 </div>
 
 <div class="row">
     <div class="col-sm-12">
-        {% if lecture.summary %}
-            <p> {{ lecture.summary }} </p>
+        {% if lecture.content %}
+            <p> {{ lecture.content }} </p>
         {% endif %}
 
         {% if lecture.video_url %}
@@ -26,12 +26,6 @@
         <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span> Slides
         </a>
         {% endif %}
-
-        {% if lecture.notes %}
-        <div>
-            <p>{{ lecture.notes|safe }}</p>
-        </div>
-        {% endif %}
     </div>
 </div>
 
@@ -43,8 +37,9 @@
             <tbody>
                 {% for assignment in assignments %}
                 <tr>
-                    <td><a href="{% url 'courses:resolve_assignment' assignment.id %}">Assignment {{forloop.counter}}</a></td>
-                    <td>{{ assignment.difficulty}}</td>
+                    <td>#{{ forloop.counter }}</td>
+                    <td><a href="{% url 'courses:resolve_assignment' assignment.id %}">{{ assignment.title }}</a></td>
+                    <td>{{ assignment.difficulty }}</td>
                     <td>
                         {% for tag in assignment.tags.all %}
                         <span class="label label-default">{{ tag }}</span>

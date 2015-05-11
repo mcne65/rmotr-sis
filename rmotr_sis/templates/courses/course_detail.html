@@ -15,8 +15,7 @@
         <table class="table table-striped">
             {% for lecture in object.lecture_set.all %}
             <tr>
-                <td>#{{ forloop.counter }}</td>
-                <td><a href="{% url 'courses:lecture_detail' lecture.id %}">{{lecture.subject}}</a></td>
+                <td><a href="{% url 'courses:lecture_detail' lecture.id %}">{{ lecture.title }}</a></td>
                 <td>{{ lecture.date }}</td>
             </tr>
             {% endfor %}
