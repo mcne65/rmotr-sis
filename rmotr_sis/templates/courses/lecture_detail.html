@@ -12,7 +12,8 @@
 <div class="row">
     <div class="col-sm-12">
         {% if lecture.content %}
-            <p> {{ lecture.content }} </p>
+        <h4>Lecture content</h4>
+        <p> {{ lecture.content }} </p>
         {% endif %}
 
         {% if lecture.video_url %}
@@ -89,7 +90,7 @@
 
 <div class="row">
     <div class="col-sm-6">
-    <a href="{% url 'courses:course_detail' lecture.course_instance.id %}">« Back to lectures</a>
+    <a class="btn btn-default" href="{% url 'courses:course_detail' lecture.course_instance.id %}">« Back to lectures</a>
     </div>
 </div>
 {% endblock %}
