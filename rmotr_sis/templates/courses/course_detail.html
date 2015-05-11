@@ -15,9 +15,8 @@
         <table class="table table-striped">
             {% for lecture in object.lecture_set.all %}
             <tr>
-                <td>#{{ forloop.counter }}</td>
-                <td><a href="{% url 'courses:lecture_detail' lecture.id %}">{{lecture.subject}}</a></td>
                 <td>{{ lecture.date }}</td>
+                <td><a href="{% url 'courses:lecture_detail' lecture.id %}">{{ lecture.title }}</a></td>
             </tr>
             {% endfor %}
         </table>
@@ -45,7 +44,7 @@
 
 <div class="row">
     <div class="col-sm-6">
-    <a href="{% url 'students:student_home' %}">« Back to home</a>
+    <a class="btn btn-default" href="{% url 'students:student_home' %}">« Back to home</a>
     </div>
 </div>
 {% endblock %}

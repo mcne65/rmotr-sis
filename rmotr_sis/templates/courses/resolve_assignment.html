@@ -19,14 +19,9 @@
             {% if previous_attempt %}
             <blockquote><small>You have started resolving this assignment on {{previous_attempt.start_datetime}}</small></blockquote>
             {% endif %}
-            <button type="submit" class="btn btn-default">Submit</button>
+            <a class="btn btn-default" href="{% url 'courses:lecture_detail' lecture.id %}">« Back to assignments</a>
+            <button type="submit" class="btn btn-success">Submit</button>
         </form>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-sm-6">
-    <a href="{% url 'courses:lecture_detail' lecture.id %}">« Back to assignments</a>
     </div>
 </div>
 {% endblock %}
