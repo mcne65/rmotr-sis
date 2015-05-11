@@ -48,6 +48,17 @@ class Lecture(TimeStampedModel):
     def __str__(self):
         return self.title
 
+    def get_assignment_summary(self):
+        """"Returns all assignments per student with the current assignment status"""
+        summary = {}
+        students = self.course_instance.students.all()
+        assignments = self.assignment_set.all()
+        for student in students:
+            summary.setdefault(student, {})
+            for a in assignments:
+                summary[student][a] = a.get_status(student)
+        return summary
+
 
 class Assignment(TimeStampedModel):
     title = models.CharField(max_length=255)
@@ -62,15 +73,27 @@ class Assignment(TimeStampedModel):
     def __str__(self):
         return '{} ({})'.format(
             ', '.join([t.name for t in self.tags.all()]),
-            self.difficulty
+            self.get_difficulty_display()
         )
 
-    def is_resolved_by_student(self, student):
-        """Returns True if the student has already resolved the assignment,
-           or False otherwise
+    def get_status(self, student):
+        """Returns the assignment status (pending, failed, resolved)
+           for certain student.
+        """
+        qs = AssignmentAttempt.objects.filter(student=student, assignment=self)
+        if qs.count() == 0:
+            return 'pending'
+        qs = qs.filter(resolved=True)
+        if qs.exists():
+            return 'resolved'
+        return 'failed'
+
+    def get_attempts(self, student):
+        """Returns the amount of attempts the student executed for
+           this assignment.
         """
         return AssignmentAttempt.objects.filter(
-            student=student, assignment=self, resolved=True).exists()
+            student=student, assignment=self).exclude(end_datetime=None).count()
 
 
 class AssignmentAttempt(TimeStampedModel):

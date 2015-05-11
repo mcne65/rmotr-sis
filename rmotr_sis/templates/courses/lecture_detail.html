@@ -39,20 +39,14 @@
                 <tr>
                     <td>#{{ forloop.counter }}</td>
                     <td><a href="{% url 'courses:resolve_assignment' assignment.id %}">{{ assignment.title }}</a></td>
-                    <td>{{ assignment.difficulty }}</td>
+                    <td>{{ assignment.get_difficulty_display }}</td>
                     <td>
                         {% for tag in assignment.tags.all %}
                         <span class="label label-default">{{ tag }}</span>
                         {% endfor %}
                     </td>
-                    {% if assignment.resolved %}
-                    <td class="text-success">
-                        <span class="glyphicon glyphicon-ok"></span>
-                    </td>
-                    {% else %}
-                    <td>-</td>
-                    {% endif %}
-                    <td><a class="btn btn-default btn-xs" href="{% url 'courses:resolve_assignment' assignment.id %}" role="button">Start »</a></td>
+                    <td>{{ assignment.attempts}} attempts</td>
+                    <td>{{ assignment.status|capfirst }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -70,26 +64,20 @@
         <table class="table table-bordered table-striped assignment-summary">
             <thead>
                 <td></td>
-                {% for student, assignments in all_assignments.items %}
+                {% for student, assignments in summary.items %}
                 {% if forloop.counter == 1 %}
                 {% for assignment in assignments %}
-                <td><a target="_blank" href="{% url 'admin:courses_assignment_change' assignment.id %}">A{{ forloop.counter }}</a></td>
+                <td><a title="{{ assignment.title }}" target="_blank" href="{% url 'admin:courses_assignment_change' assignment.id %}">#{{ forloop.counter }}</a></td>
                 {% endfor %}
                 {% endif %}
                 {% endfor %}
             </thead>
             <tbody>
-                {% for student, assignments in all_assignments.items %}
+                {% for student, assignments in summary.items %}
                 <tr>
-                    <td>{{ student }}</td>
-                    {% for assignment, resolved in assignments.items %}
-                    {% if resolved %}
-                    <td class="text-success">
-                        <span class="glyphicon glyphicon-ok"></span>
-                    </td>
-                    {% else %}
-                    <td>-</td>
-                    {% endif %}
+                    <td>{{ student.get_full_name }}</td>
+                    {% for assignment, status in assignments.items %}
+                    <td>{{ status|capfirst }}</td>
                     {% endfor %}
                 </tr>
                 {% endfor %}

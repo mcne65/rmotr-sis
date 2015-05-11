@@ -58,17 +58,13 @@ class LectureDetailView(StudentRequiredMixin, LoginRequiredMixin,
 
         assignments = self.object.assignment_set.all()
         for a in assignments:
-            a.resolved = a.is_resolved_by_student(self.request.user)
+            a.status = a.get_status(self.request.user)
+            a.attempts = a.get_attempts(self.request.user)
         context['assignments'] = assignments
 
         # if user is staff show the summary of all assignments per student
         if self.request.user.is_staff:
-            all_assignments = {}
-            for student in self.object.course_instance.students.all():
-                all_assignments.setdefault(student, {})
-                for a in assignments:
-                    all_assignments[student][a] = a.is_resolved_by_student(student)
-            context['all_assignments'] = all_assignments
+            context['summary'] = self.object.get_assignment_summary()
 
         return context
 
