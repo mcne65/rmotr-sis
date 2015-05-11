@@ -14,7 +14,7 @@
                 <div class="alert alert-danger" role="alert">{{ form.source.errors.0|escape }}</div>
             {% endif %}
             <div class="form-group">
-                <textarea class="form-control" cols="40" id="id_source" name="source" rows="10">{{ form.source.value }}</textarea>
+                <textarea class="form-control" id="id_source" name="source">{{ form.source.value }}</textarea>
             </div>
             {% if previous_attempt %}
             <blockquote><small>You have started resolving this assignment on {{previous_attempt.start_datetime}}</small></blockquote>

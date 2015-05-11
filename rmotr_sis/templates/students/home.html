@@ -3,7 +3,7 @@
 {% block main_container %}
 <div class="row">
     <div class="jumbotron">
-      <h2>Hello, {{ user.profile.full_name }}!</h2>
+      <h2>Hello, {{ user.get_full_name }}!</h2>
       <p>Welcome to rmotr SIS. Here you can access all the information you need about courses, lectures, assignments and more. Please, start by clicking the course link below...</p>
       <p>
           {% for instance in courses %}

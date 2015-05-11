@@ -5,7 +5,8 @@ from taggit.managers import TaggableManager
 from django.db import models
 from django.utils import timezone
 
-from students.models import TimeStampedModel, Profile
+from accounts.models import User
+from rmotr_sis.models import TimeStampedModel
 
 DIFFICULTY_CHOICES = (
     ('VE', 'Very easy'),
@@ -29,7 +30,7 @@ class CourseInstance(TimeStampedModel):
     course = models.ForeignKey(Course)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
-    students = models.ManyToManyField(Profile)
+    students = models.ManyToManyField(User)
 
     def __str__(self):
         return '{} ({} - {})'.format(self.course.name,
@@ -83,7 +84,7 @@ class Assignment(TimeStampedModel):
 
 class AssignmentAttempt(TimeStampedModel):
     assignment = models.ForeignKey(Assignment)
-    student = models.ForeignKey(Profile)
+    student = models.ForeignKey(User)
     source = models.TextField()
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField(null=True, blank=True)

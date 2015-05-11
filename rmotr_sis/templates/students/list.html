@@ -31,13 +31,9 @@
             {% for person in object_list %}
             <tr>
                 <td>{{ person.id }}</td>
-                <td>{{ person.full_name }}</td>
+                <td>{{ person.get_full_name }}</td>
                 <td>{{ person.email }}</td>
-                {% if person.timezone %}
                 <td>{{ person.timezone }}</td>
-                {% else %}
-                <td>{{ person.lg_timezone }}</td>
-                {% endif %}
             </tr>
             {% endfor %}
         </tbody>

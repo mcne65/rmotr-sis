@@ -39,7 +39,7 @@ class CourseInstanceDetailView(StudentRequiredMixin, LoginRequiredMixin,
     template_name = 'courses/course_detail.html'
 
     def validate_user_in_courseinstance(self):
-        if self.request.user.profile not in self.object.students.all():
+        if self.request.user not in self.object.students.all():
             raise Http404
 
 
@@ -50,7 +50,7 @@ class LectureDetailView(StudentRequiredMixin, LoginRequiredMixin,
 
     def validate_user_in_courseinstance(self):
         instance = self.object.course_instance
-        if self.request.user.profile not in instance.students.all():
+        if self.request.user not in instance.students.all():
             raise Http404
 
     def get_context_data(self, **kwargs):
@@ -58,7 +58,7 @@ class LectureDetailView(StudentRequiredMixin, LoginRequiredMixin,
 
         assignments = self.object.assignment_set.all()
         for a in assignments:
-            a.resolved = a.is_resolved_by_student(self.request.user.profile)
+            a.resolved = a.is_resolved_by_student(self.request.user)
         context['assignments'] = assignments
 
         # if user is staff show the summary of all assignments per student
@@ -80,7 +80,7 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
     def get_initial(self):
         self.assignment = get_object_or_404(Assignment, pk=self.kwargs['pk'])
         allowed_students = self.assignment.lecture.course_instance.students.all()
-        if self.request.user.profile not in allowed_students:
+        if not self.request.user.is_staff and self.request.user not in allowed_students:
             raise Http404
         return {'source': self.assignment.source}
 
@@ -91,7 +91,7 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
         # is found, create a new one.
         obj, created = AssignmentAttempt.objects.get_or_create(
             assignment=self.assignment,
-            student=self.request.user.profile,
+            student=self.request.user,
             resolved=False,
             end_datetime=None,
             defaults={'start_datetime': datetime.now()}
@@ -114,7 +114,7 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
 
         # finish the attempt and check if it's a valid solution or not
         attempt = AssignmentAttempt.objects.get(
-            assignment=self.assignment, student=self.request.user.profile,
+            assignment=self.assignment, student=self.request.user,
             end_datetime=None, resolved=False)
         attempt.source = result['code']
         attempt.output = result['output']
