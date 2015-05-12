@@ -2,7 +2,9 @@ body {
   min-height: 2000px;
   padding-top: 70px;
 }
-
+div.message-alert {
+    margin-bottom: 0;
+}
 div.row {
   margin-bottom: 10px;
 }

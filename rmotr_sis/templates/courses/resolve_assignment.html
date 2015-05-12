@@ -19,7 +19,7 @@
             {% if previous_attempt %}
             <blockquote><small>You have started resolving this assignment on {{previous_attempt.start_datetime}}</small></blockquote>
             {% endif %}
-            <a class="btn btn-default" href="{% url 'courses:lecture_detail' lecture.id %}">« Back to assignments</a>
+            <a class="btn btn-default" href="{{ next }}">Cancel</a>
             <button type="submit" class="btn btn-success">Submit</button>
         </form>
     </div>

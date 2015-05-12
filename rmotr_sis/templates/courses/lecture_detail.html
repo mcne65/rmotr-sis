@@ -39,7 +39,7 @@
                 {% for assignment in assignments %}
                 <tr>
                     <td>#{{ forloop.counter }}</td>
-                    <td><a href="{% url 'courses:resolve_assignment' assignment.id %}">{{ assignment.title }}</a></td>
+                    <td><a href="{% url 'assignments:resolve_assignment' assignment.id %}?next={% url 'courses:lecture_detail' lecture.id %}">{{ assignment.title }}</a></td>
                     <td>{{ assignment.get_difficulty_display }}</td>
                     <td>
                         {% for tag in assignment.tags.all %}
@@ -68,7 +68,7 @@
                 {% for student, assignments in summary.items %}
                 {% if forloop.counter == 1 %}
                 {% for assignment in assignments %}
-                <td><a title="{{ assignment.title }}" target="_blank" href="{% url 'admin:courses_assignment_change' assignment.id %}">#{{ forloop.counter }}</a></td>
+                <td><a title="{{ assignment.title }}" target="_blank" href="{% url 'admin:assignments_assignment_change' assignment.id %}">#{{ forloop.counter }}</a></td>
                 {% endfor %}
                 {% endif %}
                 {% endfor %}

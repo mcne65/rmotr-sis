@@ -1,18 +1,9 @@
-from __future__ import division, unicode_literals, absolute_import
-
-from datetime import datetime
-
 from braces.views import LoginRequiredMixin
 
-from django.core.urlresolvers import reverse
-from django.contrib import messages
-from django.views.generic import DetailView, FormView
-from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.views.generic import DetailView
+from django.http import Http404
 
-from .models import Lecture, CourseInstance, Assignment, AssignmentAttempt
-from .forms import ResolveAssignmentForm
-from .utils import run_code
+from .models import Lecture, CourseInstance
 
 
 class StudentRequiredMixin(object):
@@ -56,7 +47,7 @@ class LectureDetailView(StudentRequiredMixin, LoginRequiredMixin,
     def get_context_data(self, **kwargs):
         context = super(LectureDetailView, self).get_context_data(**kwargs)
 
-        assignments = self.object.assignment_set.all()
+        assignments = self.object.assignments.all()
         for a in assignments:
             a.status = a.get_status(self.request.user)
             a.attempts = a.get_attempts(self.request.user)
@@ -67,66 +58,3 @@ class LectureDetailView(StudentRequiredMixin, LoginRequiredMixin,
             context['summary'] = self.object.get_assignment_summary()
 
         return context
-
-
-class ResolveAssignmentView(LoginRequiredMixin, FormView):
-    form_class = ResolveAssignmentForm
-    template_name = 'courses/resolve_assignment.html'
-
-    def get_initial(self):
-        self.assignment = get_object_or_404(Assignment, pk=self.kwargs['pk'])
-        allowed_students = self.assignment.lecture.course_instance.students.all()
-        if not self.request.user.is_staff and self.request.user not in allowed_students:
-            raise Http404
-        return {'source': self.assignment.source}
-
-    def get_context_data(self, **kwargs):
-        context = super(ResolveAssignmentView, self).get_context_data(**kwargs)
-
-        # try to find an unfinished attempt for this assignment. If nothing
-        # is found, create a new one.
-        obj, created = AssignmentAttempt.objects.get_or_create(
-            assignment=self.assignment,
-            student=self.request.user,
-            resolved=False,
-            end_datetime=None,
-            defaults={'start_datetime': datetime.now()}
-        )
-        if not created:
-            context['previous_attempt'] = obj
-        context['lecture'] = self.assignment.lecture
-
-        return context
-
-    def get_success_url(self):
-        return reverse('courses:lecture_detail',
-                       kwargs={'pk': self.assignment.lecture.id})
-
-    def form_valid(self, form):
-
-        code = '{}\n\n{}'.format(form.cleaned_data['source'],
-                                 self.assignment.footer)
-        result = run_code(code)
-
-        # finish the attempt and check if it's a valid solution or not
-        attempt = AssignmentAttempt.objects.get(
-            assignment=self.assignment, student=self.request.user,
-            end_datetime=None, resolved=False)
-        attempt.source = result['code']
-        attempt.output = result['output']
-        attempt.errors = result.get('errors')
-        if result.get('time'):
-            attempt.execution_time = float(result['time'].rstrip('\n'))
-        if not attempt.errors and not attempt.output:
-            # no assert failed, the solution is correct
-            attempt.resolved = True
-            messages.success(
-                self.request, 'Excelent! You have resolved the assignment.')
-        else:
-            messages.error(
-                self.request,
-                'Ouch! The solution you posted was incorrect, please try again.')
-        attempt.end_datetime = datetime.now()
-        attempt.save()
-
-        return HttpResponseRedirect(self.get_success_url())

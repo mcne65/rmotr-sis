@@ -1,5 +1,3 @@
-from __future__ import division, unicode_literals, absolute_import
-
 import requests
 
 
