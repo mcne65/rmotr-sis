@@ -50,7 +50,7 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
         next = self.request.GET.get('next')
         if next:
             return next
-        return reverse('students:student_home')
+        return reverse('student_home')
 
     def form_valid(self, form):
 
