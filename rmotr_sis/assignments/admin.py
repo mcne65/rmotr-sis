@@ -13,4 +13,4 @@ class AssignmentAttemptAdmin(admin.ModelAdmin):
 class AssignmentAdmin(admin.ModelAdmin):
     list_display = ('title', 'difficulty', 'tag_list')
     list_filter = ('difficulty', )
-    search_fields = ('id', 'title')
+    search_fields = ('id', 'title', 'tags__name')
