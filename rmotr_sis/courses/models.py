@@ -40,6 +40,7 @@ class Lecture(TimeStampedModel):
     video_url = models.CharField(max_length=500, blank=True, null=True)
     slides_url = models.CharField(max_length=500, blank=True, null=True)
     assignments = models.ManyToManyField(Assignment, blank=True)
+    published = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
