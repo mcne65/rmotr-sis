@@ -33,6 +33,17 @@ class CourseInstanceDetailView(StudentRequiredMixin, LoginRequiredMixin,
         if self.request.user not in self.object.students.all():
             raise Http404
 
+    def get_context_data(self, **kwargs):
+        context = super(CourseInstanceDetailView, self).get_context_data(**kwargs)
+
+        # if user is staff show all lectures, otherwise show only published ones
+        if self.request.user.is_staff:
+            context['lectures'] = self.object.lecture_set.all()
+        else:
+            context['lectures'] = self.object.lecture_set.filter(published=True)
+
+        return context
+
 
 class LectureDetailView(StudentRequiredMixin, LoginRequiredMixin,
                         DetailView):
@@ -45,6 +56,10 @@ class LectureDetailView(StudentRequiredMixin, LoginRequiredMixin,
             raise Http404
 
     def get_context_data(self, **kwargs):
+        if not self.object.published and not self.request.user.is_staff:
+            # only staff uses can see not published lectures
+            raise Http404
+
         context = super(LectureDetailView, self).get_context_data(**kwargs)
 
         assignments = self.object.assignments.all()

@@ -13,7 +13,7 @@
         <h4>Lectures</h4>
         {% if object.lecture_set.all %}
         <table class="table table-striped">
-            {% for lecture in object.lecture_set.all %}
+            {% for lecture in lectures %}
             <tr>
                 <td>{{ lecture.date }}</td>
                 <td><a href="{% url 'courses:lecture_detail' lecture.id %}">{{ lecture.title }}</a></td>
