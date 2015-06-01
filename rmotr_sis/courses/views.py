@@ -3,6 +3,8 @@ from braces.views import LoginRequiredMixin
 from django.views.generic import DetailView
 from django.http import Http404
 
+import markdown
+
 from .models import Lecture, CourseInstance
 
 
@@ -46,6 +48,7 @@ class LectureDetailView(StudentRequiredMixin, LoginRequiredMixin,
 
     def get_context_data(self, **kwargs):
         context = super(LectureDetailView, self).get_context_data(**kwargs)
+        context['html_content'] = markdown.markdown(self.object.content)
 
         assignments = self.object.assignments.all()
         for a in assignments:
