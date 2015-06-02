@@ -8,6 +8,9 @@ rsync -avi --exclude '*__pycache__*' --exclude '*.pyc' rmotr_sis/ root@sis.rmotr
 echo "====== COLLECTING STATIC FILES ======"
 ssh root@sis.rmotr.com 'PYTHONPATH=/opt/rmotr-sis/rmotr_sis/ DJANGO_SETTINGS_MODULE=rmotr_sis.settings.production python /opt/rmotr-sis/rmotr_sis/manage.py collectstatic --noinput'
 
+echo "====== INSTALLING DEPENDENCIES ======"
+ssh root@sis.rmotr.com 'pip install -r /opt/rmotr-sis/requirements/base.txt'
+
 echo "====== MIGRATING DATABASE ======"
 ssh root@sis.rmotr.com 'PYTHONPATH=/opt/rmotr-sis/rmotr_sis/ DJANGO_SETTINGS_MODULE=rmotr_sis.settings.production python /opt/rmotr-sis/rmotr_sis/manage.py migrate'
 
