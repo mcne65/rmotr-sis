@@ -12,8 +12,7 @@
 <div class="row">
     <div class="col-sm-12">
         {% if lecture.content %}
-        <h4>Lecture content</h4>
-        <p> {{ lecture.content }} </p>
+        <p> {{ html_content|safe }} </p>
         {% endif %}
 
         {% if lecture.video_url %}
