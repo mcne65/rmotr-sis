@@ -62,6 +62,7 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
         attempt = AssignmentAttempt.objects.get(
             assignment=self.assignment, student=self.request.user,
             end_datetime=None, resolved=False)
+        attempt.student_source = form.cleaned_data['source']
         attempt.source = result['code']
         attempt.output = result['output']
         attempt.errors = result.get('errors')
