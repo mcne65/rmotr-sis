@@ -41,7 +41,7 @@
 </div>
 
 <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-12">
         <h4>Assignments</h4>
         {% if assignments %}
         <table class="table table-striped">
@@ -58,6 +58,11 @@
                     </td>
                     <td>{{ assignment.attempts}} attempts</td>
                     <td>{{ assignment.status|capfirst }}</td>
+                    <td>
+                        {% if assignment.status != 'resolved' %}
+                        <a href="{% url 'assignments:resolve_assignment' assignment.id %}?next={% url 'courses:lecture_detail' lecture.id %}" class="btn btn-success btn-xs">Attempt to solve</a>
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
