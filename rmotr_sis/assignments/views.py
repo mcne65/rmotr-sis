@@ -23,10 +23,10 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
         # check if the user has permissions to see this assignment
         user = self.request.user
         lectures = self.assignment.lecture_set.all()
-        for lecture in lectures:
-            if user.is_staff or lecture.course_instance.is_student(user):
-                return {'source': self.assignment.source}
-        raise Http404
+        if (not user.is_staff and
+                not any([l.course_instance.is_student(user) for l in lectures])):
+            raise Http404
+        return {'source': self.assignment.source}
 
     def get_context_data(self, **kwargs):
         context = super(ResolveAssignmentView, self).get_context_data(**kwargs)
