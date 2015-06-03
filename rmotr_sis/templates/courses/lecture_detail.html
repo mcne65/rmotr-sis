@@ -5,6 +5,11 @@
 {% block main_container %}
 <div class="row">
     {% if user.is_staff %}
+    {% if not lecture.published %}
+    <div class="col-sm-12">
+        <div class="alert alert-danger" role="alert">Warning: This class has <b>NOT</b> been published yet.</div>
+    </div>
+    {% endif %}
     <div class="col-sm-12 text-right">
         <a href="{% url lecture|admin_url:'change' lecture.id %}" target="_blank" class="btn btn-danger">Admin Edit</a>
     </div>
