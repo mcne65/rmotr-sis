@@ -53,10 +53,13 @@ class Assignment(TimeStampedModel):
 class AssignmentAttempt(TimeStampedModel):
     assignment = models.ForeignKey(Assignment)
     student = models.ForeignKey(User)
-    source = models.TextField()
+    student_source = models.TextField()
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField(null=True, blank=True)
+    resolved = models.BooleanField(default=False)
+
+    # execution details
+    source = models.TextField()
     output = models.TextField(null=True, blank=True)
     errors = models.TextField(null=True, blank=True)
     execution_time = models.FloatField(null=True, blank=True)
-    resolved = models.BooleanField(default=False)
