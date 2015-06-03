@@ -1,8 +1,14 @@
 {% extends 'bare.html' %}
 
-{% block main_container %}
+{% load rmotr_sis__utils %}
 
+{% block main_container %}
 <div class="row">
+    {% if user.is_staff %}
+    <div class="col-sm-12 text-right">
+        <a href="{% url lecture|admin_url:'change' lecture.id %}" target="_blank" class="btn btn-danger">Admin Edit</a>
+    </div>
+    {% endif %}
     <div class="col-sm-12">
         <h3>{{ lecture.title }}</h3>
         <p>{{ lecture.date }}</p>

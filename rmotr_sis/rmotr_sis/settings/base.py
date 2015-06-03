@@ -25,6 +25,7 @@ INSTALLED_APPS = (
     'taggit',
 
     # Own apps
+    'rmotr_sis',
     'accounts',
     'students',
     'courses',
