@@ -36,7 +36,7 @@ class Command(BaseCommand):
             reader = smartcsv.reader(f, columns=CSV_STRUCTURE)
             counter = 0
             for row in reader:
-                user = User.objects.create(**row)
+                user = User(**row)
 
                 # generate random password
                 password = self.get_random_passwd()
