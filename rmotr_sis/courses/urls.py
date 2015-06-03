@@ -6,6 +6,6 @@ urlpatterns = patterns('courses.views',
     url(r'^(?P<pk>[0-9]+)$',
         views.CourseInstanceDetailView.as_view(), name="course_detail"),
 
-    url(r'^lectures/(?P<pk>[0-9]+)/$',
+    url(r'^lectures/(?P<pk>[0-9]+)$',
         views.LectureDetailView.as_view(), name="lecture_detail"),
 )
