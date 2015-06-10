@@ -57,7 +57,16 @@
                         {% endfor %}
                     </td>
                     <td>{{ assignment.attempts}} attempts</td>
-                    <td>{{ assignment.status|capfirst }}</td>
+                    <td>
+                        {% if assignment.status == 'resolved' %}
+                          <i class="fa fa-check" style="color: #5cb85c"></i>
+                        {% elif assignment.status == 'failed' %}
+                          <i class="fa fa-times" style="color: red"></i>
+                        {% elif assignment.status == 'pending' or assignment.status == 'unsubmitted'%}
+                          <i class="fa fa-clock-o"></i>
+                        {% endif %}
+                        {{ assignment.status|capfirst }}
+                    </td>
                     <td>
                         {% if assignment.status != 'resolved' %}
                         <a href="{% url 'assignments:resolve_assignment' assignment.id %}?next={% url 'courses:lecture_detail' lecture.id %}" class="btn btn-success btn-xs">Attempt to solve</a>
@@ -93,7 +102,15 @@
                 <tr>
                     <td>{{ student.get_full_name }}</td>
                     {% for assignment, status in assignments.items %}
-                    <td>{{ status|capfirst }}</td>
+                    <td>
+                        {% if status == 'resolved' %}
+                          <i class="fa fa-check" style="color: #5cb85c"></i>
+                        {% elif status == 'failed' %}
+                          <i class="fa fa-times" style="color: red"></i>
+                        {% elif status == 'pending' or status == 'unsubmitted'%}
+                          <i class="fa fa-clock-o"></i>
+                        {% endif %}
+                    </td>
                     {% endfor %}
                 </tr>
                 {% endfor %}

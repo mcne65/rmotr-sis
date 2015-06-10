@@ -35,11 +35,13 @@ class Assignment(TimeStampedModel):
            for certain student.
         """
         qs = AssignmentAttempt.objects.filter(student=student, assignment=self)
-        if qs.count() == 0:
+        count = qs.count()
+        if count == 0:
             return 'pending'
-        qs = qs.filter(resolved=True)
-        if qs.exists():
+        if qs.filter(resolved=True).exists():
             return 'resolved'
+        if count == 1 and qs.filter(execution_time=None).exists():
+            return 'unsubmitted'
         return 'failed'
 
     def get_attempts(self, student):
