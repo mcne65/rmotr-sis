@@ -23,6 +23,7 @@ INSTALLED_APPS = (
 
     # Thirt part apps
     'taggit',
+     'dbbackup',
 
     # Own apps
     'rmotr_sis',
@@ -48,8 +49,11 @@ WSGI_APPLICATION = 'rmotr_sis.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'rmotr_sis.db'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'rmotr_sis',
+        'USER': 'rmotr',
+        'PASSWORD': 'rmotr',
+        'HOST': 'localhost'
     }
 }
 

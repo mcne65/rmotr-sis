@@ -6,3 +6,4 @@ django-taggit==0.14.0
 requests==2.7.0
 Markdown==2.6.2
 smartcsv==0.2.3
+django-dbbackup==2.0.4
