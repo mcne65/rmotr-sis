@@ -40,7 +40,7 @@ class Assignment(TimeStampedModel):
             return 'pending'
         if qs.filter(resolved=True).exists():
             return 'resolved'
-        if count == 1 and qs.filter(execution_time=None):
+        if count == 1 and qs.filter(execution_time=None).exists():
             return 'unsubmitted'
         return 'failed'
 
