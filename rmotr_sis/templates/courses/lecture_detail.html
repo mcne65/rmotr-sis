@@ -103,6 +103,7 @@
                     <td>{{ student.get_full_name }}</td>
                     {% for assignment, status in assignments.items %}
                     <td>
+                        <a target="_blank" href="{% url 'admin:assignments_assignmentattempt_changelist' %}?student__id={{student.id}}&assignment__id={{assignment.id}}">
                         {% if status == 'resolved' %}
                           <i class="fa fa-check" style="color: #5cb85c"></i>
                         {% elif status == 'failed' %}
@@ -110,6 +111,7 @@
                         {% elif status == 'pending' or status == 'unsubmitted'%}
                           <i class="fa fa-clock-o"></i>
                         {% endif %}
+                        </a>
                     </td>
                     {% endfor %}
                 </tr>

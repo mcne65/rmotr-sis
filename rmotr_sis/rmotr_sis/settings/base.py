@@ -51,8 +51,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'rmotr_sis',
-        'USER': 'rmotr',
-        'PASSWORD': 'rmotr',
+        'USER': 'root',
+        'PASSWORD': 'root',
         'HOST': 'localhost'
     }
 }
