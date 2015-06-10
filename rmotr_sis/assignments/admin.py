@@ -7,6 +7,8 @@ from .models import Assignment, AssignmentAttempt
 class AssignmentAttemptAdmin(admin.ModelAdmin):
     list_display = ('assignment', 'student', 'start_datetime',
                     'end_datetime', 'resolved')
+    list_filter = ('resolved',)
+    search_fields = ('assignment__title', 'student__username')
 
 
 @admin.register(Assignment)
