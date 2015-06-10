@@ -65,10 +65,7 @@ class LectureDetailView(StudentRequiredMixin, LoginRequiredMixin,
         context = super(LectureDetailView, self).get_context_data(**kwargs)
         context['html_content'] = markdown.markdown(self.object.content)
 
-        assignments = self.object.assignments.all()
-        for a in assignments:
-            a.status = a.get_status(self.request.user)
-            a.attempts = a.get_attempts(self.request.user)
+        assignments = self.object.get_assignments_for_user(self.request.user)
         context['assignments'] = assignments
 
         # if user is staff show the summary of all assignments per student

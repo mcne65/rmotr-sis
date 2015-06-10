@@ -42,6 +42,13 @@ class Lecture(TimeStampedModel):
     assignments = models.ManyToManyField(Assignment, blank=True)
     published = models.BooleanField(default=False)
 
+    def get_assignments_for_user(self, user):
+        assignments = self.assignments.all()
+        for a in assignments:
+            a.status = a.get_status(user)
+            a.attempts = a.get_attempts(user)
+        return assignments
+
     def __str__(self):
         return self.title
 
