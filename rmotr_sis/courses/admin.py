@@ -9,6 +9,8 @@ class LectureAdmin(admin.ModelAdmin):
     list_filter = ('published',)
     search_fields = ('title',)
 
+    raw_id_fields = ("assignments",)
+
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
