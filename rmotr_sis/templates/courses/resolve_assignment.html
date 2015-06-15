@@ -3,9 +3,77 @@
 
 {% block extra_header_styles %}
     <link href="{% static 'css/codemirror.css' %}" rel="stylesheet">
+    <link href="{% static 'bower_components/prism/themes/prism.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block extra_hidden_html %}
+<div class="modal fade bs-example-modal-lg js-assignment-modal" id="assignmentsModal" tabindex="-1" role="dialog" aria-labelledby="assignmentsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title js-assignment-modal-title" id="assignmentsModalLabel"></h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary js-use-source-code">Use this code</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="display: none">
+    <div class='js-original-source-code'>{{ form.source.value }}</div>
+    {% if previous_attempts %}
+        {% for attempt in previous_attempts %}
+            <div id="assignment-source-{{attempt.id}}">
+                <pre><code class="language-python">{{attempt.student_source}}</code></pre>
+            </div>
+            <div id="assignment-source-{{attempt.id}}-verbatim">{{attempt.student_source}}</div>
+        {% endfor %}
+    {% endif %}
+    </div>
 {% endblock %}
 
 {% block main_container %}
+{% if previous_attempts %}
+    <div class="row" style="margin-bottom: 20px">
+        <div class="col-sm-12">
+            <h3>Previous attempts:</h3>
+            <ul>
+                {% for attempt in previous_attempts %}
+                <li>
+                    <a href="#"
+                       class="js-prompt-previously-solved-assignment"
+                       data-attempt-id="{{attempt.id}}"
+                       style="margin-right: 5px">
+                        Assignment
+                        {% if attempt.resolved %}
+                            successfull 
+                        {% else %}
+                            failed 
+                        {% endif %}
+                        on {{attempt.end_datetime}} (UTC).
+                    </a>
+                    {% if attempt.resolved %}
+                        <i class="fa fa-check" style="color: #5cb85c"></i>
+                    {% else %}
+                        <i class="fa fa-times" style="color: red"></i>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endif %}
+
+<div class="row">
+    <div class="col-sm-12">
+        <button type="button" class="btn btn-default js-use-original-source-code-button" style="display:none">Use original source code</button>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-sm-12">
         <form method="POST">
@@ -29,12 +97,8 @@
 {% block extra_footer_scripts %}
     <script src="{% static 'js/codemirror.js' %}"></script>
     <script src="{% static 'js/python.js' %}"></script>
-    <script type="text/javascript">
-        var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("id_source"), {
-            lineNumbers: true,
-            mode: "python",
-            indentWithTabs: false,
-            indentUnit: 4,
-        });
-    </script>
+    <script src="{% static 'bower_components/prism/prism.js' %}"></script>
+    <script src="{% static 'bower_components/prism/components/prism-python.min.js' %}"></script>
+
+    <script src="{% static 'js/assignments.js' %}"></script>
 {% endblock %}

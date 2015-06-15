@@ -43,6 +43,11 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
         )
         if not created:
             context['previous_attempt'] = obj
+        context['previous_attempts'] = AssignmentAttempt.objects.filter(
+            assignment=self.assignment,
+            student=self.request.user,
+            end_datetime__isnull=False,
+        )
 
         return context
 
