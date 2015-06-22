@@ -23,6 +23,9 @@ class Assignment(TimeStampedModel):
 
     tags = TaggableManager()
 
+    class Meta:
+        ordering = ['difficulty']
+
     def __str__(self):
         return self.title
 

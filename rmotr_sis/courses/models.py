@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from django.db import models
 from django.utils import timezone
 
@@ -56,11 +58,11 @@ class Lecture(TimeStampedModel):
         """"Returns all assignments per student with the current
             assignment status.
         """
-        summary = {}
+        summary = OrderedDict()
         students = self.course_instance.students.all()
         assignments = self.assignments.all()
         for student in students:
-            summary.setdefault(student, {})
+            summary.setdefault(student, OrderedDict())
             for a in assignments:
                 summary[student][a] = a.get_status(student)
         return summary
