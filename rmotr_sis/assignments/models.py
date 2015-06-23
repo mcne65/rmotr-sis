@@ -6,17 +6,17 @@ from accounts.models import User
 from rmotr_sis.models import TimeStampedModel
 
 DIFFICULTY_CHOICES = (
-    ('VE', 'Very easy'),
-    ('E', 'Easy'),
-    ('M', 'Medium'),
-    ('H', 'Hard'),
-    ('VH', 'Very hard'),
+    ('0-VE', 'Very easy'),
+    ('1-E', 'Easy'),
+    ('2-M', 'Medium'),
+    ('3-H', 'Hard'),
+    ('4-VH', 'Very hard'),
 )
 
 
 class Assignment(TimeStampedModel):
     title = models.CharField(max_length=255)
-    difficulty = models.CharField(max_length=2, choices=DIFFICULTY_CHOICES)
+    difficulty = models.CharField(max_length=4, choices=DIFFICULTY_CHOICES)
     source = models.TextField()
     footer = models.TextField()
     solution = models.TextField(blank=True, null=True)
