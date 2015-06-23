@@ -25,6 +25,7 @@ class User(TimeStampedModel, AbstractUser):
             # is_staff
             # is_active
             # date_joined
+            # last_login
 
        [2] AbstractUser code
             # https://github.com/django/django/blob/master/django/contrib/auth/models.py#L288
@@ -36,3 +37,4 @@ class User(TimeStampedModel, AbstractUser):
     cloud9_handle = models.CharField(max_length=50, blank=True, null=True)
     timezone = models.CharField(max_length=150, choices=TIMEZONE_CHOICES,
                                 blank=True, null=True)
+    last_activity = models.DateTimeField(blank=True, null=True)
