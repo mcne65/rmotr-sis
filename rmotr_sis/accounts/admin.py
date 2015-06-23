@@ -15,7 +15,8 @@ class AccountsUserAdmin(UserAdmin):
                                          'timezone')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined',
+                                           'last_activity')}),
     )
 
 admin.site.register(User, AccountsUserAdmin)
