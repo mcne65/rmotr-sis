@@ -26,6 +26,7 @@
             <th>full name</th>
             <th>email</th>
             <th>timezone</th>
+            <th>last activity</th>
         </thead>
         <tbody>
             {% for person in object_list %}
@@ -33,7 +34,8 @@
                 <td>{{ person.id }}</td>
                 <td>{{ person.get_full_name }}</td>
                 <td>{{ person.email }}</td>
-                <td>{{ person.timezone }}</td>
+                <td>{{ person.timezone|default:"---" }}</td>
+                <td>{{ person.last_activity|default:"---" }}</td>
             </tr>
             {% endfor %}
         </tbody>

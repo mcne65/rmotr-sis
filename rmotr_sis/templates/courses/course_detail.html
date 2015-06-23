@@ -32,7 +32,12 @@
         <h4>Students in this course:</h4>
         <ul>
             {% for student in object.students.all %}
-            <li>{{ student.get_full_name }}</li>
+            <li>
+                {{ student.get_full_name }}
+                {% if user.is_staff and student.last_activity %}
+                    <span class="label label-primary">{{ student.last_activity }}</span>
+                {% endif %}
+            </li>
             {% endfor %}
         </ul>
         {% else %}
