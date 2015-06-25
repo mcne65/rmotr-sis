@@ -37,42 +37,17 @@
 {% endblock %}
 
 {% block main_container %}
-{% if previous_attempts %}
-    <div class="row" style="margin-bottom: 20px">
-        <div class="col-sm-12">
-            <h3>Previous attempts:</h3>
-            <ul>
-                {% for attempt in previous_attempts %}
-                <li>
-                    <a href="#"
-                       class="js-prompt-previously-solved-assignment"
-                       data-attempt-id="{{attempt.id}}"
-                       style="margin-right: 5px">
-                        Assignment
-                        {% if attempt.resolved %}
-                            successfull 
-                        {% else %}
-                            failed 
-                        {% endif %}
-                        on {{attempt.end_datetime}} (UTC).
-                    </a>
-                    {% if attempt.resolved %}
-                        <i class="fa fa-check" style="color: #5cb85c"></i>
-                    {% else %}
-                        <i class="fa fa-times" style="color: red"></i>
-                    {% endif %}
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-{% endif %}
 
-<div class="row">
-    <div class="col-sm-12">
-        <button type="button" class="btn btn-default js-use-original-source-code-button" style="display:none">Use original source code</button>
-    </div>
-</div>
+{% if execution %}
+    {% if execution.success %}
+        <div class="alert alert-success" role="alert"><strong>Well done!</strong> You resolved the assignment</div>
+    {% elif execution.traceback %}
+        <div class="alert alert-danger" role="alert"><strong>Oh snap!</strong> There was an exception while executing your code</div>
+        <pre>{{execution.traceback}}</pre>
+    {% else %}
+        <div class="alert alert-danger" role="alert"><strong>Oh snap!</strong> Your solution is not passing some of our test cases</div>
+    {% endif %}
+{% endif %}
 
 <div class="row">
     <div class="col-sm-12">
@@ -87,11 +62,52 @@
             {% if previous_attempt %}
             <blockquote><small>You have started resolving this assignment on {{previous_attempt.start_datetime}}</small></blockquote>
             {% endif %}
-            <a class="btn btn-default" href="{{ next }}">Cancel</a>
+            {% if next %}
+            <a class="btn btn-default" href="{{ next }}">« Back to the lecture</a>
+            {% endif %}
             <button type="submit" class="btn btn-success">Submit</button>
         </form>
     </div>
 </div>
+
+{% if previous_attempts %}
+<div class="row" style="margin-bottom: 20px;">
+    <div class="col-sm-12">
+        <h3>Previous attempts:</h3>
+        <ul>
+            {% for attempt in previous_attempts %}
+            <li>
+                <a href="#"
+                   class="js-prompt-previously-solved-assignment"
+                   data-attempt-id="{{attempt.id}}"
+                   style="margin-right: 5px">
+                    Assignment
+                    {% if attempt.resolved %}
+                        successfull
+                    {% else %}
+                        failed
+                    {% endif %}
+                    on {{attempt.end_datetime}} (UTC).
+                </a>
+                {% if attempt.resolved %}
+                    <i class="fa fa-check" style="color: #5cb85c"></i>
+                {% else %}
+                    <i class="fa fa-times" style="color: red"></i>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <button type="button" class="btn btn-default js-use-original-source-code-button"
+                style="display:none">Use original source code</button>
+    </div>
+</div>
+{% endif %}
+
 {% endblock %}
 
 {% block extra_footer_scripts %}
