@@ -39,14 +39,19 @@
 {% block main_container %}
 
 {% if execution %}
+    <div class="row">
+        <div class="col-sm-12">
     {% if execution.success %}
         <div class="alert alert-success" role="alert"><strong>Well done!</strong> You resolved the assignment</div>
-    {% elif execution.traceback %}
-        <div class="alert alert-danger" role="alert"><strong>Oh snap!</strong> There was an exception while executing your code</div>
-        <pre>{{execution.traceback}}</pre>
     {% else %}
-        <div class="alert alert-danger" role="alert"><strong>Oh snap!</strong> Your solution is not passing some of our test cases</div>
+        <div class="alert alert-danger" role="alert"><strong>Oh snap!</strong> Something went wrong while executing your code</div>
+        <div>
+            <pre class="execution-traceback">{{execution.traceback}}</pre>
+            <button type="button" class="pull-right btn btn-default js-show-execution-errors">Toggle errors</button>
+        </div>
     {% endif %}
+        </div>
+    </div>
 {% endif %}
 
 <div class="row">

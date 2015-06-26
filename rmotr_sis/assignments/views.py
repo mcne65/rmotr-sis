@@ -1,10 +1,7 @@
 from datetime import datetime
 
-from django.conf import settings
-from django.core.urlresolvers import reverse
-from django.contrib import messages
 from django.views.generic import FormView
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 
 from braces.views import LoginRequiredMixin
@@ -33,17 +30,6 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
         context = super(ResolveAssignmentView, self).get_context_data(**kwargs)
         context['next'] = self.request.GET.get('next')
 
-        # # try to find an unfinished attempt for this assignment. If nothing
-        # # is found, create a new one.
-        # obj, created = AssignmentAttempt.objects.get_or_create(
-        #     assignment=self.assignment,
-        #     student=self.request.user,
-        #     resolved=False,
-        #     end_datetime=None,
-        #     defaults={'start_datetime': datetime.now()}
-        # )
-        # if not created:
-        #     context['previous_attempt'] = obj
         context['previous_attempts'] = AssignmentAttempt.objects.filter(
             assignment=self.assignment,
             student=self.request.user,
@@ -52,38 +38,23 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
 
         return context
 
-    # def get_success_url(self):
-        # next = self.request.GET.get('next')
-        # if next:
-        #     return next
-        # return reverse('student_home')
-
     @staticmethod
     def build_code_to_execute(source, footer):
         code = """
-{source}
+{student_source}
 
 import sys
-from traceback import *
+import unittest
 
-try:
-    {footer}
-except AssertionError as e:
-    print("{assertion_secret}")
-    raise e
-except Exception as e:
-    etype, value, tb = sys.exc_info()
-    print(''.join(format_exception(etype, value, tb)[-2:]))
-    raise e
-else:
-    print("{success_secret}")
+{our_tests}
+
+suite = unittest.defaultTestLoader.loadTestsFromModule(sys.modules[__name__])
+result = suite.run(unittest.TestResult())
+
+if not result.wasSuccessful():
+  unittest.TextTestRunner(stream=sys.stderr, verbosity=2).run(suite)
         """
-        return code.format(**{
-            'source': source,
-            'footer': footer,
-            'assertion_secret': settings.ASSIGNMENTS_ASSERTION_SECRET,
-            'success_secret': settings.ASSIGNMENTS_SUCCESS_SECRET
-        })
+        return code.format(**{'student_source': source, 'our_tests': footer})
 
     def form_valid(self, form):
 
@@ -91,6 +62,7 @@ else:
             form.cleaned_data['source'], self.assignment.footer)
         result = run_code(code)
 
+        # register a new attempt for this assignemnt
         attempt = AssignmentAttempt(
             assignment=self.assignment,
             student=self.request.user,
@@ -107,14 +79,13 @@ else:
             attempt.execution_time = float(result['time'].rstrip('\n'))
 
         context = self.get_context_data(form=form)
-
-        if settings.ASSIGNMENTS_SUCCESS_SECRET in result['output']:
-            context['execution'] = {'success': True, 'traceback': None}
-            attempt.resolved = True
-        elif settings.ASSIGNMENTS_ASSERTION_SECRET in result['output']:
-            context['execution'] = {'success': False, 'traceback': None}
+        context['execution'] = {'success': True, 'traceback': None}
+        if result.get('errors'):
+            # tests execution failed, send traceback to the template
+            context['execution'] = {'success': False, 'traceback': result['errors']}
         else:
-            context['execution'] = {'success': False, 'traceback': result['output']}
+            # mark the assignment as resolved
+            attempt.resolved = True
 
         attempt.save()
 

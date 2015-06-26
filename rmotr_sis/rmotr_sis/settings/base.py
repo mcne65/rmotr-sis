@@ -78,7 +78,3 @@ TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
 # Auth
 LOGIN_REDIRECT_URL = '/'
 AUTH_USER_MODEL = 'accounts.User'
-
-# Redefine this in production settings.
-ASSIGNMENTS_ASSERTION_SECRET = 'foobar'
-ASSIGNMENTS_SUCCESS_SECRET = 'helloworld'
