@@ -1,9 +1,7 @@
 from datetime import datetime
 
-from django.core.urlresolvers import reverse
-from django.contrib import messages
 from django.views.generic import FormView
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 
 from braces.views import LoginRequiredMixin
@@ -32,17 +30,6 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
         context = super(ResolveAssignmentView, self).get_context_data(**kwargs)
         context['next'] = self.request.GET.get('next')
 
-        # try to find an unfinished attempt for this assignment. If nothing
-        # is found, create a new one.
-        obj, created = AssignmentAttempt.objects.get_or_create(
-            assignment=self.assignment,
-            student=self.request.user,
-            resolved=False,
-            end_datetime=None,
-            defaults={'start_datetime': datetime.now()}
-        )
-        if not created:
-            context['previous_attempt'] = obj
         context['previous_attempts'] = AssignmentAttempt.objects.filter(
             assignment=self.assignment,
             student=self.request.user,
@@ -51,38 +38,55 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
 
         return context
 
-    def get_success_url(self):
-        next = self.request.GET.get('next')
-        if next:
-            return next
-        return reverse('student_home')
+    @staticmethod
+    def build_code_to_execute(source, footer):
+        code = """
+{student_source}
+
+import sys
+import unittest
+
+{our_tests}
+
+suite = unittest.defaultTestLoader.loadTestsFromModule(sys.modules[__name__])
+result = suite.run(unittest.TestResult())
+
+if not result.wasSuccessful():
+  unittest.TextTestRunner(stream=sys.stderr, verbosity=2).run(suite)
+        """
+        return code.format(**{'student_source': source, 'our_tests': footer})
 
     def form_valid(self, form):
 
-        code = '{}\n\n{}'.format(form.cleaned_data['source'],
-                                 self.assignment.footer)
+        code = self.build_code_to_execute(
+            form.cleaned_data['source'], self.assignment.footer)
         result = run_code(code)
 
-        # finish the attempt and check if it's a valid solution or not
-        attempt = AssignmentAttempt.objects.get(
-            assignment=self.assignment, student=self.request.user,
-            end_datetime=None, resolved=False)
-        attempt.student_source = form.cleaned_data['source']
+        # register a new attempt for this assignemnt
+        attempt = AssignmentAttempt(
+            assignment=self.assignment,
+            student=self.request.user,
+            student_source=form.cleaned_data['source'],
+            start_datetime=datetime.now(),
+            end_datetime=datetime.now()
+        )
+
+        # execution details
         attempt.source = result['code']
         attempt.output = result['output']
         attempt.errors = result.get('errors')
         if result.get('time'):
             attempt.execution_time = float(result['time'].rstrip('\n'))
-        if not attempt.errors and not attempt.output:
-            # no assert failed, the solution is correct
-            attempt.resolved = True
-            messages.success(
-                self.request, 'Excelent! You have resolved the assignment.')
+
+        context = self.get_context_data(form=form)
+        context['execution'] = {'success': True, 'traceback': None}
+        if result.get('errors'):
+            # tests execution failed, send traceback to the template
+            context['execution'] = {'success': False, 'traceback': result['errors']}
         else:
-            messages.error(
-                self.request,
-                'Ouch! The solution you posted was incorrect, please try again.')
-        attempt.end_datetime = datetime.now()
+            # mark the assignment as resolved
+            attempt.resolved = True
+
         attempt.save()
 
-        return HttpResponseRedirect(self.get_success_url())
+        return self.render_to_response(context)

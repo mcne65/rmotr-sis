@@ -34,4 +34,8 @@ $(function() {
             originalSourceCoudeButton.show();
         });
     });
+
+    $('.js-show-execution-errors').on('click', function(evt){
+        $('pre.execution-traceback').toggle();
+    });
 });
