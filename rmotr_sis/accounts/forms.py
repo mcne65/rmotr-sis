@@ -38,10 +38,12 @@ class UserSignupForm(forms.ModelForm):
         ]
 
     def clean(self):
-        cleaned_data = super(UserSignupForm, self).clean()
+        super(UserSignupForm, self).clean()
 
         # validate repeated password
-        if cleaned_data['password'] != cleaned_data['repeat_password']:
+        password = self.cleaned_data.get('password')
+        repeat_password = self.cleaned_data.get('repeat_password')
+        if password and repeat_password and password != repeat_password:
             raise forms.ValidationError('Password is not correctly repeated.')
 
-        return cleaned_data
+        return self.cleaned_data
