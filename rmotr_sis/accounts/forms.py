@@ -42,6 +42,6 @@ class UserSignupForm(forms.ModelForm):
 
         # validate repeated password
         if cleaned_data['password'] != cleaned_data['repeat_password']:
-            raise forms.ValidationError('Password is not correctly repeated')
+            raise forms.ValidationError('Password is not correctly repeated.')
 
         return cleaned_data
