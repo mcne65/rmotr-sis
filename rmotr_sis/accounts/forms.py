@@ -9,8 +9,8 @@ class UserSignupForm(forms.ModelForm):
 
     # auth data
     email = forms.EmailField(label='Email address')
-    password = forms.CharField(max_length=128)
-    repeat_password = forms.CharField(max_length=128)
+    password = forms.CharField(max_length=128, widget=forms.PasswordInput())
+    repeat_password = forms.CharField(max_length=128, widget=forms.PasswordInput())
 
     # personal data
     first_name = forms.CharField(max_length=30)
