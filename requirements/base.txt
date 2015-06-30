@@ -7,3 +7,4 @@ requests==2.7.0
 Markdown==2.6.2
 smartcsv==0.2.3
 django-dbbackup==2.0.4
+django-crispy-forms==1.4.0
