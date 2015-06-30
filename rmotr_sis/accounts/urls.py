@@ -8,6 +8,6 @@ urlpatterns = patterns('',
     url(r'logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
 
     url(r'signup/$', UserSignupView.as_view(), name='user_signup'),
-    url(r'^singup-successful/', TemplateView.as_view(
-        template_name="registration/singup-successful.html")),
+    url(r'^signup-successful/', TemplateView.as_view(
+        template_name="registration/signup-successful.html")),
 )

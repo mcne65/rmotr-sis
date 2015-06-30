@@ -8,7 +8,7 @@ from accounts.forms import UserSignupForm
 class UserSignupView(FormView):
     template_name = 'registration/signup.html'
     form_class = UserSignupForm
-    success_url = '/accounts/singup-successful'
+    success_url = '/accounts/signup-successful'
 
     def form_valid(self, form):
         user = form.save(commit=False)
