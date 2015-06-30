@@ -10,3 +10,9 @@
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
     </form>
 {% endblock %}
+
+{% block extra_footer_scripts %}
+    <script type="text/javascript">
+      $('select[name="timezone"]').select2();
+    </script>
+{% endblock %}
