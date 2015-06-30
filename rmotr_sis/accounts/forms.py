@@ -17,7 +17,7 @@ class UserSignupForm(forms.ModelForm):
     last_name = forms.CharField(max_length=30)
     timezone = forms.CharField(
         max_length=150, widget=forms.Select(choices=TIMEZONE_CHOICES))
-    birth_date = forms.DateField()
+    birth_date = forms.DateField(label="Birth date (MM/DD/YYYY)")
 
     # accounts
     github_handle = forms.CharField(max_length=50)
