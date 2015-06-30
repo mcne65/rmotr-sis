@@ -1,10 +1,12 @@
 {% extends "bare.html" %}
 
+{% load crispy_forms_tags %}
+
 {% block main_container %}
     <h1>Signup view</h1>
     <form method="POST">
     {% csrf_token %}
-    {{form.as_p}}
+    {{form|crispy}}
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
     </form>
 {% endblock %}
