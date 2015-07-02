@@ -24,7 +24,7 @@ backup-production-db:
 rsync-local-files:
 		@echo $(TAG)Rsyncing local files$(END)
 		rsync -ai --exclude '*__pycache__*' --exclude '*.pyc' rmotr_sis/ $(SSH_CONN):$(PROJECT_ROOT)/rmotr_sis
-		rsync -ai requirements/ $(SSH_CONN):$(PROJECT_ROOT)/requirement
+		rsync -ai requirements/ $(SSH_CONN):$(PROJECT_ROOT)/requirements
 		rsync -ai static/ $(SSH_CONN):$(PROJECT_ROOT)/static
 		rsync -ai .git/ $(SSH_CONN):$(PROJECT_ROOT)/.git
 
@@ -44,5 +44,5 @@ restart-app:
 		@echo $(TAG)Restarting app$(END)
 		ssh $(SSH_CONN) 'supervisorctl restart rmotr_sis'
 
-deploy: backup-production-db rsync-local-files collect-static install-dependencies migrate-database restart-app
-		@echo $(TAG)Deploying...$(END)
+deploy: backup-production-db rsync-local-files install-dependencies collect-static migrate-database restart-app
+		@echo $(TAG)Done.$(END)
