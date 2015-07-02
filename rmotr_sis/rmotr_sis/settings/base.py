@@ -23,7 +23,8 @@ INSTALLED_APPS = (
 
     # Thirt part apps
     'taggit',
-     'dbbackup',
+    'dbbackup',
+    'crispy_forms',
 
     # Own apps
     'rmotr_sis',
@@ -78,3 +79,5 @@ TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
 # Auth
 LOGIN_REDIRECT_URL = '/'
 AUTH_USER_MODEL = 'accounts.User'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
