@@ -31,4 +31,11 @@ class Migration(migrations.Migration):
             name='occupation',
             field=models.CharField(choices=[('studing-full-time', 'Studing full-time'), ('studing-part-time', 'Studing part-time'), ('unemployed-and-looking-for-job', 'Unemployed and looking for job'), ('unemployed-but-not-looking-for-job', 'Unemployed but not looking for job'), ('self-employeed', 'Self-employeed'), ('working-part-time', 'Working part-time'), ('working-full-time', 'Working full-time')], blank=True, max_length=150, null=True),
         ),
+
+        # unique email
+        migrations.AlterField(
+            model_name='user',
+            name='email',
+            field=models.EmailField(verbose_name='email address', max_length=254, blank=True, unique=True)
+        )
     ]

@@ -37,6 +37,16 @@ class UserSignupForm(forms.ModelForm):
             'twitter_handle', 'github_handle', 'cloud9_handle',
         ]
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        try:
+            User.objects.get(email=email)
+        except User.DoesNotExist:
+            return email
+        else:
+            raise forms.ValidationError(
+                'A user with that email address already exists.')
+
     def clean(self):
         super(UserSignupForm, self).clean()
 
