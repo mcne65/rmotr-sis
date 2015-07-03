@@ -13,6 +13,7 @@ TIMEZONE_CHOICES = tuple([(tz, tz) for tz in pytz.common_timezones])
 GENDER_CHOICES = (
     ('male', 'Male'),
     ('female', 'Female'),
+    ('not-disclosed', 'Prefer not to disclose'),
 )
 
 OBJECTIVE_CHOICES = tuple([(slugify(t), t) for t in ['Get a job as a programmer',
@@ -23,7 +24,7 @@ OBJECTIVE_CHOICES = tuple([(slugify(t), t) for t in ['Get a job as a programmer'
 OCCUPATION_CHOICES = tuple([(slugify(t), t) for t in ['Studing full-time',
                                                       'Studing part-time',
                                                       'Unemployed and looking for job',
-                                                      'unemployed but not looking for job',
+                                                      'Unemployed but not looking for job',
                                                       'Self-employeed',
                                                       'Working part-time',
                                                       'Working full-time']])
@@ -52,7 +53,7 @@ class User(TimeStampedModel, AbstractUser):
 
     # personal information
     birth_date = models.DateField(blank=True, null=True)
-    gender = models.CharField(max_length=10, choices=GENDER_CHOICES,
+    gender = models.CharField(max_length=15, choices=GENDER_CHOICES,
                               null=True, blank=True)
     timezone = models.CharField(max_length=150, choices=TIMEZONE_CHOICES,
                                 blank=True, null=True)
