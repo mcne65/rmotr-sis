@@ -5,7 +5,7 @@ import pytz
 from django.db import models
 from django.core import validators
 from django.utils.text import slugify
-from django.utils import timezone as tz
+from django.utils import timezone as django_timezone
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
                                         UserManager)
@@ -95,7 +95,8 @@ class User(TimeStampedModel, AbstractBaseUser, PermissionsMixin):
     twitter_handle = models.CharField(max_length=50, blank=True, null=True)
     linkedin_profile_url = models.URLField(max_length=750, blank=True, null=True)
 
-    date_joined = models.DateTimeField(_('date joined'), default=tz.now)
+    date_joined = models.DateTimeField(_('date joined'),
+                                       default=django_timezone.now)
     last_activity = models.DateTimeField(blank=True, null=True)
 
     objects = UserManager()
