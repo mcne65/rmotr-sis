@@ -8,8 +8,9 @@
         <h1>Sign up to rmotr SIS</h1>
         <p>Welcome to rmotr SIS. Here you can access all the information you need about courses, lectures, assignments and more. Please, start by signing up completing the following form.</p>
         <p>Once the registration is done, we will send a confirmation email soon when your new account is activated.</p>
+        <p>NOTE: Sorry about so many fields in this form. We really need this detailed information to improve the course quality.</p>
 
-        <form method="POST" style="padding-top:40px;">
+        <form method="POST" style="padding-top:20px;">
             {% csrf_token %}
             {{form|crispy}}
             <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
@@ -20,6 +21,12 @@
 
 {% block extra_footer_scripts %}
     <script type="text/javascript">
+      $('<br/><h3>Credentials</h3><hr/>').insertBefore('#div_id_username');
+      $('<br/><h3>Personal information</h3><hr/>').insertBefore('#div_id_first_name');
+      $('<br/><h3>External accounts</h3><hr/>').insertBefore('#div_id_github_handle');
+      $('<br/><h3>Extra information</h3><hr/>').insertBefore('#div_id_objective');
+      $('<br/>').insertAfter('#div_id_occupation');
+
       $('select[name="timezone"]').select2();
     </script>
 {% endblock %}
