@@ -9,9 +9,9 @@ from accounts.models import (User, TIMEZONE_CHOICES, GENDER_CHOICES,
 class UserSignupForm(forms.ModelForm):
 
     # auth data
-    email = forms.EmailField(label='Google email address',
-                             help_text=('We require @gmail.com emails to use '
-                                        'them in our Hangout sessions.'))
+    email = forms.EmailField(label='Google account email',
+                             help_text=('We require Google account emails to '
+                                        'use them in our Hangout sessions.'))
     password = forms.CharField(max_length=128, widget=forms.PasswordInput())
     repeat_password = forms.CharField(max_length=128, widget=forms.PasswordInput())
 
@@ -59,11 +59,6 @@ class UserSignupForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data['email']
-
-        # must be a google email account
-        if '@gmail.com' not in email and '@googlemail.com' not in email:
-            raise forms.ValidationError(
-                'Must be a Google email account.')
 
         # must be unique
         try:
