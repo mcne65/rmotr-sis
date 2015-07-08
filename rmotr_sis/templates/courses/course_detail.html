@@ -71,12 +71,17 @@
     </div>
     <div class="col-xs-12">
         <h4>Copy paste zone</h4>
-        <p>
-            <strong>Emails:</strong>
-            {% for student in object.students.all %}
-            {{ student.email }},
-            {% endfor %}
-        </p>
+        <p><strong>Emails:</strong></p>
+        <textarea class="form-control js-slack-copy-paste" rows="8" disabled>
+{% for student in object.students.all %}{{ student.email }},
+{% endfor %}
+        </textarea>
+        <p><strong>Slack:</strong></p>
+        <textarea class="form-control js-slack-copy-paste" rows="8" disabled>
+{% for student in object.students.all %}{{ student.get_full_name }} <{{ student.email }}>
+{% endfor %}
+        </textarea>
+
     </div>
 </div>
 {% endif %}
@@ -86,4 +91,11 @@
     <a class="btn btn-default" href="{% url 'student_home' %}">« Back to home</a>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_footer_scripts %}
+<script>
+
+     $('.js-slack-copy-paste').focus()
+</script>
 {% endblock %}
