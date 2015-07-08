@@ -22,10 +22,15 @@ class CourseInstance(TimeStampedModel):
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
     students = models.ManyToManyField(User, blank=True)
+    _code = models.CharField(max_length=10, blank=True)
 
     def __str__(self):
         return '{} ({} - {})'.format(self.course.name,
                                      self.start_date, self.end_date)
+
+    @property
+    def code(self):
+        return '{}-{}'.format(self.course.code, self._code)
 
     def is_student(self, student):
         """Returns True if the student is participating in this course

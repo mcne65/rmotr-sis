@@ -5,11 +5,19 @@
     <div class="jumbotron">
       <h2>Hello, {{ user.get_full_name }}!</h2>
       <p>Welcome to rmotr SIS. Here you can access all the information you need about courses, lectures, assignments and more. Please, start by clicking the course link below...</p>
+      {% if not user.is_staff %}
       <p>
           {% for instance in courses %}
           <a class="btn btn-primary btn-lg" href="{% url 'courses:course_detail' instance.id %}" role="button">{{ instance.course.name }}</a>
           {% endfor %}
       </p>
+      {% else %}
+      <ul>
+          {% for instance in courses %}
+          <li><a href="{% url 'courses:course_detail' instance.id %}">({{ instance.code }}) {{ instance.course.name }}</a> ({{ instance.start_date }} - {{ instance.end_date }})</li>
+          {% endfor %}
+      </ul>
+      {% endif %}
     </div>
 </div>
 {% endblock %}
