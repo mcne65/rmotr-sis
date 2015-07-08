@@ -46,6 +46,40 @@
     </div>
 </div>
 
+{% if user.is_staff %}
+<div class="row">
+    <div class="col-xs-12">
+        <h4>Students CRM</h4>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in object.students.all %}
+                <tr>
+                    <td>{{ student.id }}</td>
+                    <td>{{ student.get_full_name }}</td>
+                    <td>{{ student.email }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-xs-12">
+        <h4>Copy paste zone</h4>
+        <p>
+            <strong>Emails:</strong>
+            {% for student in object.students.all %}
+            {{ student.email }},
+            {% endfor %}
+        </p>
+    </div>
+</div>
+{% endif %}
 
 <div class="row">
     <div class="col-sm-6">
