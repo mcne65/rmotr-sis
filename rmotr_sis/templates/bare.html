@@ -40,7 +40,7 @@
             </a></li>
             {% if user.is_staff %}
             <li class="">
-              <a href="{% url 'students:student_list' %}">
+              <a href="{% url 'admin:accounts_user_changelist' %}">
                 <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Students
               </a>
             </li>
