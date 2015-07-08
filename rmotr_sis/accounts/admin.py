@@ -7,8 +7,14 @@ from accounts.models import User
 
 class AccountsUserAdmin(UserAdmin):
 
-    list_display = ('username', 'email', 'first_name', 'last_name',
-                    'is_active', 'is_staff')
+    list_display = ('username',
+                    'email',
+                    'first_name',
+                    'last_name',
+                    'timezone',
+                    'last_activity',
+                    'is_active',
+                    'is_staff')
     fieldsets = (
         (_('Credentials'), {'fields': ('username',
                                        'password')}),
@@ -33,5 +39,7 @@ class AccountsUserAdmin(UserAdmin):
                                            'date_joined',
                                            'last_activity')}),
     )
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups',
+                   'courseinstance___code')
 
 admin.site.register(User, AccountsUserAdmin)
