@@ -83,4 +83,4 @@ AUTH_USER_MODEL = 'accounts.User'
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_TEMPLATE_LOCATION = os.path.join(BASE_DIR, 'templates', 'emails')
+EMAIL_TEMPLATE_LOCATION = os.path.join(TEMPLATE_DIRS[0], 'emails')

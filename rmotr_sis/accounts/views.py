@@ -20,8 +20,7 @@ class UserSignupView(AnonymousRequiredMixin, FormView):
 
         # send confirmation email
         subject = 'Thank you for signing up at rmotr.com'
-        from_email = 'no-reply@rmotr.com'
         send_template_mail(subject, 'signup-successful.html',
-                           from_email=from_email, recipient_list=[user.email])
+                           recipient_list=[user.email], context={'user': user})
 
         return super(UserSignupView, self).form_valid(form)

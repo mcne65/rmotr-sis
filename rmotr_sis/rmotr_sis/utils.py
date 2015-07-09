@@ -8,8 +8,8 @@ from django.conf import settings
 from django.core.mail import send_mail
 
 
-def send_template_mail(subject, template, from_email, recipient_list,
-                       context=None, **kwargs):
+def send_template_mail(subject, template, recipient_list, context=None,
+                       from_email='no-reply@rmotr.com', **kwargs):
     """Extends django.core.mail.send_mail to accept HTML templates"""
 
     context = context or {}
