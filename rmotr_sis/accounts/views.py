@@ -4,6 +4,7 @@ from django.views.generic import FormView
 from braces.views import AnonymousRequiredMixin
 
 from accounts.forms import UserSignupForm
+from rmotr_sis.utils import send_template_mail
 
 
 class UserSignupView(AnonymousRequiredMixin, FormView):
@@ -17,6 +18,10 @@ class UserSignupView(AnonymousRequiredMixin, FormView):
         user.set_password(form.cleaned_data['password'])
         user.save()
 
-        # TODO: Send confirmation email
+        # send confirmation email
+        subject = 'Thank you for signing up at rmotr.com'
+        from_email = 'no-reply@rmotr.com'
+        send_template_mail(subject, 'signup-successful.html',
+                           from_email=from_email, recipient_list=[user.email])
 
         return super(UserSignupView, self).form_valid(form)
