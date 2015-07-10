@@ -2,10 +2,31 @@ from collections import OrderedDict
 
 from django.db import models
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 from accounts.models import User
 from rmotr_sis.models import TimeStampedModel
 from assignments.models import Assignment
+
+WEEKDAY_CHOICES = (
+    ('0', 'Monday'),
+    ('1', 'Tuesday'),
+    ('2', 'Wednesday'),
+    ('3', 'Thursday'),
+    ('4', 'Friday'),
+    ('5', 'Saturday'),
+    ('6', 'Sunday'),
+)
+
+
+def validate_is_professor(value):
+    try:
+        professor = User.objects.get(id=value)
+    except User.DoesNotExist:
+        raise ValidationError('Professor user does not exist')
+
+    if not professor.is_staff:
+        raise ValidationError('Professor user must be staff')
 
 
 class Course(TimeStampedModel):
@@ -21,8 +42,10 @@ class CourseInstance(TimeStampedModel):
     course = models.ForeignKey(Course)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
-    professor = models.ForeignKey(User, related_name='courseinstance_professor_set')
-    lecture_datetime = models.DateTimeField()
+    professor = models.ForeignKey(User, related_name='courseinstance_professor_set',
+                                  validators=[validate_is_professor])
+    lecture_weekday = models.CharField(max_length=1, choices=WEEKDAY_CHOICES)
+    lecture_utc_time = models.TimeField()
     students = models.ManyToManyField(User, blank=True)
     _code = models.CharField(max_length=10, blank=True)
 
@@ -39,11 +62,6 @@ class CourseInstance(TimeStampedModel):
            instance, or False otherwise.
         """
         return student in self.students.all()
-
-    def save(self, *args, **kwargs):
-        if self.professor:
-            assert self.professor.is_staff
-        return super(CourseInstance, self).save(*args, **kwargs)
 
 
 class Lecture(TimeStampedModel):

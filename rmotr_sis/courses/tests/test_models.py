@@ -29,20 +29,10 @@ class TestCourseInstance(TestCase):
             code="12345")
         professor = User.objects.create(username='professor', is_staff=True)
         instance = CourseInstance.objects.create(
-            course=course, professor=professor, lecture_datetime=timezone.now())
+            course=course, professor=professor, lecture_weekday='0',
+            lecture_utc_time=timezone.now())
         self.assertEqual(CourseInstance.objects.count(), 1)
         self.assertEqual(instance.course.name, "Advanced Python")
-
-    def test_courseinstance_professor_not_staff(self):
-        """Should raise AssertionError when professor user is not staff"""
-        course = Course.objects.create(
-            name="Advanced Python",
-            description="Learn advanced python techniques",
-            code="12345")
-        user = User.objects.create(username='test', is_staff=False)
-        with self.assertRaises(AssertionError):
-            CourseInstance.objects.create(
-                course=course, lecture_datetime=timezone.now(), professor=user)  # user is not staff
 
 
 class TestLecture(TestCase):
@@ -52,7 +42,7 @@ class TestLecture(TestCase):
         self.professor = User.objects.create(username='professor', is_staff=True)
         self.instance = CourseInstance.objects.create(
             course=self.course, professor=self.professor,
-            lecture_datetime=timezone.now())
+            lecture_utc_time=timezone.now(), lecture_weekday='0')
 
     def test_lecture_was_created(self):
         """Should create a Lecture model when only required data is given"""
