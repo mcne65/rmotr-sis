@@ -1,8 +1,9 @@
 from __future__ import division, unicode_literals, absolute_import
 
 from django.test import TestCase
-from django.utils import timezone as time
+from django.utils import timezone
 
+from accounts.models import User
 from courses.models import Lecture, Course, CourseInstance
 
 
@@ -26,31 +27,46 @@ class TestCourseInstance(TestCase):
             name="Advanced Python",
             description="Learn advanced python techniques",
             code="12345")
-        instance = CourseInstance.objects.create(course=course)
+        professor = User.objects.create(username='professor', is_staff=True)
+        instance = CourseInstance.objects.create(
+            course=course, professor=professor, lecture_datetime=timezone.now())
         self.assertEqual(CourseInstance.objects.count(), 1)
         self.assertEqual(instance.course.name, "Advanced Python")
+
+    def test_courseinstance_professor_not_staff(self):
+        """Should raise AssertionError when professor user is not staff"""
+        course = Course.objects.create(
+            name="Advanced Python",
+            description="Learn advanced python techniques",
+            code="12345")
+        user = User.objects.create(username='test', is_staff=False)
+        with self.assertRaises(AssertionError):
+            CourseInstance.objects.create(
+                course=course, lecture_datetime=timezone.now(), professor=user)  # user is not staff
 
 
 class TestLecture(TestCase):
 
     def setUp(self):
         self.course = Course.objects.create(name="Advanced Python")
-        self.instance = CourseInstance.objects.create(course=self.course)
+        self.professor = User.objects.create(username='professor', is_staff=True)
+        self.instance = CourseInstance.objects.create(
+            course=self.course, professor=self.professor,
+            lecture_datetime=timezone.now())
 
     def test_lecture_was_created(self):
         """Should create a Lecture model when only required data is given"""
-        Lecture.objects.create(subject="Flask", course_instance=self.instance)
+        Lecture.objects.create(title="Flask", course_instance=self.instance)
         self.assertEqual(Lecture.objects.count(), 1)
 
     def test_lecture_was_created_all_parameters(self):
         """Should create a Lecture model when all fields are given"""
         lecture = Lecture.objects.create(
-            subject="Flask",
-            date=time.now(),
-            notes="Notes",
+            title="Flask",
+            date=timezone.now(),
             video_url="www.youtube.com",
             slides_url="www.rmotr.com",
-            summary="The flask framework",
+            content="The flask framework",
             course_instance=self.instance)
         self.assertEqual(Lecture.objects.count(), 1)
-        self.assertIn(lecture.subject, "Flask")
+        self.assertIn(lecture.title, "Flask")
