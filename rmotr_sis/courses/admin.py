@@ -8,8 +8,7 @@ class LectureAdmin(admin.ModelAdmin):
     list_display = ('title', 'course_instance', 'published')
     list_filter = ('published',)
     search_fields = ('title',)
-
-    raw_id_fields = ("assignments",)
+    raw_id_fields = ('assignments',)
 
 
 @admin.register(Course)
@@ -19,4 +18,4 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(CourseInstance)
 class CourseInstanceAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('code', 'course', 'professor', 'start_date', 'end_date')

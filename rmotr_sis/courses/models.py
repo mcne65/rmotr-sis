@@ -27,8 +27,8 @@ class CourseInstance(TimeStampedModel):
     _code = models.CharField(max_length=10, blank=True)
 
     def __str__(self):
-        return '{} ({} - {})'.format(self.course.name,
-                                     self.start_date, self.end_date)
+        return '({}) - {} ({} - {})'.format(
+            self.code, self.course.name, self.start_date, self.end_date)
 
     @property
     def code(self):
