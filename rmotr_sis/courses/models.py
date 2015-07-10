@@ -21,6 +21,8 @@ class CourseInstance(TimeStampedModel):
     course = models.ForeignKey(Course)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
+    professor = models.ForeignKey(User, related_name='courseinstance_professor_set')
+    lecture_datetime = models.DateTimeField()
     students = models.ManyToManyField(User, blank=True)
     _code = models.CharField(max_length=10, blank=True)
 
@@ -37,6 +39,11 @@ class CourseInstance(TimeStampedModel):
            instance, or False otherwise.
         """
         return student in self.students.all()
+
+    def save(self, *args, **kwargs):
+        if self.professor:
+            assert self.professor.is_staff
+        return super(CourseInstance, self).save(*args, **kwargs)
 
 
 class Lecture(TimeStampedModel):
