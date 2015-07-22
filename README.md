@@ -1,11 +1,15 @@
 # rmotr-sis
 Student information system for rmotr.com organization.
 
+### Requirements
+
+- virtualenvwrapper
+
 ### Installation
 
 ```bash
 $ git clone https://github.com/rmotr/rmotr-sis.git
-$ cd /rmotr-sis
+$ cd rmotr-sis
 $ mkvirtualenv rmotr-sis -a .
 $ pip install -r requirements/dev.txt
 $ echo "export DJANGO_SETTINGS_MODULE=rmotr_sis.settings.dev" >> ${HOME}/.virtualenvs/rmotr-sis/bin/postactivate
