@@ -21,18 +21,40 @@ GENDER_CHOICES = (
     ('not-disclosed', 'Prefer not to disclose'),
 )
 
-OBJECTIVE_CHOICES = tuple([(slugify(t), t) for t in ['Get a job as a programmer',
-                                                     'Start my own company',
-                                                     'Get a promotion in my current job',
-                                                     'Personal enrichment']])
+OBJECTIVE_CHOICES = tuple([(slugify(t), t) for t in [
+    'Get a job as a programmer',
+    'Start my own company',
+    'Get a promotion in my current job',
+    'Personal enrichment'
+]])
 
-OCCUPATION_CHOICES = tuple([(slugify(t), t) for t in ['Studing full-time',
-                                                      'Studing part-time',
-                                                      'Unemployed and looking for job',
-                                                      'Unemployed but not looking for job',
-                                                      'Self-employeed',
-                                                      'Working part-time',
-                                                      'Working full-time']])
+OCCUPATION_CHOICES = tuple([(slugify(t), t) for t in [
+    'Studing full-time',
+    'Studing part-time',
+    'Unemployed and looking for job',
+    'Unemployed but not looking for job',
+    'Self-employeed',
+    'Working part-time',
+    'Working full-time'
+]])
+
+EXPERIENCE_CHOICES = tuple([(slugify(t), t) for t in [
+    'Less than 50 hours',
+    '50-100 hours',
+    '100-200 hours',
+    '200-500 hours',
+    'More than 500 hours',
+]])
+
+AVAILABILITY_CHOICES = tuple([(slugify(t), t) for t in [
+    'Less than 10hours/week',
+    '20hours/week',
+    '30hours/week',
+    '40hours/week',
+    '50hours/week',
+    '60hours/week',
+    '70hours/week',
+]])
 
 
 class User(TimeStampedModel, AbstractBaseUser, PermissionsMixin):

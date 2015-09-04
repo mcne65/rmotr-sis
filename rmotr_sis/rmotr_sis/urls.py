@@ -10,5 +10,6 @@ urlpatterns = patterns('',
     url(r'^courses/', include('courses.urls', namespace="courses")),
     url(r'^assignments/', include('assignments.urls', namespace="assignments")),
     url(r'^students/', include('students.urls', namespace="students")),
+    url(r'^scholarships/', include('scholarships.urls', namespace="scholarships")),
     url(r'^$', views.StudentHomeView.as_view(), name='student_home'),
 )
