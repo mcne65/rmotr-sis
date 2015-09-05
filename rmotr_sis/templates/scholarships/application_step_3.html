@@ -1,0 +1,10 @@
+{% extends 'bare.html' %}
+
+{% block main_container %}
+<h1>Step 3 of the application</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+  <input type="submit">
+</form>
+{% endblock %}

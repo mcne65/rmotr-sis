@@ -1,11 +1,14 @@
 from django.views.generic import FormView, TemplateView
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
+from django.shortcuts import render
 
 from rmotr_sis.utils import send_template_mail
 from scholarships.forms import (ScholarshipApplicationFormStep1,
-                                ScholarshipApplicationFormStep2)
+                                ScholarshipApplicationFormStep2,
+                                ScholarshipApplicationFormStep3)
 from scholarships.models import ScholarshipApplication
+from scholarships.forms import SKILLS_ASSESSMENT
 from courses.models import Batch
 
 
@@ -60,14 +63,7 @@ class ScholarshipApplicationStep2View(FormView):
         return super(ScholarshipApplicationStep2View, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        #  'gender': 'male',
-        #  'timezone': 'Africa/Abidjan'
-        #  'birth_date': datetime.date(2015, 9, 9),
-        #  'objective': 'start-my-own-company',
-        #  'experience': '50-100-hours',
-        #  'availability': 'less-than-10hoursweek',
-        #  'occupation': 'studing-full-time',
-        #  'course_instances': [<CourseInstance: (PYP-001) - Advanced Python Programming (2015-06-04 - 2015-07-16)>, <CourseInstance: (DEMO-DEMO) - Sample Course (2015-06-01 - 2015-07-01)>],
+
         app = ScholarshipApplication.objects.get(id=self.kwargs['uuid'])
 
         app.gender = form.cleaned_data['gender']
@@ -85,9 +81,54 @@ class ScholarshipApplicationStep2View(FormView):
 
         app.save()
 
-        return HttpResponseRedirect(self.get_success_url())
+        next_step_url = reverse('scholarships:application-3',
+                                args=(str(app.id),))
+        return render(self.request,
+                      'scholarships/application_step_2_confirmation.html',
+                      {'next_step_url': next_step_url})
 
 
 class ScholarshipApplicationStep2ViewSuccess(TemplateView):
 
     template_name = 'scholarships/application_step_2_confirmation.html'
+
+
+class ScholarshipApplicationStep3View(FormView):
+    form_class = ScholarshipApplicationFormStep3
+    template_name = 'scholarships/application_step_3.html'
+    success_url = '/scholarships/step3-success'
+
+    def dispatch(self, request, *args, **kwargs):
+
+        # check that the user didn't complete this step in the past
+        try:
+            ScholarshipApplication.objects.get(id=self.kwargs['uuid'], status='2')
+        except (ValueError, ScholarshipApplication.DoesNotExist):
+            raise Http404
+
+        return super(ScholarshipApplicationStep3View, self).dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+
+        app = ScholarshipApplication.objects.get(id=self.kwargs['uuid'])
+
+        correct_count = 0
+        for index, question in enumerate(SKILLS_ASSESSMENT):
+            if question['correct'] == form.cleaned_data['q{}'.format(index)]:
+                correct_count += 1
+
+        app.skills_assessment_questions = SKILLS_ASSESSMENT
+        app.skills_assessment_answers = form.cleaned_data
+        app.skills_assessment_correct_count = correct_count
+
+        # mark application as step3 completed
+        app.status = '3'
+
+        app.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class ScholarshipApplicationStep3ViewSuccess(TemplateView):
+
+    template_name = 'scholarships/application_step_3_confirmation.html'
