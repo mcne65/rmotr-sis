@@ -6,6 +6,7 @@ from rmotr_sis.utils import send_template_mail
 from scholarships.forms import (ScholarshipApplicationFormStep1,
                                 ScholarshipApplicationFormStep2)
 from scholarships.models import ScholarshipApplication
+from courses.models import Batch
 
 
 class ScholarshipApplicationStep1View(FormView):
@@ -17,6 +18,12 @@ class ScholarshipApplicationStep1View(FormView):
 
         # save model
         application = form.save()
+
+        # assign application object to current batch
+        batch = Batch.objects.get(accepting_applications=True)
+        application.batch = batch
+        application.save()
+
         next_step_url = reverse('scholarships:application-2',
                                 args=(str(application.id),))
 

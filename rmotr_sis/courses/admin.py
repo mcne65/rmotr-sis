@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Lecture, Course, CourseInstance
+from .models import Lecture, Batch, Course, CourseInstance
 
 
 @admin.register(Lecture)
@@ -9,6 +9,11 @@ class LectureAdmin(admin.ModelAdmin):
     list_filter = ('published',)
     search_fields = ('title',)
     raw_id_fields = ('assignments',)
+
+
+@admin.register(Batch)
+class BatchAdmin(admin.ModelAdmin):
+    list_display = ('number', 'start_date', 'accepting_applications')
 
 
 @admin.register(Course)

@@ -5,7 +5,7 @@ from django.db import models
 from accounts.models import (TIMEZONE_CHOICES, GENDER_CHOICES,
                              OBJECTIVE_CHOICES, OCCUPATION_CHOICES,
                              EXPERIENCE_CHOICES, AVAILABILITY_CHOICES)
-from courses.models import CourseInstance
+from courses.models import Batch, CourseInstance
 
 APPLICATION_STATUS_CHOICES = (
     ('1', '1 - Personal information completed'),
@@ -16,7 +16,11 @@ APPLICATION_STATUS_CHOICES = (
 
 class ScholarshipApplication(models.Model):
 
+    class Meta:
+        unique_together = (('email', 'batch'),)
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    batch = models.ForeignKey(Batch, blank=True, null=True)  # FIXME: this must be required
     status = models.CharField(max_length=1, choices=APPLICATION_STATUS_CHOICES,
                               default=APPLICATION_STATUS_CHOICES[0][0])
     email_validated = models.BooleanField(default=False)
@@ -45,8 +49,10 @@ class ScholarshipApplication(models.Model):
     occupation = models.CharField(
         max_length=150, choices=OCCUPATION_CHOICES,
         null=True, blank=True)
-    course_instances = models.ManyToManyField(CourseInstance,
-                                              null=True, blank=True)
+    course_instances = models.ManyToManyField(CourseInstance, blank=True)
 
     # step 3
     skills_assessment_approved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return '{} - {}'.format(self.batch, self.email)
