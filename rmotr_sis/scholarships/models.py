@@ -8,12 +8,6 @@ from accounts.models import (TIMEZONE_CHOICES, GENDER_CHOICES,
                              EXPERIENCE_CHOICES, AVAILABILITY_CHOICES)
 from courses.models import Batch, CourseInstance
 
-APPLICATION_STATUS_CHOICES = (
-    ('1', '1 - Personal information completed'),
-    ('2', '2 - Academic information completed'),
-    ('3', '3 - Skills assessment approved'),
-)
-
 
 class ScholarshipApplication(models.Model):
 
@@ -22,8 +16,7 @@ class ScholarshipApplication(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     batch = models.ForeignKey(Batch, blank=True, null=True)  # FIXME: this must be required
-    status = models.CharField(max_length=1, choices=APPLICATION_STATUS_CHOICES,
-                              default=APPLICATION_STATUS_CHOICES[0][0])
+    status = models.PositiveSmallIntegerField(default=1)
     email_validated = models.BooleanField(default=False)
 
     # step 1

@@ -38,6 +38,10 @@ class Batch(TimeStampedModel):
     def __str__(self):
         return 'Batch {}'.format(self.number)
 
+    @classmethod
+    def get_current_batch(cls):
+        return cls.objects.filter(accepting_applications=True).first() or None
+
     def save(self):
         count = Batch.objects.filter(accepting_applications=True).count()
         if count and self.accepting_applications:

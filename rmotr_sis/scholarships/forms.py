@@ -1,7 +1,7 @@
 from django import forms
 
 from scholarships.models import ScholarshipApplication
-from courses.models import CourseInstance
+from courses.models import Batch, CourseInstance
 from accounts.models import (TIMEZONE_CHOICES, GENDER_CHOICES,
                              OBJECTIVE_CHOICES, OCCUPATION_CHOICES,
                              EXPERIENCE_CHOICES, AVAILABILITY_CHOICES)
@@ -12,6 +12,17 @@ class ScholarshipApplicationFormStep1(forms.ModelForm):
     class Meta:
         model = ScholarshipApplication
         fields = ('email', 'first_name', 'last_name')
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        try:
+            ScholarshipApplication.objects.get(email=email, batch=Batch.get_current_batch())
+        except ScholarshipApplication.DoesNotExist:
+            pass
+        else:
+            raise forms.ValidationError(
+                'This email has already applied for a scholarship in this batch')
+        return email
 
 
 class ScholarshipModelMultipleChoiceField(forms.ModelMultipleChoiceField):

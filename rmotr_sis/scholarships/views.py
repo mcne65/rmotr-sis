@@ -1,7 +1,7 @@
 from django.views.generic import FormView, TemplateView
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from rmotr_sis.utils import send_template_mail
 from scholarships.forms import (ScholarshipApplicationFormStep1,
@@ -52,19 +52,29 @@ class ScholarshipApplicationStep2View(FormView):
 
     def dispatch(self, request, *args, **kwargs):
 
-        # if the user access this view, it means that the email was validated
         try:
-            app = ScholarshipApplication.objects.get(id=self.kwargs['uuid'], status='1')
-        except (ValueError, ScholarshipApplication.DoesNotExist):
+            app = get_object_or_404(ScholarshipApplication, id=self.kwargs['uuid'])
+        except ValueError:
             raise Http404
+
+        if app.status > 1:
+            # user already completed step2, redirect to step3
+            url = reverse('scholarships:application-3', args=(str(app.id),))
+            return HttpResponseRedirect(url)
+
+        # if the user access this view, it means that the email was validated
         app.email_validated = True
+
         app.save()
 
         return super(ScholarshipApplicationStep2View, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
 
-        app = ScholarshipApplication.objects.get(id=self.kwargs['uuid'])
+        try:
+            app = get_object_or_404(ScholarshipApplication, id=self.kwargs['uuid'])
+        except ValueError:
+            raise Http404
 
         app.gender = form.cleaned_data['gender']
         app.timezone = form.cleaned_data['timezone']
@@ -77,7 +87,7 @@ class ScholarshipApplicationStep2View(FormView):
             app.course_instances.add(instance)
 
         # mark application as step2 completed
-        app.status = '2'
+        app.status = 2
 
         app.save()
 
@@ -100,11 +110,12 @@ class ScholarshipApplicationStep3View(FormView):
 
     def dispatch(self, request, *args, **kwargs):
 
-        # check that the user didn't complete this step in the past
-        try:
-            ScholarshipApplication.objects.get(id=self.kwargs['uuid'], status='2')
-        except (ValueError, ScholarshipApplication.DoesNotExist):
-            raise Http404
+        app = get_object_or_404(ScholarshipApplication, id=self.kwargs['uuid'])
+
+        if app.status > 2:
+            # user already completed step3, show step3 confirmation
+            return render(self.request,
+                          'scholarships/application_step_3_confirmation.html')
 
         return super(ScholarshipApplicationStep3View, self).dispatch(request, *args, **kwargs)
 
@@ -122,7 +133,7 @@ class ScholarshipApplicationStep3View(FormView):
         app.skills_assessment_correct_count = correct_count
 
         # mark application as step3 completed
-        app.status = '3'
+        app.status = 3
 
         app.save()
 
