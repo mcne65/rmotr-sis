@@ -57,10 +57,14 @@ class ScholarshipApplicationStep2View(FormView):
         except ValueError:
             raise Http404
 
-        if app.status > 1:
+        if app.status == 2:
             # user already completed step2, redirect to step3
             url = reverse('scholarships:application-3', args=(str(app.id),))
             return HttpResponseRedirect(url)
+        elif app.status == 3:
+            # user already completed all steps, show application confirmation
+            return render(self.request,
+                          'scholarships/application_step_3_confirmation.html')
 
         # if the user access this view, it means that the email was validated
         app.email_validated = True
@@ -112,8 +116,12 @@ class ScholarshipApplicationStep3View(FormView):
 
         app = get_object_or_404(ScholarshipApplication, id=self.kwargs['uuid'])
 
-        if app.status > 2:
-            # user already completed step3, show step3 confirmation
+        if app.status == 1:
+            # user didn't complete step2 yet, redirect back to step2
+            url = reverse('scholarships:application-2', args=(str(app.id),))
+            return HttpResponseRedirect(url)
+        elif app.status == 3:
+            # user already completed this step, show application confirmation
             return render(self.request,
                           'scholarships/application_step_3_confirmation.html')
 
