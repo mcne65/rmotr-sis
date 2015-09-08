@@ -1,6 +1,6 @@
 from django import forms
 
-from scholarships.models import ScholarshipApplication
+from scholarships.models import ScholarshipReferral, ScholarshipApplication
 from courses.models import Batch, CourseInstance
 from accounts.models import (TIMEZONE_CHOICES, GENDER_CHOICES,
                              OBJECTIVE_CHOICES, OCCUPATION_CHOICES,
@@ -54,6 +54,10 @@ class ScholarshipApplicationFormStep2(forms.ModelForm):
             queryset=CourseInstance.objects.filter(batch__accepting_applications=True),
             widget=forms.CheckboxSelectMultiple(),
             label='Select instances that best fit you')
+    referrals = forms.ModelMultipleChoiceField(
+            queryset=ScholarshipReferral.objects.filter(active=True),
+            widget=forms.CheckboxSelectMultiple(),
+            label='How did you hear about us?')
 
     class Meta:
         model = ScholarshipApplication

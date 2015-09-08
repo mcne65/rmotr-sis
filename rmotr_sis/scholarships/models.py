@@ -9,6 +9,14 @@ from accounts.models import (TIMEZONE_CHOICES, GENDER_CHOICES,
 from courses.models import Batch, CourseInstance
 
 
+class ScholarshipReferral(models.Model):
+    name = models.CharField(max_length=30)
+    active = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+
+
 class ScholarshipApplication(models.Model):
 
     class Meta:
@@ -44,6 +52,7 @@ class ScholarshipApplication(models.Model):
         max_length=150, choices=OCCUPATION_CHOICES,
         null=True, blank=True)
     course_instances = models.ManyToManyField(CourseInstance, blank=True)
+    referrals = models.ManyToManyField(ScholarshipReferral, blank=True)
 
     # step 3
     skills_assessment_questions = JSONField(blank=True, null=False)

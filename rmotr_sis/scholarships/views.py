@@ -89,6 +89,8 @@ class ScholarshipApplicationStep2View(FormView):
         app.occupation = form.cleaned_data['occupation']
         for instance in form.cleaned_data['course_instances']:
             app.course_instances.add(instance)
+        for referral in form.cleaned_data['referrals']:
+            app.referrals.add(referral)
 
         # mark application as step2 completed
         app.status = 2

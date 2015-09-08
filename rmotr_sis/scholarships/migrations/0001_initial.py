@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ScholarshipApplication',
             fields=[
-                ('id', models.UUIDField(serialize=False, editable=False, default=uuid.uuid4, primary_key=True)),
+                ('id', models.UUIDField(editable=False, primary_key=True, default=uuid.uuid4, serialize=False)),
                 ('status', models.PositiveSmallIntegerField(default=1)),
                 ('email_validated', models.BooleanField(default=False)),
                 ('email', models.EmailField(max_length=254)),
@@ -33,8 +33,21 @@ class Migration(migrations.Migration):
                 ('skills_assessment_answers', jsonfield.fields.JSONField(blank=True, default=dict)),
                 ('skills_assessment_correct_count', models.PositiveSmallIntegerField(blank=True, null=True)),
                 ('batch', models.ForeignKey(blank=True, to='courses.Batch', null=True)),
-                ('course_instances', models.ManyToManyField(to='courses.CourseInstance', blank=True)),
+                ('course_instances', models.ManyToManyField(blank=True, to='courses.CourseInstance')),
             ],
+        ),
+        migrations.CreateModel(
+            name='ScholarshipReferral',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
+                ('name', models.CharField(max_length=30)),
+                ('active', models.BooleanField(default=False)),
+            ],
+        ),
+        migrations.AddField(
+            model_name='scholarshipapplication',
+            name='referrals',
+            field=models.ManyToManyField(blank=True, to='scholarships.ScholarshipReferral', null=True),
         ),
         migrations.AlterUniqueTogether(
             name='scholarshipapplication',
