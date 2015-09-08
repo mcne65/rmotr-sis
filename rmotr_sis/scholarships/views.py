@@ -97,11 +97,9 @@ class ScholarshipApplicationStep2View(FormView):
 
         app.save()
 
-        next_step_url = reverse('scholarships:application-3',
-                                args=(str(app.id),))
-        return render(self.request,
-                      'scholarships/application_step_2_confirmation.html',
-                      {'next_step_url': next_step_url})
+        step3_url = reverse('scholarships:application-3',
+                            args=(str(app.id),))
+        return HttpResponseRedirect(step3_url)
 
 
 class ScholarshipApplicationStep2ViewSuccess(TemplateView):
