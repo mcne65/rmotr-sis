@@ -33,31 +33,45 @@ class ScholarshipModelMultipleChoiceField(forms.ModelMultipleChoiceField):
 
 class ScholarshipApplicationFormStep2(forms.ModelForm):
 
-    gender = forms.CharField(
-        max_length=15, widget=forms.RadioSelect(choices=GENDER_CHOICES))
-    timezone = forms.CharField(
-        max_length=150, widget=forms.Select(choices=TIMEZONE_CHOICES))
+    gender = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=GENDER_CHOICES
+    )
+    timezone = forms.ChoiceField(
+        widget=forms.Select,
+        choices=TIMEZONE_CHOICES
+    )
     birth_date = forms.DateField(label="Birth date (MM/DD/YYYY)")
-    objective = forms.CharField(
-            max_length=150, widget=forms.RadioSelect(choices=OBJECTIVE_CHOICES),
-            label='Which is your primary objective in joining this course?')
-    experience = forms.CharField(
-            max_length=150, widget=forms.RadioSelect(choices=EXPERIENCE_CHOICES),
-            label='How many hours have you spent learning programming up to this point?')
-    availability = forms.CharField(
-            max_length=150, widget=forms.RadioSelect(choices=AVAILABILITY_CHOICES),
-            label='How many hours per week can you dedicate to this course?')
-    occupation = forms.CharField(
-            max_length=150, widget=forms.RadioSelect(choices=OCCUPATION_CHOICES),
-            label='Which is your current occupation?')
+    objective = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=OBJECTIVE_CHOICES,
+        label='Which is your primary objective in joining this course?'
+    )
+    experience = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=EXPERIENCE_CHOICES,
+        label='How many hours have you spent learning programming up to this point?'
+    )
+    availability = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=AVAILABILITY_CHOICES,
+        label='How many hours per week can you dedicate to this course?'
+    )
+    occupation = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=OCCUPATION_CHOICES,
+        label='Which is your current occupation?'
+    )
     course_instances = ScholarshipModelMultipleChoiceField(
-            queryset=CourseInstance.objects.filter(batch__accepting_applications=True),
-            widget=forms.CheckboxSelectMultiple(),
-            label='Select instances that best fit you')
+        queryset=CourseInstance.objects.filter(batch__accepting_applications=True),
+        widget=forms.CheckboxSelectMultiple(),
+        label='Select instances that best fit you'
+    )
     referrals = forms.ModelMultipleChoiceField(
-            queryset=ScholarshipReferral.objects.filter(active=True),
-            widget=forms.CheckboxSelectMultiple(),
-            label='How did you hear about us?')
+        queryset=ScholarshipReferral.objects.filter(active=True),
+        widget=forms.CheckboxSelectMultiple(),
+        label='How did you hear about us?'
+    )
 
     class Meta:
         model = ScholarshipApplication
@@ -89,9 +103,10 @@ SKILLS_ASSESSMENT = [
 
 
 class_attrs = {
-    'q{}'.format(index): forms.CharField(
-        max_length=1, label=q['text'],
-        widget=forms.RadioSelect(choices=q['choices']))
+    'q{}'.format(index): forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=q['choices'],
+        label=q['text'])
     for index, q in enumerate(SKILLS_ASSESSMENT)
 }
 ScholarshipApplicationFormStep3 = type('ScholarshipApplicationFormStep3',

@@ -1,10 +1,12 @@
 {% extends 'bare.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block main_container %}
-<h1>Step 3 of the application</h1>
+{% include "scholarships/form_wizard.html" with step="3" only %}
 <form method="POST">
     {% csrf_token %}
-    {{form.as_p}}
-  <input type="submit">
+    {{form|crispy}}
+    <input class="btn btn-info" type="submit">
 </form>
 {% endblock %}
