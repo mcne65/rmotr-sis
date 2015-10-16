@@ -1,9 +1,13 @@
 {% extends 'bare.html' %}
-
+{% load staticfiles %}
 {% load crispy_forms_tags %}
 
+{% block extra_header_styles %}
+<link href="{% static 'css/applications.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block main_container %}
-{% include "scholarships/form_wizard.html" with step="1" only %}
+{% include "applications/form_wizard.html" with step="2" only %}
 <form method="POST">
     {% csrf_token %}
     {{form|crispy}}

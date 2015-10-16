@@ -35,15 +35,18 @@ OCCUPATION_CHOICES = tuple([(slugify(t), t) for t in [
     'Unemployed but not looking for job',
     'Self-employeed',
     'Working part-time',
-    'Working full-time'
+    'Working full-time',
+    'Both working and studing'
 ]])
 
 EXPERIENCE_CHOICES = tuple([(slugify(t), t) for t in [
-    'Less than 50 hours',
-    '50-100 hours',
-    '100-200 hours',
-    '200-500 hours',
-    'More than 500 hours',
+    'Never studied before',
+    'Less than 1 month',
+    'Between 1 and 3 months',
+    'Between 3 and 6 months',
+    'Between 6 and 12 months',
+    'Between 1 and 2 years',
+    'More than 2 years'
 ]])
 
 AVAILABILITY_CHOICES = tuple([(slugify(t), t) for t in [

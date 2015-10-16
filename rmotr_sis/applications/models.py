@@ -9,7 +9,7 @@ from accounts.models import (TIMEZONE_CHOICES, GENDER_CHOICES,
 from courses.models import Batch, CourseInstance
 
 
-class ScholarshipReferral(models.Model):
+class ApplicationReferral(models.Model):
     name = models.CharField(max_length=30)
     active = models.BooleanField(default=False)
 
@@ -17,7 +17,7 @@ class ScholarshipReferral(models.Model):
         return self.name
 
 
-class ScholarshipApplication(models.Model):
+class Application(models.Model):
 
     class Meta:
         unique_together = (('email', 'batch'),)
@@ -52,12 +52,13 @@ class ScholarshipApplication(models.Model):
         max_length=150, choices=OCCUPATION_CHOICES,
         null=True, blank=True)
     course_instances = models.ManyToManyField(CourseInstance, blank=True)
-    referrals = models.ManyToManyField(ScholarshipReferral, blank=True)
+    referrals = models.ManyToManyField(ApplicationReferral, blank=True)
 
     # step 3
     skills_assessment_questions = JSONField(blank=True, null=False)
     skills_assessment_answers = JSONField(blank=True, null=False)
-    skills_assessment_correct_count = models.PositiveSmallIntegerField(blank=True, null=True)
+    skills_assessment_correct_count = models.PositiveSmallIntegerField(blank=True,
+                                                                       null=True)
 
     def __str__(self):
         return '{} - {}'.format(self.batch, self.email)
