@@ -92,6 +92,7 @@ class ApplicationStep2View(FormView):
             app.course_instances.add(instance)
         for referral in form.cleaned_data['referrals']:
             app.referrals.add(referral)
+        app.referrals_other = form.cleaned_data['referrals_other']
 
         # mark application as step2 completed
         app.status = 2

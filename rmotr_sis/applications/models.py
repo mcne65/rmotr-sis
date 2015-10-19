@@ -54,6 +54,7 @@ class Application(TimeStampedModel):
         null=True, blank=True)
     course_instances = models.ManyToManyField(CourseInstance, blank=True)
     referrals = models.ManyToManyField(ApplicationReferral, blank=True)
+    referrals_other = models.CharField(max_length=100, blank=True)
 
     # step 3
     skills_assessment_questions = JSONField(blank=True, null=False)

@@ -73,11 +73,17 @@ class ApplicationFormStep2(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple(),
         label='How did you hear about us?'
     )
+    referrals_other = forms.CharField(
+        label='If you selected "Other" in the previous question, please tell us how',
+        max_length=100,
+        required=False
+    )
 
     class Meta:
         model = Application
         fields = ('gender', 'timezone', 'birth_date', 'objective', 'experience',
-                  'availability', 'occupation', 'course_instances')
+                  'availability', 'occupation', 'course_instances',
+                  'referrals', 'referrals_other')
 
 SKILLS_ASSESSMENT = [
     {
