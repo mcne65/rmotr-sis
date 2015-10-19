@@ -16,3 +16,9 @@
     <input class="btn btn-info" type="submit">
 </form>
 {% endblock %}
+
+{% block extra_footer_scripts %}
+<script type="text/javascript">
+    $('select[name="timezone"]').select2();
+</script>
+{% endblock %}
