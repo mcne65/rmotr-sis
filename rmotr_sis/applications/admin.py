@@ -11,4 +11,6 @@ class ApplicationReferralAdmin(admin.ModelAdmin):
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'batch', 'email', 'modified',
+                    'status', 'skills_assessment_correct_count')
+    list_filter = ('batch', 'email_validated', 'status', 'gender')

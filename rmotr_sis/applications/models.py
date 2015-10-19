@@ -3,13 +3,14 @@ from jsonfield import JSONField
 
 from django.db import models
 
+from rmotr_sis.models import TimeStampedModel
 from accounts.models import (TIMEZONE_CHOICES, GENDER_CHOICES,
                              OBJECTIVE_CHOICES, OCCUPATION_CHOICES,
                              EXPERIENCE_CHOICES, AVAILABILITY_CHOICES)
 from courses.models import Batch, CourseInstance
 
 
-class ApplicationReferral(models.Model):
+class ApplicationReferral(TimeStampedModel):
     name = models.CharField(max_length=30)
     active = models.BooleanField(default=False)
 
@@ -17,7 +18,7 @@ class ApplicationReferral(models.Model):
         return self.name
 
 
-class Application(models.Model):
+class Application(TimeStampedModel):
 
     class Meta:
         unique_together = (('email', 'batch'),)
