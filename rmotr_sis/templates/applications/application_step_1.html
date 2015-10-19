@@ -6,6 +6,8 @@
 <link href="{% static 'css/applications.css' %}" rel="stylesheet">
 {% endblock %}
 
+{% block navbar %}{% endblock %}
+
 {% block main_container %}
 {% include "applications/form_wizard.html" with step="1" only %}
 <form method="POST">
