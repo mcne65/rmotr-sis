@@ -27,8 +27,9 @@ class ApplicationFormStep1(forms.ModelForm):
 
 class ApplicationModelMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
-        return '{}, {} UTC'.format(obj.get_lecture_weekday_display(),
-                                   obj.start_date.strftime('%B %-dth %Y %I:%M%p'))
+        return '{}, {} {} EST'.format(obj.get_lecture_weekday_display(),  # FIXME: Time in DB is saved as UTC, not EST
+                                      obj.start_date.strftime('%B %-dth %Y'),
+                                      obj.lecture_utc_time.strftime('%I:%M%p'))
 
 
 class ApplicationFormStep2(forms.ModelForm):
