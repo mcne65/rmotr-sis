@@ -29,6 +29,27 @@ def validate_is_professor(value):
         raise ValidationError('Professor user must be staff')
 
 
+class Batch(TimeStampedModel):
+    number = models.PositiveSmallIntegerField()
+    start_date = models.DateField()
+    comments = models.TextField(blank=True, null=False)
+    accepting_applications = models.BooleanField(default=False)
+
+    def __str__(self):
+        return 'Batch {}'.format(self.number)
+
+    @classmethod
+    def get_current_batch(cls):
+        return cls.objects.filter(accepting_applications=True).first() or None
+
+    def save(self):
+        count = Batch.objects.filter(accepting_applications=True).count()
+        if count and self.accepting_applications:
+            raise ValidationError('Only one batch must be accepting '
+                                  'applications at the same time')
+        super(Batch, self).save()
+
+
 class Course(TimeStampedModel):
     name = models.CharField(max_length=150, blank=False, null=True)
     description = models.TextField(blank=True, null=True)
@@ -40,6 +61,7 @@ class Course(TimeStampedModel):
 
 class CourseInstance(TimeStampedModel):
     course = models.ForeignKey(Course)
+    batch = models.ForeignKey(Batch, blank=True, null=True)  # FIXME: this must be required after migrations
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
     professor = models.ForeignKey(User, related_name='courseinstance_professor_set',
@@ -50,7 +72,7 @@ class CourseInstance(TimeStampedModel):
     _code = models.CharField(max_length=10, blank=True)
 
     def __str__(self):
-        return '({}) - {} ({} - {})'.format(
+        return '#{} - {} ({} - {})'.format(
             self.code, self.course.name, self.start_date, self.end_date)
 
     @property

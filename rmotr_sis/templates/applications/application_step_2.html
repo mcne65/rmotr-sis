@@ -1,0 +1,24 @@
+{% extends 'bare.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block extra_header_styles %}
+<link href="{% static 'css/applications.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block main_container %}
+{% include "applications/form_wizard.html" with step="2" only %}
+<form method="POST">
+    {% csrf_token %}
+    {{form|crispy}}
+    <input class="btn btn-info" type="submit">
+</form>
+{% endblock %}
+
+{% block extra_footer_scripts %}
+<script type="text/javascript">
+    $('select[name="timezone"]').select2();
+</script>
+{% endblock %}

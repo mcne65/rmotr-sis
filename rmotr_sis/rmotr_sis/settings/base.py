@@ -4,7 +4,6 @@ from os.path import dirname
 PROJECT_ROOT = dirname(dirname(dirname(dirname(os.path.realpath(__file__)))))
 BASE_DIR = os.path.join(PROJECT_ROOT, 'rmotr_sis')
 
-
 SECRET_KEY = '^gtiou3uf0!)(zu6e-96ydcvzzws)eilo832qoam(snd%9ak_)'
 
 DEBUG = True
@@ -32,6 +31,7 @@ INSTALLED_APPS = (
     'students',
     'courses',
     'assignments',
+    'applications',
 )
 
 MIDDLEWARE_CLASSES = (
