@@ -84,12 +84,12 @@ SKILLS_ASSESSMENT = [
 What's the correct data type of these values: true, false?
                    """,
         'choices': (
-            ('0', 'boolean'),
-            ('1', 'integer'),
-            ('2', 'string'),
+            ('0', 'integer'),
+            ('1', 'string'),
+            ('2', 'boolean'),
             ('3', 'null'),
         ),
-        'correct': '0'
+        'correct': '2'
     },
     {
         'text': """
@@ -110,12 +110,12 @@ What's the result of the execution?
 If you need to repeat certain action many times as long as a condition is valid, which of the following control structures would you use?
         """,
         'choices': (
-            ('0', 'while loop'),
-            ('1', 'for each loop'),
-            ('2', 'case'),
-            ('3', 'if'),
+            ('0', 'for each loop'),
+            ('1', 'case'),
+            ('2', 'if'),
+            ('3', 'while loop'),
         ),
-        'correct': '0'
+        'correct': '3'
     },
     {
         'text': """
@@ -134,12 +134,12 @@ Which one of the next characteristics is typical of a dictionary (or hash) data 
 Why would you use try/except blocks?
         """,
         'choices': (
-            ('0', 'To catch exceptions and perform the proper action depending on the error type'),
-            ('1', 'To raise an exception in case something went wrong'),
-            ('2', 'To analyze the performance and correctness of your code'),
+            ('0', 'To raise an exception in case something went wrong'),
+            ('1', 'To analyze the performance and correctness of your code'),
+            ('2', 'To catch exceptions and perform the proper action depending on the error type'),
             ('3', 'To perform the same action many times'),
         ),
-        'correct': '0'
+        'correct': '2'
     },
     {
         'text': """
@@ -164,12 +164,12 @@ y = y * x;
 Which is the value of "y" after the execution?
         """,
         'choices': (
-            ('0', '50'),
-            ('1', '15'),
+            ('0', '15'),
+            ('1', '50'),
             ('2', '5'),
             ('3', '10'),
         ),
-        'correct': '0'
+        'correct': '1'
     },
     {
         'text': """
@@ -187,12 +187,12 @@ if (x < 5){
 Which is the value of "x" after the execution?
         """,
         'choices': (
-            ('0', '6'),
-            ('1', '2'),
-            ('2', '4'),
-            ('3', '10'),
+            ('0', '2'),
+            ('1', '4'),
+            ('2', '10'),
+            ('3', '6'),
         ),
-        'correct': '0'
+        'correct': '3'
     },
     {
         'text': """
@@ -223,12 +223,12 @@ y[0] = y[0] + y[1]
 Which is the value of "y" after the execution?
         """,
         'choices': (
-            ('0', '[6, 4, 1]'),
-            ('1', '[4, 4, 1]'),
-            ('2', '[2, 4, 1]'),
+            ('0', '[4, 4, 1]'),
+            ('1', '[2, 4, 1]'),
+            ('2', '[6, 4, 1]'),
             ('3', '[2, 2, 4]'),
         ),
-        'correct': '0'
+        'correct': '2'
     }
 ]
 
