@@ -61,7 +61,7 @@ class Course(TimeStampedModel):
 
 class CourseInstance(TimeStampedModel):
     course = models.ForeignKey(Course)
-    batch = models.ForeignKey(Batch, blank=True, null=True)  # FIXME: this must be required after migrations
+    batch = models.ForeignKey(Batch)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
     professor = models.ForeignKey(User, related_name='courseinstance_professor_set',
@@ -77,7 +77,7 @@ class CourseInstance(TimeStampedModel):
 
     @property
     def code(self):
-        return '{}-{}'.format(self.course.code, self._code)
+        return '{}-{}-{}'.format(self.batch.number, self.course.code, self._code)
 
     def is_student(self, student):
         """Returns True if the student is participating in this course

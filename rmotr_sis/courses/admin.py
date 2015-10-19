@@ -24,3 +24,4 @@ class CourseAdmin(admin.ModelAdmin):
 @admin.register(CourseInstance)
 class CourseInstanceAdmin(admin.ModelAdmin):
     list_display = ('code', 'course', 'professor', 'start_date', 'end_date')
+    list_filter = ('batch__number', 'course__code', '_code')
