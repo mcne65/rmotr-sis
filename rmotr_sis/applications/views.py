@@ -35,7 +35,8 @@ class ApplicationStep1View(FormView):
         subject = 'Thank you for applying to the rmotr.com applications program'
         send_template_mail(subject, 'application-email-confirm.html',
                            recipient_list=[email],
-                           context={'next_step_url': next_step_url})
+                           context={'next_step_url': next_step_url,
+                                    'first_name': form.cleaned_data['first_name']})
 
         return HttpResponseRedirect(self.get_success_url())
 
