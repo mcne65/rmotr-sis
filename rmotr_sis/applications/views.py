@@ -32,7 +32,7 @@ class ApplicationStep1View(FormView):
 
         # send confirmation email
         email = form.cleaned_data['email']
-        subject = 'Thank you for applying to the rmotr.com applications program'
+        subject = 'Thank you for applying to rmotr.com courses'
         send_template_mail(subject, 'application-email-confirm.html',
                            recipient_list=[email],
                            context={'next_step_url': next_step_url,
