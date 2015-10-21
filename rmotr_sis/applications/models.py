@@ -62,5 +62,14 @@ class Application(TimeStampedModel):
     skills_assessment_correct_count = models.PositiveSmallIntegerField(blank=True,
                                                                        null=True)
 
+    # step 4 (scholarships)
+    need_scholarship = models.BooleanField(default=False)
+    scholarship_q1 = models.TextField(max_length=1200, blank=True)
+    scholarship_q2 = models.TextField(max_length=1200, blank=True)
+    scholarship_q3 = models.TextField(max_length=1200, blank=True)
+    scholarship_q4 = models.TextField(max_length=1200, blank=True)
+    scholarship_q5 = models.TextField(max_length=1200, blank=True)
+    scholarship_q6 = models.TextField(max_length=1200, blank=True)
+
     def __str__(self):
         return '{} - {}'.format(self.batch, self.email)
