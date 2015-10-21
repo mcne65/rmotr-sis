@@ -2,6 +2,7 @@ from django.views.generic import FormView, TemplateView
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
+from django.conf import settings
 
 from rmotr_sis.utils import send_template_mail
 from applications.forms import (ApplicationFormStep1,
@@ -146,6 +147,16 @@ class ApplicationStep3View(FormView):
         app.status = 3
 
         app.save()
+
+        # notify admins
+        subject = '{} {} has completed the application form'.format(
+            app.first_name.title(), app.last_name.title())
+        application_url = reverse('admin:applications_application_change',
+                                  args=(str(app.id),))
+        send_template_mail(subject, 'application-admin-notify.html',
+                           recipient_list=[a[1] for a in settings.ADMINS],
+                           context={'application_url': application_url,
+                                    'application': app})
 
         return HttpResponseRedirect(self.get_success_url())
 
