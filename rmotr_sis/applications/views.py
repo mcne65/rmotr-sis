@@ -108,7 +108,6 @@ class ApplicationStep2ViewSuccess(TemplateView):
 class ApplicationStep3View(FormView):
     form_class = ApplicationFormStep3
     template_name = 'applications/application_step_3.html'
-    #success_url = '/applications/step3-success'
 
     def dispatch(self, request, *args, **kwargs):
 
