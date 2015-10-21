@@ -1,13 +1,14 @@
 from django.views.generic import FormView, TemplateView
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.conf import settings
 
 from rmotr_sis.utils import send_template_mail
 from applications.forms import (ApplicationFormStep1,
                                 ApplicationFormStep2,
-                                ApplicationFormStep3)
+                                ApplicationFormStep3,
+                                ApplicationFormStep4)
 from applications.models import Application
 from applications.forms import SKILLS_ASSESSMENT
 from courses.models import Batch
@@ -50,7 +51,6 @@ class ApplicationStep1ViewSuccess(TemplateView):
 class ApplicationStep2View(FormView):
     form_class = ApplicationFormStep2
     template_name = 'applications/application_step_2.html'
-    success_url = '/applications/step2-success'
 
     def dispatch(self, request, *args, **kwargs):
 
@@ -59,14 +59,9 @@ class ApplicationStep2View(FormView):
         except ValueError:
             raise Http404
 
-        if app.status == 2:
-            # user already completed step2, redirect to step3
-            url = reverse('applications:application-3', args=(str(app.id),))
-            return HttpResponseRedirect(url)
-        elif app.status == 3:
-            # user already completed all steps, show application confirmation
-            return render(self.request,
-                          'applications/application_step_3_confirmation.html')
+        if app.status != 1:
+            # the user is trying to access an invalid step
+            raise Http404
 
         # if the user access this view, it means that the email was validated
         app.email_validated = True
@@ -113,22 +108,20 @@ class ApplicationStep2ViewSuccess(TemplateView):
 class ApplicationStep3View(FormView):
     form_class = ApplicationFormStep3
     template_name = 'applications/application_step_3.html'
-    success_url = '/applications/step3-success'
 
     def dispatch(self, request, *args, **kwargs):
 
         app = get_object_or_404(Application, id=self.kwargs['uuid'])
 
-        if app.status == 1:
-            # user didn't complete step2 yet, redirect back to step2
-            url = reverse('applications:application-2', args=(str(app.id),))
-            return HttpResponseRedirect(url)
-        elif app.status == 3:
-            # user already completed this step, show application confirmation
-            return render(self.request,
-                          'applications/application_step_3_confirmation.html')
+        if app.status != 2:
+            # the user is trying to access an invalid step
+            raise Http404
 
         return super(ApplicationStep3View, self).dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('applications:application-3-success',
+                       args=(str(self.kwargs['uuid']),))
 
     def form_valid(self, form):
 
@@ -164,3 +157,52 @@ class ApplicationStep3View(FormView):
 class ApplicationStep3ViewSuccess(TemplateView):
 
     template_name = 'applications/application_step_3_confirmation.html'
+
+    def get_context_data(self, **kwargs):
+        return {'scholarship_url': reverse('applications:application-4',
+                                           args=(str(self.kwargs['uuid']),))}
+
+
+class ApplicationStep4View(FormView):
+    form_class = ApplicationFormStep4
+    template_name = 'applications/application_step_4.html'
+    success_url = '/applications/step4-success'
+
+    def dispatch(self, request, *args, **kwargs):
+
+        try:
+            app = get_object_or_404(Application, id=self.kwargs['uuid'])
+        except ValueError:
+            raise Http404
+
+        if app.status != 3:
+            # the user is trying to access an invalid step
+            raise Http404
+
+        # if the user access this view, it means that he need a scholarship
+        app.need_scholarship = True
+
+        app.save()
+
+        return super(ApplicationStep4View, self).dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('applications:application-4-success',
+                       args=(str(self.kwargs['uuid']),))
+
+    def form_valid(self, form):
+        app = Application.objects.get(id=self.kwargs['uuid'])
+        for i in range(6):
+            q_name = 'scholarship_q{}'.format(i + 1)
+            setattr(app, q_name, form.cleaned_data[q_name])
+
+        # mark application as step4 completed
+        app.status = 4
+
+        app.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class ApplicationStep4ViewSuccess(TemplateView):
+
+    template_name = 'applications/application_step_4_confirmation.html'

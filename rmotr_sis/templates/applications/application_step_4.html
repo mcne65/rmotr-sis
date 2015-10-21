@@ -1,0 +1,20 @@
+{% extends 'bare.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block extra_header_styles %}
+<link href="{% static 'css/applications.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block main_container %}
+<h2>Apply for a scholarship at rmotr.com</h2>
+<p>It's important to mention that scholarships are going to be granted to people that really need them. We have a huge demand for scholarships program, so we've come to the point to become really rigorous with the application process. We're going to do in depth due diligence to assess who deserve the scholarship.</p>
+<p>Please answer the following questions and explain us why you are a good candidate to deserve a scholarship.</p>
+<form method="POST">
+    {% csrf_token %}
+    {{form|crispy}}
+    <input class="btn btn-info" type="submit">
+</form>
+{% endblock %}

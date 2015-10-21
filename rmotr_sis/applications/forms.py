@@ -248,3 +248,33 @@ class_attrs = {
     for index, q in enumerate(SKILLS_ASSESSMENT)
 }
 ApplicationFormStep3 = type('ApplicationFormStep3', (forms.Form,), class_attrs)
+
+
+class ApplicationFormStep4(forms.ModelForm):
+    scholarship_q1 = forms.CharField(
+        widget=forms.Textarea, max_length=1200,
+        label='Please tell us in less than 200 words why you need the scholarship.')
+    scholarship_q2 = forms.CharField(
+        widget=forms.Textarea, max_length=1200,
+        label='Please tell us of that time that you helped someone and it was worth it.')
+    scholarship_q3 = forms.CharField(
+        widget=forms.Textarea, max_length=1200,
+        label='Please tell us what was the most impressive thing you’ve built by yourself (or with other people).')
+    scholarship_q4 = forms.CharField(
+        widget=forms.Textarea, max_length=1200,
+        label='Please tell us how you’ve been trying to learn programming by yourself.')
+    scholarship_q5 = forms.CharField(
+        widget=forms.Textarea, max_length=1200,
+        label='Please tell us innovative ways you’d use to hack education and make it more available and affordable to the world.')
+    scholarship_q6 = forms.CharField(
+        widget=forms.Textarea, max_length=1200,
+        label='Will you commit to helping others in order to give back to the community what you’ve received from this scholarship?')
+
+    class Meta:
+        model = Application
+        fields = ('scholarship_q1',
+                  'scholarship_q2',
+                  'scholarship_q3',
+                  'scholarship_q4',
+                  'scholarship_q5',
+                  'scholarship_q6',)
