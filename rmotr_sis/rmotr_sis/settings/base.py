@@ -91,5 +91,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_TEMPLATE_LOCATION = os.path.join(TEMPLATE_DIRS[0], 'emails')
 
 SCHOLARSHIP_ASSIGNMENTS = {
-    'assignment_1': 'http://google.com'
+    'assignment_1': 'http://assignment-1.com',
+    'assignment_2': 'http://assignment-2.com',
+    'assignment_3': 'http://assignment-3.com',
 }

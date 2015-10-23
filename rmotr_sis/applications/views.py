@@ -1,3 +1,4 @@
+import sys
 from datetime import datetime
 
 from django.views.generic import FormView
@@ -11,7 +12,9 @@ from applications.forms import (ApplicationFormStep1,
                                 ApplicationFormStep2,
                                 ApplicationFormStep3,
                                 ApplicationFormStep4,
-                                ApplicationFormStep5)
+                                ApplicationFormStep5,
+                                ApplicationFormStep6,
+                                ApplicationFormStep7)
 from applications.models import Application
 from applications.forms import SKILLS_ASSESSMENT
 from courses.models import Batch
@@ -194,10 +197,10 @@ class ApplicationStep4View(FormView):
         subject = 'Scholarship @rmotr.com first assignment'
         solution_url = reverse('applications:application-5',
                                args=(str(app.id),))
-        send_template_mail(subject, 'application-scholarship-first-assignment.html',
+        send_template_mail(subject, 'application-scholarship-assignment-1.html',
                            recipient_list=[app.email],
                            context={'solution_url': solution_url,
-                                    'scholarship_assignment1_url': settings.SCHOLARSHIP_ASSIGNMENTS['assignment_1'],
+                                    'scholarship_assignment_url': settings.SCHOLARSHIP_ASSIGNMENTS['assignment_1'],
                                     'application': app})
         app.scholarship_a1_email_sent = datetime.now()
 
@@ -205,9 +208,14 @@ class ApplicationStep4View(FormView):
         return render(self.request, 'applications/application_step_4_confirmation.html')
 
 
-class ApplicationStep5View(FormView):
-    form_class = ApplicationFormStep5
-    template_name = 'applications/application_step_5.html'
+class BaseApplicationScholarshipAssignmentView(FormView):
+
+    def get_form_class(self):
+        return getattr(sys.modules[__name__],
+                       'ApplicationFormStep{}'.format(self.current_status))
+
+    def get_template_names(self):
+        return ['applications/application_step_{}.html'.format(self.current_status)]
 
     def dispatch(self, request, *args, **kwargs):
 
@@ -216,26 +224,67 @@ class ApplicationStep5View(FormView):
         except ValueError:
             raise Http404
 
-        if app.status != 4:
+        if app.status != self.current_status - 1:
             # the user is trying to access an invalid step
             raise Http404
 
-        return super(ApplicationStep5View, self).dispatch(request, *args, **kwargs)
+        return super(BaseApplicationScholarshipAssignmentView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        kwargs['scholarship_assignment1_url'] = settings.SCHOLARSHIP_ASSIGNMENTS['assignment_1']
+        value = settings.SCHOLARSHIP_ASSIGNMENTS['assignment_{}'.format(self.assignment_number)]
+        kwargs['scholarship_assignment_url'] = value
         return kwargs
 
     def get_success_url(self):
-        return reverse('applications:application-5-success',
+        return reverse('applications:application-{}-success'.format(self.current_status),
                        args=(str(self.kwargs['uuid']),))
 
     def form_valid(self, form):
         app = Application.objects.get(id=self.kwargs['uuid'])
-        app.scholarship_a1_solution = form.cleaned_data['scholarship_a1_solution']
+        field = 'scholarship_a{}_solution'.format(self.assignment_number)
+        solution = form.cleaned_data['scholarship_a{}_solution'.format(self.assignment_number)]
+        setattr(app, field, solution)
 
         # mark application as step5 completed
-        app.status = 5
+        app.status = self.current_status
+
+        # send email with the next scholarship assignment
+        if not hasattr(self, 'last_assignment') or not self.last_assignment:
+            subject = 'Scholarship @rmotr.com next assignment'
+            solution_url = reverse(
+                'applications:application-{}'.format(self.current_status + 1),
+                args=(str(app.id),)
+            )
+            email_template = 'application-scholarship-assignment-{}.html'.format(self.assignment_number + 1)
+            send_template_mail(
+                subject,
+                email_template,
+                recipient_list=[app.email],
+                context={
+                    'solution_url': solution_url,
+                    'scholarship_assignment_url': settings.SCHOLARSHIP_ASSIGNMENTS['assignment_{}'.format(self.assignment_number + 1)],
+                    'application': app
+                }
+            )
+            field = 'scholarship_a{}_email_sent'.format(self.assignment_number + 1)
+            setattr(app, field, datetime.now())
 
         app.save()
-        return render(self.request, 'applications/application_step_5_confirmation.html')
+        template = 'applications/application_step_{}_confirmation.html'.format(self.current_status)
+        return render(self.request, template)
+
+
+class ApplicationStep5View(BaseApplicationScholarshipAssignmentView):
+    current_status = 5
+    assignment_number = 1
+
+
+class ApplicationStep6View(BaseApplicationScholarshipAssignmentView):
+    current_status = 6
+    assignment_number = 2
+
+
+class ApplicationStep7View(BaseApplicationScholarshipAssignmentView):
+    current_status = 7
+    assignment_number = 3
+    last_assignment = True

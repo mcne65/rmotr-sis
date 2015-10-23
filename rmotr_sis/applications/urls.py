@@ -12,5 +12,8 @@ urlpatterns = patterns('applications.views',
 
     url(r'^(?P<uuid>[\w.-]+)/scholarship$', views.ApplicationStep4View.as_view(), name="application-4"),
 
+    # scholarship assignments
     url(r'^(?P<uuid>[\w.-]+)/scholarship/assignments/1$', views.ApplicationStep5View.as_view(), name="application-5"),
+    url(r'^(?P<uuid>[\w.-]+)/scholarship/assignments/2$', views.ApplicationStep6View.as_view(), name="application-6"),
+    url(r'^(?P<uuid>[\w.-]+)/scholarship/assignments/3$', views.ApplicationStep7View.as_view(), name="application-7"),
 )

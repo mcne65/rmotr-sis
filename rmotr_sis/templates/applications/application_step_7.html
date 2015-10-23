@@ -9,8 +9,8 @@
 {% block navbar %}{% endblock %}
 
 {% block main_container %}
-<h2>First assignment</h2>
-<p>As a first step in this application process you must resolve <a href="{{scholarship_assignment_url}}">this assignment</a>, and paste the solution in this form.</p>
+<h2>Third assignment</h2>
+<p>For the last step in this application process you must resolve <a href="{{scholarship_assignment_url}}">this assignment</a>, and paste the solution in this form.</p>
 <form method="POST">
     {% csrf_token %}
     {{form|crispy}}
