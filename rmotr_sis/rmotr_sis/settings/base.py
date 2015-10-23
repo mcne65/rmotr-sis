@@ -89,3 +89,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_TEMPLATE_LOCATION = os.path.join(TEMPLATE_DIRS[0], 'emails')
+
+SCHOLARSHIP_ASSIGNMENTS = {
+    'assignment_1': 'http://google.com'
+}

@@ -278,3 +278,21 @@ class ApplicationFormStep4(forms.ModelForm):
                   'scholarship_q4',
                   'scholarship_q5',
                   'scholarship_q6',)
+
+
+class ApplicationFormStep5(forms.ModelForm):
+
+    scholarship_a1_solution = forms.URLField(
+        max_length=1200,
+        label='Paste here the gist (https://gist.github.com/) URL with the solution to the assignment')
+
+    def clean_scholarship_a1_solution(self):
+        solution = self.cleaned_data['scholarship_a1_solution']
+        if 'gist.github.com' not in solution:
+            raise forms.ValidationError(
+                'Must be a gist.github.com URL')
+        return solution
+
+    class Meta:
+        model = Application
+        fields = ('scholarship_a1_solution',)

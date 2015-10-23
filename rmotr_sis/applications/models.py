@@ -62,7 +62,7 @@ class Application(TimeStampedModel):
     skills_assessment_correct_count = models.PositiveSmallIntegerField(blank=True,
                                                                        null=True)
 
-    # step 4 (scholarships)
+    # step 4 (scholarships questions)
     need_scholarship = models.BooleanField(default=False)
     scholarship_q1 = models.TextField(max_length=1200, blank=True)
     scholarship_q2 = models.TextField(max_length=1200, blank=True)
@@ -70,6 +70,18 @@ class Application(TimeStampedModel):
     scholarship_q4 = models.TextField(max_length=1200, blank=True)
     scholarship_q5 = models.TextField(max_length=1200, blank=True)
     scholarship_q6 = models.TextField(max_length=1200, blank=True)
+
+    # step 5 (scholarships first email assignments)
+    scholarship_a1_email_sent = models.DateTimeField(null=True, blank=True)
+    scholarship_a1_solution = models.URLField(max_length=1200, blank=True)
+
+    # step 6 (scholarships second email assignments)
+    scholarship_a2_email_sent = models.DateTimeField(null=True, blank=True)
+    scholarship_a2_solution = models.URLField(max_length=1200, blank=True)
+
+    # step 7 (scholarships third email assignments)
+    scholarship_a3_email_sent = models.DateTimeField(null=True, blank=True)
+    scholarship_a3_solution = models.URLField(max_length=1200, blank=True)
 
     def __str__(self):
         return '{} - {}'.format(self.batch, self.email)
