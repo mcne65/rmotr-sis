@@ -194,7 +194,7 @@ class ApplicationStep4View(FormView):
 
 
         # send email with first scholarship assignment
-        subject = 'Scholarship @rmotr.com first assignment'
+        subject = 'Scholarship application assignment 1'
         solution_url = reverse('applications:application-5',
                                args=(str(app.id),))
         send_template_mail(subject, 'application-scholarship-assignment-1.html',
@@ -250,7 +250,7 @@ class BaseApplicationScholarshipAssignmentView(FormView):
 
         # send email with the next scholarship assignment
         if not hasattr(self, 'last_assignment') or not self.last_assignment:
-            subject = 'Scholarship @rmotr.com next assignment'
+            subject = 'Scholarship application assignment {}'.format(self.assignment_number + 1)
             solution_url = reverse(
                 'applications:application-{}'.format(self.current_status + 1),
                 args=(str(app.id),)
