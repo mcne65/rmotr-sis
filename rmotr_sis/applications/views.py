@@ -1,14 +1,20 @@
-from django.views.generic import FormView, TemplateView
+import sys
+from datetime import datetime
+
+from django.views.generic import FormView
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.conf import settings
 
 from rmotr_sis.utils import send_template_mail
 from applications.forms import (ApplicationFormStep1,
                                 ApplicationFormStep2,
                                 ApplicationFormStep3,
-                                ApplicationFormStep4)
+                                ApplicationFormStep4,
+                                ApplicationFormStep5,
+                                ApplicationFormStep6,
+                                ApplicationFormStep7)
 from applications.models import Application
 from applications.forms import SKILLS_ASSESSMENT
 from courses.models import Batch
@@ -40,12 +46,7 @@ class ApplicationStep1View(FormView):
                            context={'next_step_url': next_step_url,
                                     'first_name': form.cleaned_data['first_name']})
 
-        return HttpResponseRedirect(self.get_success_url())
-
-
-class ApplicationStep1ViewSuccess(TemplateView):
-
-    template_name = 'applications/application_step_1_confirmation.html'
+        return render(self.request, 'applications/application_step_1_confirmation.html')
 
 
 class ApplicationStep2View(FormView):
@@ -100,11 +101,6 @@ class ApplicationStep2View(FormView):
         return HttpResponseRedirect(step3_url)
 
 
-class ApplicationStep2ViewSuccess(TemplateView):
-
-    template_name = 'applications/application_step_2_confirmation.html'
-
-
 class ApplicationStep3View(FormView):
     form_class = ApplicationFormStep3
     template_name = 'applications/application_step_3.html'
@@ -151,16 +147,13 @@ class ApplicationStep3View(FormView):
                            context={'application_url': application_url,
                                     'application': app})
 
-        return HttpResponseRedirect(self.get_success_url())
-
-
-class ApplicationStep3ViewSuccess(TemplateView):
-
-    template_name = 'applications/application_step_3_confirmation.html'
-
-    def get_context_data(self, **kwargs):
-        return {'scholarship_url': reverse('applications:application-4',
-                                           args=(str(self.kwargs['uuid']),))}
+        context = {'scholarship_url': reverse('applications:application-4',
+                                              args=(str(self.kwargs['uuid']),))}
+        return render(
+            self.request,
+            'applications/application_step_3_confirmation.html',
+            context=context
+        )
 
 
 class ApplicationStep4View(FormView):
@@ -199,10 +192,99 @@ class ApplicationStep4View(FormView):
         # mark application as step4 completed
         app.status = 4
 
+
+        # send email with first scholarship assignment
+        subject = 'Scholarship @rmotr.com first assignment'
+        solution_url = reverse('applications:application-5',
+                               args=(str(app.id),))
+        send_template_mail(subject, 'application-scholarship-assignment-1.html',
+                           recipient_list=[app.email],
+                           context={'solution_url': solution_url,
+                                    'scholarship_assignment_url': settings.SCHOLARSHIP_ASSIGNMENTS['assignment_1'],
+                                    'application': app})
+        app.scholarship_a1_email_sent = datetime.now()
+
         app.save()
-        return HttpResponseRedirect(self.get_success_url())
+        return render(self.request, 'applications/application_step_4_confirmation.html')
 
 
-class ApplicationStep4ViewSuccess(TemplateView):
+class BaseApplicationScholarshipAssignmentView(FormView):
 
-    template_name = 'applications/application_step_4_confirmation.html'
+    def get_form_class(self):
+        return getattr(sys.modules[__name__],
+                       'ApplicationFormStep{}'.format(self.current_status))
+
+    def get_template_names(self):
+        return ['applications/application_step_{}.html'.format(self.current_status)]
+
+    def dispatch(self, request, *args, **kwargs):
+
+        try:
+            app = get_object_or_404(Application, id=self.kwargs['uuid'])
+        except ValueError:
+            raise Http404
+
+        if app.status != self.current_status - 1:
+            # the user is trying to access an invalid step
+            raise Http404
+
+        return super(BaseApplicationScholarshipAssignmentView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        value = settings.SCHOLARSHIP_ASSIGNMENTS['assignment_{}'.format(self.assignment_number)]
+        kwargs['scholarship_assignment_url'] = value
+        return kwargs
+
+    def get_success_url(self):
+        return reverse('applications:application-{}-success'.format(self.current_status),
+                       args=(str(self.kwargs['uuid']),))
+
+    def form_valid(self, form):
+        app = Application.objects.get(id=self.kwargs['uuid'])
+        field = 'scholarship_a{}_solution'.format(self.assignment_number)
+        solution = form.cleaned_data['scholarship_a{}_solution'.format(self.assignment_number)]
+        setattr(app, field, solution)
+
+        # mark application as step5 completed
+        app.status = self.current_status
+
+        # send email with the next scholarship assignment
+        if not hasattr(self, 'last_assignment') or not self.last_assignment:
+            subject = 'Scholarship @rmotr.com next assignment'
+            solution_url = reverse(
+                'applications:application-{}'.format(self.current_status + 1),
+                args=(str(app.id),)
+            )
+            email_template = 'application-scholarship-assignment-{}.html'.format(self.assignment_number + 1)
+            send_template_mail(
+                subject,
+                email_template,
+                recipient_list=[app.email],
+                context={
+                    'solution_url': solution_url,
+                    'scholarship_assignment_url': settings.SCHOLARSHIP_ASSIGNMENTS['assignment_{}'.format(self.assignment_number + 1)],
+                    'application': app
+                }
+            )
+            field = 'scholarship_a{}_email_sent'.format(self.assignment_number + 1)
+            setattr(app, field, datetime.now())
+
+        app.save()
+        template = 'applications/application_step_{}_confirmation.html'.format(self.current_status)
+        return render(self.request, template)
+
+
+class ApplicationStep5View(BaseApplicationScholarshipAssignmentView):
+    current_status = 5
+    assignment_number = 1
+
+
+class ApplicationStep6View(BaseApplicationScholarshipAssignmentView):
+    current_status = 6
+    assignment_number = 2
+
+
+class ApplicationStep7View(BaseApplicationScholarshipAssignmentView):
+    current_status = 7
+    assignment_number = 3
+    last_assignment = True

@@ -10,6 +10,8 @@
 
 {% block main_container %}
 {% include "applications/form_wizard.html" with step="3" only %}
+<h1>Skills assessment</h1>
+<p>Answer a few questions to show us which is your current programming level</p>
 <form method="POST">
     {% csrf_token %}
     {{form|crispy}}

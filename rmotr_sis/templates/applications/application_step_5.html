@@ -9,18 +9,11 @@
 {% block navbar %}{% endblock %}
 
 {% block main_container %}
-{% include "applications/form_wizard.html" with step="2" only %}
-<h1>Personal information</h1>
-<p>Tell us some personal information so we can know you better</p>
+<h2>First assignment</h2>
+<p>As a first step in this application process you must resolve <a href="{{scholarship_assignment_url}}">this assignment</a>, and paste the solution in this form.</p>
 <form method="POST">
     {% csrf_token %}
     {{form|crispy}}
     <input class="btn btn-info" type="submit">
 </form>
-{% endblock %}
-
-{% block extra_footer_scripts %}
-<script type="text/javascript">
-    $('select[name="timezone"]').select2();
-</script>
 {% endblock %}
