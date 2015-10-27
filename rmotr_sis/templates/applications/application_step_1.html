@@ -9,6 +9,21 @@
 {% block navbar %}{% endblock %}
 
 {% block main_container %}
+<div class="page-header application-course-header">
+    <h1>Advanced Python Programming course</h1>
+    <img src="/static/img/python-logo-master-v3-TM-flattened.png"/>
+    <p class="lead course-description">
+        Learn Advanced Python concepts in a real classroom, with a real teacher and classmates, but remotely.
+    </p>
+    <p class="course-details">
+        Read more about how it works, the price, contents and requirements <a href="http://blog.rmotr.com/announcements/2015/10/20/python-programming-course-batch-4-is-now-open/" target="_blank">here.</a>
+    </p>
+</div>
+<div>
+
+</div>
+
+
 {% include "applications/form_wizard.html" with step="1" only %}
 <form method="POST">
     {% csrf_token %}

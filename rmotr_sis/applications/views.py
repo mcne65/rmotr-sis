@@ -1,7 +1,7 @@
 import sys
 from datetime import datetime
 
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
@@ -288,3 +288,12 @@ class ApplicationStep7View(BaseApplicationScholarshipAssignmentView):
     current_status = 7
     assignment_number = 3
     last_assignment = True
+
+
+class ConfirmationStepView(TemplateView):
+    BASE_TEMPLATE_NAME = 'applications/application_step_{step}_confirmation.html'
+
+    def get(self, request, step, *args, **kwargs):
+        self.template_name = self.BASE_TEMPLATE_NAME.format(step=step)
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context)

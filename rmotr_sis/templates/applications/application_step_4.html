@@ -9,9 +9,19 @@
 {% block navbar %}{% endblock %}
 
 {% block main_container %}
-<h2>Apply for a scholarship at rmotr.com</h2>
-<p>It's important to mention that scholarships are going to be granted to people that really need them. We have a huge demand for scholarships program, so we've come to the point to become really rigorous with the application process. We're going to do in depth due diligence to assess who deserve the scholarship.</p>
-<p>Please answer the following questions and explain us why you are a good candidate to deserve a scholarship.</p>
+<div class="page-header">
+    <h1>Apply for a scholarship at rmotr.com</h1>
+</div>
+
+
+<p class="lead">
+    Scholarships will be granted to people that need them. We do a careful selection of applicants. Please read about our <a target="_blank" href="http://blog.rmotr.com/announcements/2015/03/29/new-scholarship-model/">Scholarship model</a> and the <a target="_blank" href="http://blog.rmotr.com/scholarships/2015/01/08/scholarship-faqs/">Scholarships FAQs</a> before applying.
+</p>
+
+<div class="page-header">
+    <p><b>Please answer the following questions and explain us why you are a good candidate to deserve a scholarship.</b></p>
+</div>
+
 <form method="POST">
     {% csrf_token %}
     {{form|crispy}}
