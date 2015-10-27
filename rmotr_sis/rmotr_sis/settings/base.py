@@ -91,7 +91,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_TEMPLATE_LOCATION = os.path.join(TEMPLATE_DIRS[0], 'emails')
 
 SCHOLARSHIP_ASSIGNMENTS = {
-    'assignment_1': 'http://assignment-1.com',
-    'assignment_2': 'http://assignment-2.com',
-    'assignment_3': 'http://assignment-3.com',
+    'assignment_1': 'https://gist.github.com/martinzugnoni/9d7d68ea37c165278493',  # find-next-prime
+    'assignment_2': 'https://gist.github.com/martinzugnoni/2b60deae6fa639543c50',  # max-adjacent-product
+    'assignment_3': 'https://gist.github.com/martinzugnoni/dc6952632af3ce5a2ef1',  # find-anagrams
 }
