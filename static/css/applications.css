@@ -1,3 +1,18 @@
 label {font-weight: 200}
 pre {font-weight: 200; margin-bottom: 0px;}
 .control-label {font-weight: bold; padding-top: 30px;}
+
+.application-course-header{
+    width: 100%;
+    text-align: center;
+}
+.application-course-header h1{
+    font-weight: bold
+}
+.application-course-header .course-description{
+    padding: 0px 15%;
+}
+
+.application-course-header .course-details{
+    font-weight: bold;
+}
