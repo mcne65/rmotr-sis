@@ -96,4 +96,4 @@ SCHOLARSHIP_ASSIGNMENTS = {
     'assignment_3': 'https://gist.github.com/martinzugnoni/dc6952632af3ce5a2ef1',  # find-anagrams
 }
 
-COURSE_PRICE = 100  # 300.00 USD
+COURSE_PRICE = 30000  # 300.00 USD

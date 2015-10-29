@@ -4,30 +4,45 @@
 
 {% block extra_header_styles %}
 <link href="{% static 'css/applications.css' %}" rel="stylesheet">
+<style type="text/css">
+
+</style>
 {% endblock %}
 
 {% block navbar %}{% endblock %}
 
 {% block main_container %}
+
 {% if error %}
-  <p>{{error}}</p>
+<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Oops!</strong> Your card has been declined. We could not process your payment. Please, try later or using another credit card.
+</div>
 {% endif %}
-<h2>Checkout</h2>
-<p>foobar</p>
-<form method="POST">
-  {% csrf_token %}
-  <script
-    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-    data-key="{{public_key}}"
-    data-image="{% static 'img/logo.jpg' %}"
-    data-name="rmotr.com"
-    data-description="Remote Python Course"
-    data-email="{{app.email}}"
-    data-label="Pay with Credit Card"
-    data-currency="USD"
-    data-amount="{{amount}}"
-    data-locale="en"
-    data-allow-remember-me="false">
-  </script>
-</form>
+
+<div class="jumbotron">
+    <h2>Congratulations {{app.first_name|capfirst}}!</h2>
+    <p>You've been selected to participate in our new batch of courses.</p>
+    <p>To guarantee a spot in the course, please pay the <strong>${{amount_dollars|floatformat:0}} course tuition</strong> using the following checkout form.</p>
+    <p>Price includes 8 weeks of <strong>Advanced Python classes</strong> attending to a real remote classroom, with real professional professors, and real classmates from all around the world.</p>
+    <p style="font-style: italic;">** We offer 100% refound if you are not happy with our methodology</p>
+    <p>If you have further questions, don't hesitate to contact us at <a href="mailto:questions@rmotr.com">questions@rmotr.com</a>.</p>
+
+    <form method="POST">
+      {% csrf_token %}
+      <script
+        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key="{{public_key}}"
+        data-image="{% static 'img/logo.jpg' %}"
+        data-name="rmotr.com"
+        data-description="Remote Python Course"
+        data-email="{{app.email}}"
+        data-label="PAY ${{amount_dollars|floatformat:0}} TUITION NOW"
+        data-currency="USD"
+        data-amount="{{amount_cents}}"
+        data-locale="en"
+        data-allow-remember-me="false">
+      </script>
+    </form>
+</div>
 {% endblock %}
