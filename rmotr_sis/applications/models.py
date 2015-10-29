@@ -27,6 +27,7 @@ class Application(TimeStampedModel):
     batch = models.ForeignKey(Batch, blank=True, null=True)  # FIXME: this must be required
     status = models.PositiveSmallIntegerField(default=1)
     email_validated = models.BooleanField(default=False)
+    utm_source = models.CharField(max_length=255, blank=True)
 
     # step 1
     email = models.EmailField()
