@@ -9,3 +9,4 @@ smartcsv==0.2.3
 django-dbbackup==2.0.4
 django-crispy-forms==1.5.1
 django-jsonfield==0.9.15
+stripe==1.27.1

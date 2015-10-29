@@ -1,7 +1,8 @@
 import sys
 from datetime import datetime
 
-from django.views.generic import FormView, TemplateView
+import stripe
+from django.views.generic import View, FormView, TemplateView
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
@@ -300,3 +301,69 @@ class ConfirmationStepView(TemplateView):
         self.template_name = self.BASE_TEMPLATE_NAME.format(step=step)
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
+
+
+class ApplicationCheckoutView(View):
+
+    def get(self, *args, **kwargs):
+        application = get_object_or_404(Application, id=kwargs['uuid'])
+
+        # don't accept payments if student was not selected or payment was
+        # already registered
+        if not application.selected or application.charge_id:
+            raise Http404
+
+        context = {
+            'app': application,
+            'public_key': settings.STRIPE['public_key'],
+            'amount_cents': settings.COURSE_PRICE,
+            'amount_dollars': int(settings.COURSE_PRICE) / 100
+        }
+        return render(self.request, 'applications/application_checkout.html',
+                      context=context)
+
+    def post(self, *args, **kwargs):
+        stripe.api_key = settings.STRIPE['secret_key']
+        application = get_object_or_404(Application, id=kwargs['uuid'])
+        try:
+            charge = stripe.Charge.create(
+                amount=settings.COURSE_PRICE,  # amount in cents
+                currency="usd",
+                source=self.request.POST['stripeToken'],
+                description="Remote Python Course",
+                metadata={'application_id': kwargs['uuid'],
+                          'email': application.email,
+                          'batch': application.batch.number})
+        except stripe.error.CardError as e:
+            # The card has been declined
+            context = {
+                'app': application,
+                'public_key': settings.STRIPE['public_key'],
+                'amount_cents': settings.COURSE_PRICE,
+                'amount_dollars': int(settings.COURSE_PRICE) / 100,
+                'error': e
+            }
+            return render(self.request, 'applications/application_checkout.html',
+                          context=context)
+        else:
+            # save payment details
+            application.charge_id = charge['id']
+            application.charge_details = charge
+            application.save()
+
+            # notify admins
+            subject = '{} {} has just performed a checkout'.format(
+                application.first_name.title(), application.last_name.title())
+            application_url = reverse('admin:applications_application_change',
+                                      args=(str(application.id),))
+            context = {
+                'application_url': application_url,
+                'amount_dollars': int(settings.COURSE_PRICE) / 100,
+                'application': application
+            }
+            send_template_mail(subject, 'application-checkout-notify.html',
+                               recipient_list=[a[1] for a in settings.ADMINS],
+                               context=context)
+
+            return render(self.request, 'applications/application_checkout_success.html',
+                          context={'app': application})

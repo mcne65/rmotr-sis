@@ -1,0 +1,2 @@
+<p>{{application.first_name|capfirst}} {{application.last_name|capfirst}} ({{application.email}}) has just paid ${{amount_dollars|floatformat:0}} successfully.</p>
+<p>See application details following <a href="https://sis.rmotr.com{{application_url}}">this link</a> or payment details following <a href="https://dashboard.stripe.com/test/payments/{{application.charge_id}}">this one</a>.</p>

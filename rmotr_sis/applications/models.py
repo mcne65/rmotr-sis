@@ -29,6 +29,14 @@ class Application(TimeStampedModel):
     email_validated = models.BooleanField(default=False)
     utm_source = models.CharField(max_length=255, blank=True)
 
+    # payment details
+    charge_id = models.CharField(max_length=100, blank=True)
+    charge_details = JSONField(blank=True, null=False)
+
+    # whether the student was selected for this batch or not
+    # selected=True is required for checking out
+    selected = models.BooleanField(default=False)
+
     # step 1
     email = models.EmailField()
     first_name = models.CharField(max_length=30)
