@@ -1,0 +1,33 @@
+{% extends 'bare.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block extra_header_styles %}
+<link href="{% static 'css/applications.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block main_container %}
+{% if error %}
+  <p>{{error}}</p>
+{% endif %}
+<h2>Checkout</h2>
+<p>foobar</p>
+<form method="POST">
+  {% csrf_token %}
+  <script
+    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+    data-key="{{public_key}}"
+    data-image="{% static 'img/logo.jpg' %}"
+    data-name="rmotr.com"
+    data-description="Remote Python Course"
+    data-email="{{app.email}}"
+    data-label="Pay with Credit Card"
+    data-currency="USD"
+    data-amount="{{amount}}"
+    data-locale="en"
+    data-allow-remember-me="false">
+  </script>
+</form>
+{% endblock %}

@@ -1,7 +1,8 @@
 import sys
 from datetime import datetime
 
-from django.views.generic import FormView, TemplateView
+import stripe
+from django.views.generic import View, FormView, TemplateView
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
@@ -300,3 +301,50 @@ class ConfirmationStepView(TemplateView):
         self.template_name = self.BASE_TEMPLATE_NAME.format(step=step)
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
+
+
+class ApplicationCheckoutView(View):
+
+    def get(self, *args, **kwargs):
+        application = get_object_or_404(Application, id=kwargs['uuid'])
+
+        # don't accept payments if student was not selected
+        if not application.selected:
+            raise Http404
+
+        return render(self.request, 'applications/application_checkout.html',
+                      context={'app': application,
+                               'public_key': settings.STRIPE['public_key'],
+                               'amount': settings.COURSE_PRICE})
+
+    def post(self, *args, **kwargs):
+        # {'csrfmiddlewaretoken': 'GTlxFDXyBHm4Z1tJa3zGqs7AXy0N9L5s',
+        #  'stripeEmail': 'test@rmotr.com',
+        #  'stripeToken': 'tok_171FeB2eZvKYlo2CQOjipVbo',
+        #  'stripeTokenType': 'card'}
+
+        stripe.api_key = settings.STRIPE['secret_key']
+        application = get_object_or_404(Application, id=kwargs['uuid'])
+        try:
+            stripe.Charge.create(
+                amount=settings.COURSE_PRICE,  # amount in cents, again
+                currency="usd",
+                source=self.request.POST['stripeToken'],
+                description="Remote Python Course",
+                metadata={'application_id': kwargs['uuid'],
+                          'email': application.email,
+                          'batch': application.batch.number})
+        except stripe.error.CardError as e:
+            # The card has been declined
+            return render(self.request, 'applications/application_checkout.html',
+                          context={'app': application,
+                                   'public_key': settings.STRIPE['public_key'],
+                                   'amount': settings.COURSE_PRICE,
+                                   'error': e})
+        else:
+            application.checkout_datetime = datetime.now()
+
+            # TODO: send email to admins
+
+            return render(self.request, 'applications/application_checkout_success.html',
+                          context={'app': application})

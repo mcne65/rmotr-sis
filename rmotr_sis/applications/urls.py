@@ -19,6 +19,9 @@ urlpatterns = patterns(
     url(r'^(?P<uuid>[\w.-]+)/scholarship/assignments/1$', views.ApplicationStep5View.as_view(), name="application-5"),
     url(r'^(?P<uuid>[\w.-]+)/scholarship/assignments/2$', views.ApplicationStep6View.as_view(), name="application-6"),
     url(r'^(?P<uuid>[\w.-]+)/scholarship/assignments/3$', views.ApplicationStep7View.as_view(), name="application-7"),
+
+    # stripe checkout
+    url(r'^(?P<uuid>[\w.-]+)/checkout$', views.ApplicationCheckoutView.as_view(), name="application-checkout"),
 )
 
 if settings.DEBUG:

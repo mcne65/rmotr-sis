@@ -1,0 +1,14 @@
+{% extends 'bare.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block extra_header_styles %}
+<link href="{% static 'css/applications.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block main_container %}
+<h2>Payment successful</h2>
+<p>foobar</p>
+{% endblock %}

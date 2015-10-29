@@ -28,6 +28,11 @@ class Application(TimeStampedModel):
     status = models.PositiveSmallIntegerField(default=1)
     email_validated = models.BooleanField(default=False)
     utm_source = models.CharField(max_length=255, blank=True)
+    checkout_datetime = models.DateTimeField(null=True, blank=True)
+
+    # whether the student was selected for this batch or not
+    # selected=True is required for checking out
+    selected = models.BooleanField(default=False)
 
     # step 1
     email = models.EmailField()

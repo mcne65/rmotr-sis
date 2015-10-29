@@ -95,3 +95,5 @@ SCHOLARSHIP_ASSIGNMENTS = {
     'assignment_2': 'https://gist.github.com/martinzugnoni/2b60deae6fa639543c50',  # max-adjacent-product
     'assignment_3': 'https://gist.github.com/martinzugnoni/dc6952632af3ce5a2ef1',  # find-anagrams
 }
+
+COURSE_PRICE = 100  # 300.00 USD
