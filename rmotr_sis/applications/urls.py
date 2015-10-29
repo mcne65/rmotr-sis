@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.conf.urls import patterns, url
-from django.views.generic import TemplateView
 
 from applications import views
 

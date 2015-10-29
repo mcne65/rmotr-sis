@@ -310,7 +310,7 @@ class ApplicationCheckoutView(View):
 
         # don't accept payments if student was not selected or payment was
         # already registered
-        if not application.selected or application.checkout_datetime:
+        if not application.selected or application.charge_id:
             raise Http404
 
         context = {
@@ -326,7 +326,7 @@ class ApplicationCheckoutView(View):
         stripe.api_key = settings.STRIPE['secret_key']
         application = get_object_or_404(Application, id=kwargs['uuid'])
         try:
-            stripe.Charge.create(
+            charge = stripe.Charge.create(
                 amount=settings.COURSE_PRICE,  # amount in cents
                 currency="usd",
                 source=self.request.POST['stripeToken'],
@@ -346,8 +346,9 @@ class ApplicationCheckoutView(View):
             return render(self.request, 'applications/application_checkout.html',
                           context=context)
         else:
-            # register the payment date
-            application.checkout_datetime = datetime.now()
+            # save payment details
+            application.charge_id = charge['id']
+            application.charge_details = charge
             application.save()
 
             # notify admins

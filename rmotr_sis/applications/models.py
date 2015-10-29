@@ -28,7 +28,10 @@ class Application(TimeStampedModel):
     status = models.PositiveSmallIntegerField(default=1)
     email_validated = models.BooleanField(default=False)
     utm_source = models.CharField(max_length=255, blank=True)
-    checkout_datetime = models.DateTimeField(null=True, blank=True)
+
+    # payment details
+    charge_id = models.CharField(max_length=100, blank=True)
+    charge_details = JSONField(blank=True, null=False)
 
     # whether the student was selected for this batch or not
     # selected=True is required for checking out

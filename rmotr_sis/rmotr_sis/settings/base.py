@@ -97,3 +97,8 @@ SCHOLARSHIP_ASSIGNMENTS = {
 }
 
 COURSE_PRICE = 30000  # 300.00 USD
+
+STRIPE = {
+    'public_key': os.environ.get('STRIPE_PUBLIC_KEY', 'YOUR_PUBLIC_KEY'),
+    'secret_key': os.environ.get('STRIPE_SECRET_KEY', 'YOUR_SECRET_KEY')
+}
