@@ -30,6 +30,9 @@ class ApplicationStep1View(FormView):
         # save model
         application = form.save()
 
+        # if available, save the "utm_source" query param
+        application.utm_source = self.request.GET.get('utm_source', '')
+
         # assign application object to current batch
         batch = Batch.objects.get(accepting_applications=True)
         application.batch = batch
