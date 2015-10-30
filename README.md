@@ -16,6 +16,15 @@ $ echo "export DJANGO_SETTINGS_MODULE=rmotr_sis.settings.dev" >> ${HOME}/.virtua
 $ echo "unset DJANGO_SETTINGS_MODULE" >> ${HOME}/.virtualenvs/rmotr-sis/bin/postdeactivate
 ```
 
+### Static
+
+You need to have bower installed.
+```bash
+$ npm install -g bower
+$ bower install
+```
+
+
 ### Usage
 
 ```bash
