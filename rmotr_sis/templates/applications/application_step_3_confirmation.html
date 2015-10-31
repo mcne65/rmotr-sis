@@ -27,3 +27,23 @@
         <a href="{{scholarship_url}}" class="btn btn-success">Apply for a scholarship</a>
 </div>
 {% endblock %}
+
+
+{% block mixpanel_tracking_block %}
+<script type="text/javascript">
+ (function () {
+     executeMixpanel((function(){
+         var applicationCorrectSkillCount = {{ application.skills_assessment_correct_count  }};
+
+         mixpanel.track('Application completed', {
+             timestamp: new Date().toISOString(),
+             "correct_skill_count": applicationCorrectSkillCount
+         });
+         mixpanel.people.set({
+             "correct_skill_count": applicationCorrectSkillCount
+         });
+     }));
+ }());
+
+</script>
+{% endblock %}

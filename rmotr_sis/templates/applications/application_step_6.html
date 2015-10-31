@@ -17,3 +17,17 @@
     <input class="btn btn-info" type="submit">
 </form>
 {% endblock %}
+
+
+{% block mixpanel_tracking_block %}
+<script type="text/javascript">
+ (function () {
+     executeMixpanel((function(){
+         mixpanel.track('Application scholarship Assignment 2 viewed', {
+             timestamp: new Date().toISOString()
+         });
+     }));
+ }());
+
+</script>
+{% endblock %}

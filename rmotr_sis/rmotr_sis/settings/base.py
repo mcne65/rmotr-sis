@@ -79,7 +79,27 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, "static"),
 )
-TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
+
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'APP_DIRS': True,
+    'DIRS': [
+        os.path.join(BASE_DIR, 'templates')
+    ],
+    'OPTIONS': {
+        'context_processors': [
+            'django.contrib.auth.context_processors.auth',
+            'django.template.context_processors.debug',
+            'django.template.context_processors.i18n',
+            'django.template.context_processors.media',
+            'django.template.context_processors.static',
+            'django.template.context_processors.tz',
+            'django.contrib.messages.context_processors.messages',
+            'django.contrib.messages.context_processors.messages',
+            'rmotr_sis.context_processors.mixpanel_settings'
+        ]
+    }
+}]
 
 # Auth
 LOGIN_REDIRECT_URL = '/'
@@ -88,7 +108,7 @@ AUTH_USER_MODEL = 'accounts.User'
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_TEMPLATE_LOCATION = os.path.join(TEMPLATE_DIRS[0], 'emails')
+EMAIL_TEMPLATE_LOCATION = os.path.join(TEMPLATES[0]['DIRS'][0], 'emails')
 
 SCHOLARSHIP_ASSIGNMENTS = {
     'assignment_1': 'https://gist.github.com/martinzugnoni/9d7d68ea37c165278493',  # find-next-prime
@@ -97,3 +117,5 @@ SCHOLARSHIP_ASSIGNMENTS = {
 }
 
 COURSE_PRICE = 30000  # 300.00 USD
+
+MIXPANEL_TRACKING_ENABLED = True
