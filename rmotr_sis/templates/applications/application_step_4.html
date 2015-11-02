@@ -28,3 +28,21 @@
     <input class="btn btn-info" type="submit">
 </form>
 {% endblock %}
+
+{% block mixpanel_tracking_block %}
+<script type="text/javascript">
+ (function () {
+     executeMixpanel((function(){
+         var applicationCorrectSkillCount = {{ application.skills_assessment_correct_count  }};
+
+         mixpanel.track('Application scholarship step 1 viewed', {
+             timestamp: new Date().toISOString()
+         });
+         mixpanel.register_once({
+             'scholarship_applied': true
+         });
+     }));
+ }());
+
+</script>
+{% endblock %}

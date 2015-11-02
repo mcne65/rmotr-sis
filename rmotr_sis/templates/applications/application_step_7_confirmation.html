@@ -12,3 +12,17 @@
     <p>If you have further questions, don't hesitate to contact us at <a href="mailto:questions@rmotr.com">questions@rmotr.com</a>.</p>
 </div>
 {% endblock %}
+
+
+{% block mixpanel_tracking_block %}
+<script type="text/javascript">
+ (function () {
+     executeMixpanel((function(){
+         mixpanel.track('Application scholarship completed', {
+             timestamp: new Date().toISOString()
+         });
+     }));
+ }());
+
+</script>
+{% endblock %}

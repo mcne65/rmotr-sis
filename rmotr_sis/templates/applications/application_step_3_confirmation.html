@@ -24,6 +24,29 @@
         You can read about our scholarship model <a target="_blank" href="http://blog.rmotr.com/announcements/2015/03/29/new-scholarship-model/">right here</a>. There's also a <a target="_blank" href="http://blog.rmotr.com/scholarships/2015/01/08/scholarship-faqs/">Scholarships FAQs</a>.
     </p>
 
-        <a href="{{scholarship_url}}" class="btn btn-success">Apply for a scholarship</a>
+        <a href="{{scholarship_url}}" class="btn btn-success js-apply-scholarship-cta">Apply for a scholarship</a>
 </div>
+{% endblock %}
+
+
+{% block mixpanel_tracking_block %}
+<script type="text/javascript">
+ (function () {
+     executeMixpanel((function(){
+         var applicationCorrectSkillCount = {{ application.skills_assessment_correct_count  }};
+
+         mixpanel.track_links('.js-apply-scholarship-cta', 'Apply for Scholarship CTA clicked', {
+             timestamp: new Date().toISOString()
+         })
+         mixpanel.track('Application completed', {
+             timestamp: new Date().toISOString(),
+             "correct_skill_count": applicationCorrectSkillCount
+         });
+         mixpanel.people.set({
+             "correct_skill_count": applicationCorrectSkillCount
+         });
+     }));
+ }());
+
+</script>
 {% endblock %}

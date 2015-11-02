@@ -31,3 +31,26 @@
     <input class="btn btn-info" type="submit">
 </form>
 {% endblock %}
+
+{% block mixpanel_tracking_block %}
+<script type="text/javascript">
+ (function () {
+     executeMixpanel((function(){
+         var utmSource = getParameterByName('utm_source');
+         var utmMedium = getParameterByName('utm_medium');
+         var utmCampaign = getParameterByName('utm_campaign');
+         mixpanel.register_once({
+             'utm_source': utmSource,
+             'utm_medium': utmMedium,
+             'utm_campaign': utmCampaign
+         });
+         mixpanel.track('Application Step 1 viewed', {
+             timestamp: new Date().toISOString(),
+             'utm_source': utmSource,
+             'utm_medium': utmMedium,
+             'utm_campaign': utmCampaign
+         });
+     }));
+ }());
+</script>
+{% endblock %}

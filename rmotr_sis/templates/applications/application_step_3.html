@@ -10,6 +10,7 @@
 
 {% block main_container %}
 {% include "applications/form_wizard.html" with step="3" only %}
+
 <h1>Skills assessment</h1>
 <p>Answer a few questions to show us which is your current programming level</p>
 <form method="POST">
@@ -17,4 +18,35 @@
     {{form|crispy}}
     <input class="btn btn-info" type="submit">
 </form>
+{% endblock %}
+
+{% block mixpanel_tracking_block %}
+<script type="text/javascript">
+ (function () {
+     executeMixpanel((function(){
+         mixpanel.track('Application Step 2 completed', {
+             timestamp: new Date().toISOString()
+         });
+
+         var applicationGender = "{{ application.gender  }}";
+         var applicationTimezone = "{{ application.timezone  }}";
+         var applicationBirthDate = "{{ application.birth_date|date:"Y-m-d"  }}";
+         var applicationBirthDateYear = {{ application.birth_date.year  }};
+         {% autoescape off %}
+           var applicationReferrals = {{ application.get_referrals_list_as_array_string  }};
+         {%  endautoescape %}
+         var applicationReferralsOther = "{{ application.referrals_other  }}";
+
+         mixpanel.people.set({
+             "gender": applicationGender,
+             "timezone": applicationTimezone,
+             "birth_date": applicationBirthDate,
+             "birth_date_year": applicationBirthDateYear,
+             "referrals": applicationReferrals,
+             "referrals_other": applicationReferralsOther
+         });
+     }));
+ }());
+
+</script>
 {% endblock %}

@@ -47,10 +47,16 @@ class ApplicationStep1View(FormView):
         subject = 'Thank you for applying to rmotr.com courses'
         send_template_mail(subject, 'application-email-confirm.html',
                            recipient_list=[email],
-                           context={'next_step_url': next_step_url,
-                                    'first_name': form.cleaned_data['first_name']})
+                           context={
+                               'next_step_url': next_step_url,
+                               'first_name': form.cleaned_data['first_name']})
 
-        return render(self.request, 'applications/application_step_1_confirmation.html')
+        return render(
+            self.request,
+            'applications/application_step_1_confirmation.html',
+            context={
+                'application': application
+            })
 
 
 class ApplicationStep2View(FormView):
@@ -109,15 +115,21 @@ class ApplicationStep3View(FormView):
     form_class = ApplicationFormStep3
     template_name = 'applications/application_step_3.html'
 
+    def get_context_data(self, **kwargs):
+        kwargs.setdefault('application', self.application)
+        return super(ApplicationStep3View, self).get_context_data(**kwargs)
+
     def dispatch(self, request, *args, **kwargs):
 
-        app = get_object_or_404(Application, id=self.kwargs['uuid'])
+        self.application = get_object_or_404(
+            Application, id=self.kwargs['uuid'])
 
-        if app.status != 2:
+        if self.application.status != 2:
             # the user is trying to access an invalid step
             raise Http404
 
-        return super(ApplicationStep3View, self).dispatch(request, *args, **kwargs)
+        return super(ApplicationStep3View, self).dispatch(
+            request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse('applications:application-3-success',
@@ -151,8 +163,12 @@ class ApplicationStep3View(FormView):
                            context={'application_url': application_url,
                                     'application': app})
 
-        context = {'scholarship_url': reverse('applications:application-4',
-                                              args=(str(self.kwargs['uuid']),))}
+        context = {
+            'scholarship_url': reverse(
+                'applications:application-4',
+                args=(str(self.kwargs['uuid']),)),
+            'application': app
+        }
         return render(
             self.request,
             'applications/application_step_3_confirmation.html',
@@ -165,21 +181,23 @@ class ApplicationStep4View(FormView):
     template_name = 'applications/application_step_4.html'
     success_url = '/applications/step4-success'
 
-    def dispatch(self, request, *args, **kwargs):
+    def get_context_data(self, **kwargs):
+        kwargs.setdefault('application', self.application)
+        return super(ApplicationStep4View, self).get_context_data(**kwargs)
 
+    def dispatch(self, request, *args, **kwargs):
         try:
-            app = get_object_or_404(Application, id=self.kwargs['uuid'])
+            self.application = get_object_or_404(Application, id=self.kwargs['uuid'])
         except ValueError:
             raise Http404
 
-        if app.status != 3:
+        if self.application.status != 3:
             # the user is trying to access an invalid step
             raise Http404
 
         # if the user access this view, it means that he need a scholarship
-        app.need_scholarship = True
-
-        app.save()
+        self.application.need_scholarship = True
+        self.application.save()
 
         return super(ApplicationStep4View, self).dispatch(request, *args, **kwargs)
 

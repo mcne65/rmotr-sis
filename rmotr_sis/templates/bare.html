@@ -16,6 +16,10 @@
     <link href="{% static 'css/form_wizard.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+
+    {% include "utlis/mixpanel.html" %}
+    {% include "utlis/twitter-js.html" %}
+    {% block mixpanel_tracking_block %}{% endblock %}
     {% block extra_header_styles %}{% endblock %}
   </head>
 
