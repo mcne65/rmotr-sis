@@ -18,11 +18,30 @@
     Just share our course on twitter and get a 20% off your tuition. Make sure you include the hashtag <code style="color: #0042EC">#rmotr-batch-4</code>.
 
 </p>
-<a class="twitter-share-button"
+<a class="twitter-share-button js-twitter-button-application-sharing"
   href="https://twitter.com/intent/tweet?text=Just%20applied%20to%20%40rmotr_com%20remote%20Python%20Programming%20Course%21%20%23rmotr-batch-4&url=http://bit.ly/rmotr-batch-4"
   data-size="large" data-count="none">
-  Tweet now!</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    Tweet now!</a>
+<script>
+ function trackMixpanelTweetEvent(evt){
+     executeMixpanel((function(){
+         mixpanel.track('Application shared on Twitter', {
+             timestamp: new Date().toISOString()
+         });
+     }));
+ };
+ function trackMixpanelTweetIntent(evt){
+     executeMixpanel((function(){
+         mixpanel.track('Application twitter button clicked', {
+             timestamp: new Date().toISOString()
+         });
+     }));
+ };
+ twttr.ready(function (twttr) {
+   twttr.events.bind('click', trackMixpanelTweetIntent);
+   twttr.events.bind('tweet', trackMixpanelTweetEvent);
+ });
+</script>
 {% endblock %}
 
 

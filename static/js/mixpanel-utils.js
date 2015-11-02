@@ -1,4 +1,4 @@
-(function () {
+(function (window) {
     window.mixpanel = mixpanel;
     function getParameterByName(name) {
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -10,10 +10,8 @@
         if(!window.MIXPANEL_CONFIG.trackingEnabled){
             console.log("Tracking disabled");
             return;
-        }else{
-            console.log("Executing callable")
         }
         callable();
-    }
+    };
     window.getParameterByName = getParameterByName;
-}());
+}(window));
