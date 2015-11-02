@@ -181,21 +181,23 @@ class ApplicationStep4View(FormView):
     template_name = 'applications/application_step_4.html'
     success_url = '/applications/step4-success'
 
-    def dispatch(self, request, *args, **kwargs):
+    def get_context_data(self, **kwargs):
+        kwargs.setdefault('application', self.application)
+        return super(ApplicationStep4View, self).get_context_data(**kwargs)
 
+    def dispatch(self, request, *args, **kwargs):
         try:
-            app = get_object_or_404(Application, id=self.kwargs['uuid'])
+            self.application = get_object_or_404(Application, id=self.kwargs['uuid'])
         except ValueError:
             raise Http404
 
-        if app.status != 3:
+        if self.application.status != 3:
             # the user is trying to access an invalid step
             raise Http404
 
         # if the user access this view, it means that he need a scholarship
-        app.need_scholarship = True
-
-        app.save()
+        self.application.need_scholarship = True
+        self.application.save()
 
         return super(ApplicationStep4View, self).dispatch(request, *args, **kwargs)
 
