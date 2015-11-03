@@ -96,4 +96,4 @@ class Application(TimeStampedModel):
         return '{} - {}'.format(self.batch, self.email)
 
     def get_referrals_list_as_array_string(self):
-        return str([r.name for r in self.referrals.all()])
+        return str([str(r.name) for r in self.referrals.all()])
