@@ -46,3 +46,33 @@ restart-app:
 
 deploy: backup-production-db rsync-local-files install-dependencies collect-static migrate-database restart-app
 		@echo $(TAG)Done.$(END)
+
+
+PROJECT_DIR=$(HOME)/rmotr-sis
+VIRTUALENVS_DIR=$(HOME)/virtualenvs
+
+SUPERVISORD_PID=/tmp/supervisord.pid
+SUPERVISORD_PATH=$(VIRTUALENVS_DIR)/supervisord/bin/supervisord
+SUPERVISORCTL_PATH=$(VIRTUALENVS_DIR)/supervisord/bin/supervisorctl
+SUPERVISORD_CONF=$(PROJECT_DIR)/deploy/conf/supervisord.conf
+
+supervisor-start:
+		 $(SUPERVISORD_PATH) -c $(SUPERVISORD_CONF)
+
+supervisor-status:
+		$(SUPERVISORCTL_PATH) -c $(SUPERVISORD_CONF) status
+
+supervisor-reload:
+		kill -s HUP `cat $(SUPERVISORD_PID)`
+
+supervisor-stop:
+		kill -2 `cat $(SUPERVISORD_PID)`
+
+rmotr-sis-stop:
+		$(SUPERVISORCTL_PATH) -c $(SUPERVISORD_CONF) stop $(FEED_API_PROCCESS_NAME)
+
+rmotr-sis-start:
+		$(SUPERVISORCTL_PATH) -c $(SUPERVISORD_CONF) start $(FEED_API_PROCCESS_NAME)
+
+rmotr-sis-reload:
+		$(SUPERVISORCTL_PATH) -c $(SUPERVISORD_CONF) reload $(FEED_API_PROCCESS_NAME)
