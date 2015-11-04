@@ -22,6 +22,7 @@ class Application(TimeStampedModel):
 
     class Meta:
         unique_together = (('email', 'batch'),)
+        ordering = ['modified']
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     batch = models.ForeignKey(Batch, blank=True, null=True)  # FIXME: this must be required
