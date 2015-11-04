@@ -2,6 +2,7 @@ import uuid
 from jsonfield import JSONField
 
 from django.db import models
+from django.conf import settings
 
 from rmotr_sis.models import TimeStampedModel
 from accounts.models import (TIMEZONE_CHOICES, GENDER_CHOICES,
@@ -29,6 +30,7 @@ class Application(TimeStampedModel):
     status = models.PositiveSmallIntegerField(default=1)
     email_validated = models.BooleanField(default=False)
     utm_source = models.CharField(max_length=255, blank=True)
+    custom_price_in_cents = models.IntegerField(null=True, blank=True)
 
     # payment details
     charge_id = models.CharField(max_length=100, blank=True)
@@ -98,3 +100,8 @@ class Application(TimeStampedModel):
 
     def get_referrals_list_as_array_string(self):
         return str([str(r.name) for r in self.referrals.all()])
+
+    def get_price(self):
+        if self.custom_price_in_cents:
+            return self.custom_price_in_cents
+        return settings.COURSE_PRICE

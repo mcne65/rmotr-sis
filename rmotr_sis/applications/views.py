@@ -334,8 +334,8 @@ class ApplicationCheckoutView(View):
         context = {
             'app': application,
             'public_key': settings.STRIPE['public_key'],
-            'amount_cents': settings.COURSE_PRICE,
-            'amount_dollars': int(settings.COURSE_PRICE) / 100
+            'amount_cents': application.get_price(),
+            'amount_dollars': int(application.get_price()) / 100
         }
         return render(self.request, 'applications/application_checkout.html',
                       context=context)
@@ -345,7 +345,7 @@ class ApplicationCheckoutView(View):
         application = get_object_or_404(Application, id=kwargs['uuid'])
         try:
             charge = stripe.Charge.create(
-                amount=settings.COURSE_PRICE,  # amount in cents
+                amount=application.get_price(),  # amount in cents
                 currency="usd",
                 source=self.request.POST['stripeToken'],
                 description="Remote Python Course",
@@ -357,8 +357,8 @@ class ApplicationCheckoutView(View):
             context = {
                 'app': application,
                 'public_key': settings.STRIPE['public_key'],
-                'amount_cents': settings.COURSE_PRICE,
-                'amount_dollars': int(settings.COURSE_PRICE) / 100,
+                'amount_cents': application.get_price(),
+                'amount_dollars': int(application.get_price()) / 100,
                 'error': e
             }
             return render(self.request, 'applications/application_checkout.html',
@@ -376,7 +376,7 @@ class ApplicationCheckoutView(View):
                                       args=(str(application.id),))
             context = {
                 'application_url': application_url,
-                'amount_dollars': int(settings.COURSE_PRICE) / 100,
+                'amount_dollars': int(application.get_price()) / 100,
                 'application': application
             }
             send_template_mail(subject, 'application-checkout-notify.html',
