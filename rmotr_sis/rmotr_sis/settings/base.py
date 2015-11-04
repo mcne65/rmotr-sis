@@ -96,7 +96,8 @@ TEMPLATES = [{
             'django.template.context_processors.tz',
             'django.contrib.messages.context_processors.messages',
             'django.contrib.messages.context_processors.messages',
-            'rmotr_sis.context_processors.mixpanel_settings'
+            'rmotr_sis.context_processors.mixpanel_settings',
+            'rmotr_sis.context_processors.site_context_processor'
         ]
     }
 }]
