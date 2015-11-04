@@ -10,6 +10,5 @@ def mixpanel_settings(request):
 
 def site_context_processor(request):
     return {
-        'BASE_HOST': '{scheme}://{host}'.format(
-            scheme=request.scheme, host=request.get_host())
+        'BASE_HOST': 'https://sis.rmotr.com'
     }
