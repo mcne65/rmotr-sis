@@ -59,6 +59,7 @@ class Command(BaseCommand):
                 # instead of sending real emails, print in stdout
                 print('Recipient: "{}"'.format(app.email))
                 print('Subject: "{}"'.format(subject))
+                print('Next URL: "{}"'.format(next_url))
                 print()
             else:
                 send_template_mail(subject, template,
