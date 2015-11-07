@@ -23,9 +23,14 @@ class Command(BaseCommand):
         parser.add_argument(
             'action', help=('Type of reminder to send by email. '
                             'Options are: {}'.format(', '.join(CONFIG.keys()))))
+        parser.add_argument(
+            '--dry-run', help='Run the command without sending real emails',
+            action='store_true', default=False)
 
     def handle(self, *args, **kwargs):
         action = kwargs['action']
+        dry_run = kwargs['dry_run']
+
         if action not in CONFIG.keys():
             raise CommandError('Invalid action type, please use one of: {}'
                                ''.format(', '.join(CONFIG.keys())))
@@ -33,6 +38,7 @@ class Command(BaseCommand):
         applications = Application.objects.filter(**CONFIG[action]['filter'])
 
         print('Sending reminder emails...')
+        print()
         for app in applications:
             next_url = reverse(CONFIG[action]['next_url'],
                                args=(str(app.id),))
@@ -43,8 +49,14 @@ class Command(BaseCommand):
             subject = CONFIG[action]['subject'].replace(
                 '*|FNAME|*', app.first_name)
             template = CONFIG[action]['template_name']
-            send_template_mail(subject, template,
-                               recipient_list=[app.email],
-                               context=context)
+            if dry_run:
+                # instead of sending real emails, print in stdout
+                print('Recipient: "{}"'.format(app.email))
+                print('Subject: "{}"'.format(subject))
+                print()
+            else:
+                send_template_mail(subject, template,
+                                   recipient_list=[app.email],
+                                   context=context)
         print('Finished. {} emails were successfully sent'
               ''.format(applications.count()))
