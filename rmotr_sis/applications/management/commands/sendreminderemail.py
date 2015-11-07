@@ -32,6 +32,7 @@ class Command(BaseCommand):
 
         applications = Application.objects.filter(**CONFIG[action]['filter'])
 
+        print('Sending reminder emails...')
         for app in applications:
             next_url = reverse(CONFIG[action]['next_url'],
                                args=(str(app.id),))
@@ -45,3 +46,5 @@ class Command(BaseCommand):
             send_template_mail(subject, template,
                                recipient_list=[app.email],
                                context=context)
+        print('Finished. {} emails were successfully sent'
+              ''.format(applications.count()))
