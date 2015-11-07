@@ -12,6 +12,12 @@ CONFIG = {
         'subject': '*|FNAME|*, thanks for applying to rmotr.com! Please keep in mind that...',
         'filter': {'status': 1, 'email_validated': False},
         'next_url': 'applications:application-2'
+    },
+    'selected-checkout-form': {
+        'template_name': 'reminders/selected-checkout-form.html',
+        'subject': "Congratulations *|FNAME|*, you've been selected for our Python programming course!",
+        'filter': {'selected': True, 'charge_id': ''},
+        'next_url': 'applications:application-checkout'
     }
 }
 
