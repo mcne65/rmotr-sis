@@ -34,3 +34,7 @@ class ApplicationAdmin(admin.ModelAdmin):
                    'gender',
                    'selected',
                    'need_scholarship')
+    search_fields = ('id',
+                     'email',
+                     'first_name',
+                     'last_name')
