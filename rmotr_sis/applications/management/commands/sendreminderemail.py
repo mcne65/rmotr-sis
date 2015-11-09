@@ -18,6 +18,12 @@ CONFIG = {
         'subject': "Congratulations *|FNAME|*, you've been selected for our Python programming course!",
         'filter': {'selected': True, 'charge_id': ''},
         'next_url': 'applications:application-checkout'
+    },
+    'selected-checkout-expiring': {
+        'template_name': 'reminders/selected-checkout-expiring.html',
+        'subject': "Hey *|FNAME|*, your reserved spot for the Python course is about to expire!",
+        'filter': {'selected': True, 'charge_id': ''},
+        'next_url': 'applications:application-checkout'
     }
 }
 
