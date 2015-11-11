@@ -8,14 +8,15 @@ import smartcsv
 from accounts.models import User
 
 CSV_STRUCTURE = [
-    {'name': 'username', 'required': True},
+    {'name': 'first_name', 'required': True},
+    {'name': 'last_name', 'required': True},
     {
         'name': 'email',
         'required': True,
         'validator': lambda c: '@' in c
     },
-    {'name': 'first_name', 'required': True},
-    {'name': 'last_name', 'required': True}
+    {'name': 'github_handle'},
+    {'name': 'cloud9_handle'}
 ]
 
 
@@ -33,9 +34,11 @@ class Command(BaseCommand):
         print('Starting...')
         print('======= SUMMARY =======')
         with open(options['filepath'], 'r') as f:
-            reader = smartcsv.reader(f, columns=CSV_STRUCTURE)
+            reader = smartcsv.reader(f, columns=CSV_STRUCTURE, header_included=False)
             counter = 0
             for row in reader:
+                row['username'] = '{}.{}'.format(
+                    row['first_name'], row['last_name']).lower()
                 user = User(**row)
 
                 # generate random password
