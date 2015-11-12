@@ -25,3 +25,4 @@ class CourseAdmin(admin.ModelAdmin):
 class CourseInstanceAdmin(admin.ModelAdmin):
     list_display = ('code', 'course', 'professor', 'start_date', 'end_date')
     list_filter = ('batch__number', 'course__code', '_code')
+    raw_id_fields = ('students',)
