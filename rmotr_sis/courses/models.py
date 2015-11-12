@@ -64,12 +64,14 @@ class CourseInstance(TimeStampedModel):
     batch = models.ForeignKey(Batch)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
-    professor = models.ForeignKey(User, related_name='courseinstance_professor_set',
-                                  validators=[validate_is_professor])
+    professor = models.ForeignKey(
+        User, related_name='courseinstance_professor_set',
+        validators=[validate_is_professor])
     lecture_weekday = models.CharField(max_length=1, choices=WEEKDAY_CHOICES)
     lecture_utc_time = models.TimeField()
     students = models.ManyToManyField(User, blank=True)
     _code = models.CharField(max_length=10, blank=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return '#{} - {} ({} - {})'.format(

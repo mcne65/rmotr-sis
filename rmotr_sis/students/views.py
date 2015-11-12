@@ -31,7 +31,7 @@ class StudentHomeView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         if self.request.user.is_staff:
-            courses = CourseInstance.objects.all()
+            courses = CourseInstance.objects.filter(active=True)
         else:
             courses = self.request.user.courseinstance_set.all()
         context = {
