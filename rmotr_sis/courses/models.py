@@ -72,6 +72,7 @@ class CourseInstance(TimeStampedModel):
     students = models.ManyToManyField(User, blank=True)
     _code = models.CharField(max_length=10, blank=True)
     active = models.BooleanField(default=True)
+    sold_out = models.BooleanField(default=False)
 
     def __str__(self):
         return '#{} - {} ({} - {})'.format(

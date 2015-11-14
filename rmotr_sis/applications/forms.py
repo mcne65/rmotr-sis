@@ -66,7 +66,8 @@ class ApplicationFormStep2(forms.ModelForm):
     course_instances = ApplicationModelMultipleChoiceField(
         queryset=CourseInstance.objects.filter(batch__accepting_applications=True),
         widget=forms.CheckboxSelectMultiple(),
-        label='Select instances that best fit you'
+        label='When are you available to start with the first class?',
+        help_text='**course will last 7 weeks from start date, attending to class same day and time every week'
     )
     referrals = forms.ModelMultipleChoiceField(
         queryset=ApplicationReferral.objects.filter(active=True),
