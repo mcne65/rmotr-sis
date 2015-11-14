@@ -1,0 +1,41 @@
+{% extends 'bare.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block extra_header_styles %}
+<link href="{% static 'css/applications.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block main_container %}
+<h1>Skills assessment answers</h1>
+<p>{{application.first_name|title}} {{application.last_name|title}} has answered <strong>{{application.skills_assessment_correct_count}} correct questions</strong> out of {{answered_questions|length}}</p>
+
+<div class="checkbox">
+    <label><input id="only-incorrect-checkbox" type="checkbox"> Show only incorrect answers</label>
+</div>
+<hr/>
+
+{% for q in answered_questions %}
+<div class="{% if q.answered == q.correct %}correct-answer{% else %}incorrect-answer{% endif %}">
+    <p>{{ forloop.counter0 }}. {{q.text|safe}}</p>
+    <ol start="0">
+    {% for c in q.choices %}
+        <li class="{% if c.0 == q.correct %}alert-success{% elif c.0 == q.answered %}alert-danger{% endif %}">{{c.1}}</li>
+    {% endfor %}
+    </ol>
+    <hr/>
+</div>
+{% endfor %}
+{% endblock %}
+
+{% block extra_footer_scripts %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#only-incorrect-checkbox').on('change', function(){
+            $('.correct-answer').toggle();
+        });
+    });
+</script>
+{% endblock %}

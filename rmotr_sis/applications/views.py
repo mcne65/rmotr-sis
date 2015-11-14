@@ -385,3 +385,26 @@ class ApplicationCheckoutView(View):
 
             return render(self.request, 'applications/application_checkout_success.html',
                           context={'app': application})
+
+
+class SkillsAssessmentAnswersView(TemplateView):
+    template_name = 'applications/skills_assessment_answers.html'
+
+    def get(self, request, *args, **kwargs):
+        self.application = get_object_or_404(Application, id=kwargs['uuid'])
+
+        # only allow applications that already answered the skills assessment
+        if not self.application.skills_assessment_answers:
+            raise Http404
+
+        return super(SkillsAssessmentAnswersView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        # build a summary of qustions and user answers
+        answered_questions = []
+        for index, question in enumerate(self.application.skills_assessment_questions):
+            question['answered'] = self.application.skills_assessment_answers['q{}'.format(index)]
+            answered_questions.append(question)
+        kwargs['answered_questions'] = answered_questions
+        kwargs['application'] = self.application
+        return kwargs
