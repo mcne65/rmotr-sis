@@ -4,6 +4,14 @@
 
 {% block extra_header_styles %}
 <link href="{% static 'css/applications.css' %}" rel="stylesheet">
+<style type="text/css">
+    .sold-out { text-decoration: line-through; }
+    .sold-out-label {
+        position: absolute;
+        margin-left: 10px;
+        color: #d9534f;
+    }
+</style>
 {% endblock %}
 
 {% block navbar %}{% endblock %}
@@ -22,6 +30,15 @@
 {% block extra_footer_scripts %}
 <script type="text/javascript">
     $('select[name="timezone"]').select2();
+
+    var sold_out_instance_ids = {{sold_out_instance_ids|safe}};
+    $('#div_id_course_instances').find('input').each(function(index, obj){
+        if (sold_out_instance_ids.indexOf(parseInt(obj.value)) != -1){
+            $(obj).prop('disabled', true);
+            $(obj).parent().addClass('sold-out');
+            $(obj).parent().append('<span class="sold-out-label">SOLD OUT</span>');
+        }
+    })
 </script>
 {% endblock %}
 

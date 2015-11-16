@@ -1,7 +1,8 @@
 import sys
-from datetime import datetime
+from datetime import datetime, date
 
 import stripe
+from django.db.models import Q
 from django.views.generic import View, FormView, TemplateView
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
@@ -62,6 +63,16 @@ class ApplicationStep1View(FormView):
 class ApplicationStep2View(FormView):
     form_class = ApplicationFormStep2
     template_name = 'applications/application_step_2.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ApplicationStep2View, self).get_context_data(**kwargs)
+
+        batch = Batch.objects.get(accepting_applications=True)
+        context['sold_out_instance_ids'] = batch.courseinstance_set.filter(
+                Q(sold_out=True) | Q(start_date__lte=date.today())
+            ).values_list('id', flat=True)
+
+        return context
 
     def dispatch(self, request, *args, **kwargs):
 
