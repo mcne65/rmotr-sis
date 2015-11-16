@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# Display expansions
-set -x
+# # Display expansions
+# set -x
 
-# Print shell input lines as they are read
-set -v
+# # Print shell input lines as they are read
+# set -v
 
 # Exit on unset variable
 set -u
@@ -18,24 +18,31 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-. /setup.cfg
+if [[ ! -v SETUP_CONFIG_DIR ]]; then
+    if [[ -d /vagrant ]]; then
+        SETUP_CONFIG_DIR='/vagrant/deploy'
+    fi
+fi
+
+. ${SETUP_CONFIG_DIR}/setup.cfg
 
 apt-get update
 
+
 useradd -m -s /bin/bash ${OS_USER}
-sudo apt-get install -y git vim python-software-properties python-dev python-pip python3-dev
-sudo pip install virtualenv
+apt-get install -y git vim python-software-properties python-dev python-pip python3-dev
+pip install virtualenv
 
 # Maria
 apt-get install software-properties-common
 apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
 add-apt-repository -y 'deb [arch=amd64,i386] http://mirror.edatel.net.co/mariadb/repo/10.1/ubuntu trusty main'
 apt-get update
-# export DEBIAN_FRONTEND=noninteractive
-# sudo debconf-set-selections <<< 'mariadb-server-10.0 mysql-server/root_password password PASS'
-# sudo debconf-set-selections <<< 'mariadb-server-10.0 mysql-server/root_password_again password PASS'
-# sudo apt-get install -y mariadb-server
-# mysql -uroot -pPASS -e "SET PASSWORD = PASSWORD('');"
+export DEBIAN_FRONTEND=noninteractive
+sudo debconf-set-selections <<< "mariadb-server-10.0 mysql-server/root_password password $MARIADB_ROOT_PASSWORD"
+sudo debconf-set-selections <<< "mariadb-server-10.0 mysql-server/root_password_again password $MARIADB_ROOT_PASSWORD"
+sudo apt-get install -y mariadb-server
+# mysql -u$MARIADB_PASSWORD -p$MARIADB_PASSWORD -e "SET PASSWORD = PASSWORD('');"
 apt-get install -y mariadb-server
 
 su - ${OS_USER} <<EOF_su

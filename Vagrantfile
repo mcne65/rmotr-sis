@@ -69,7 +69,7 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get install -y apache2
   # SHELL
 
-  # config.vm.provision :shell, path: "vagrant/bootstrap.sh"
+  # config.vm.provision :shell, path: "deploy/server-setup.sh"
   config.vm.network "private_network", ip: "192.168.50.10"
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "2048"
