@@ -1,4 +1,5 @@
 import sys
+import json
 from datetime import datetime, date
 
 import stripe
@@ -71,6 +72,8 @@ class ApplicationStep2View(FormView):
         context['sold_out_instance_ids'] = batch.courseinstance_set.filter(
                 Q(sold_out=True) | Q(start_date__lte=date.today())
             ).values_list('id', flat=True)
+        context['sold_out_instance_ids'] = json.dumps(
+            list(context['sold_out_instance_ids']))
 
         return context
 
