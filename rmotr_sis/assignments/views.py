@@ -53,7 +53,7 @@ suite = unittest.defaultTestLoader.loadTestsFromModule(sys.modules[__name__])
 result = suite.run(unittest.TestResult())
 
 if not result.wasSuccessful():
-  unittest.TextTestRunner(stream=sys.stderr, verbosity=2).run(suite)
+    unittest.TextTestRunner(stream=sys.stderr, verbosity=2).run(suite)
         """
         return code.format(**{'student_source': source, 'our_tests': footer})
 

@@ -9,12 +9,12 @@ $(function() {
     var assignmentsModal = $('.js-assignment-modal').modal({
         show: false
     });
-    var originalSourceCoudeButton = $('.js-use-original-source-code-button');
-    originalSourceCoudeButton.on('click', function(evt){
+    var originalSourceCodeButton = $('.js-use-original-source-code-button');
+    originalSourceCodeButton.on('click', function(evt){
         evt.preventDefault();
         var originalSourceCode = $('.js-original-source-code').html();
         myCodeMirror.setValue(originalSourceCode);
-        originalSourceCoudeButton.hide();
+        originalSourceCodeButton.hide();
     });
     $('.js-prompt-previously-solved-assignment').on('click', function(evt){
         evt.preventDefault();
@@ -31,11 +31,20 @@ $(function() {
             evt.preventDefault();
             myCodeMirror.setValue(attemptSourceVerbatim);
             assignmentsModal.modal('hide');
-            originalSourceCoudeButton.show();
+            originalSourceCodeButton.show();
         });
     });
 
+    // toggle row with execution errors
     $('.js-show-execution-errors').on('click', function(evt){
         $('pre.execution-traceback').toggle();
+    });
+
+    // show modal with test cases
+    var testCasesModal = $('.js-test-cases-modal').modal({
+        show: false
+    });
+    $('.js-show-test-cases-modal').on('click', function(evt){
+        testCasesModal.modal('show');
     });
 });
