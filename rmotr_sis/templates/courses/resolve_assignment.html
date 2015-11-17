@@ -8,6 +8,8 @@
 {% endblock %}
 
 {% block extra_hidden_html %}
+
+<!-- START: Previous attemps modal -->
 <div class="modal fade bs-example-modal-lg js-assignment-modal" id="assignmentsModal" tabindex="-1" role="dialog" aria-labelledby="assignmentsModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -34,7 +36,28 @@
             <div id="assignment-source-{{attempt.id}}-verbatim">{{attempt.student_source}}</div>
         {% endfor %}
     {% endif %}
+</div>
+<!-- END: Previous attemps modal -->
+
+<!-- START: Test cases modal -->
+<div class="modal fade bs-example-modal-lg js-test-cases-modal" id="testCasesModal" tabindex="-1" role="dialog" aria-labelledby="testCasesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Unit tests for current assignment</h4>
+        <p>These tests are executed in our backend when your code is submited. All tests should pass to consider the assignemnt resolved.</p>
+      </div>
+      <div class="modal-body">
+        <pre><code class="language-python">{{assignment.footer}}</code></pre>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
     </div>
+  </div>
+</div>
+<!-- END: Test cases modal -->
 {% endblock %}
 
 {% block main_container %}
@@ -79,6 +102,9 @@
             {% if next %}
             <a class="btn btn-default" href="{{ next }}">« Back to the lecture</a>
             {% endif %}
+            <button type="button" class="btn btn-info js-show-test-cases-modal">Show test cases</button>
+            <button type="button" class="btn btn-warning js-use-original-source-code-button"
+                    style="display:none">Use original source code</button>
             <button type="submit" class="btn btn-success">Submit</button>
         </form>
     </div>
@@ -111,13 +137,6 @@
             </li>
             {% endfor %}
         </ul>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-sm-12">
-        <button type="button" class="btn btn-default js-use-original-source-code-button"
-                style="display:none">Use original source code</button>
     </div>
 </div>
 {% endif %}
