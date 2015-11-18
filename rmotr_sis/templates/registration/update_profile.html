@@ -1,0 +1,24 @@
+{% extends 'bare.html' %}
+{% load crispy_forms_tags %}
+
+{% block main_container %}
+<div class="row">
+    <div class="col-sm-6">
+        <h2>Update your profile</h2>
+        <p>You can use this form to update your profile information.</p>
+        <form method="POST">
+            {% csrf_token %}
+            {{form|crispy}}
+            <input class="btn btn-info" type="submit">
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_footer_scripts %}
+<script type="text/javascript">
+    $.each($.find('select'), function(index, value){
+        $(value).select2();
+    });
+</script>
+{% endblock %}
