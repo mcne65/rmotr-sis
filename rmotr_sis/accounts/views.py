@@ -1,5 +1,6 @@
 from __future__ import division, unicode_literals, absolute_import
 
+from django.contrib import messages
 from django.views.generic import FormView
 from django.http import HttpResponseRedirect
 from braces.views import AnonymousRequiredMixin, LoginRequiredMixin
@@ -11,7 +12,7 @@ from rmotr_sis.utils import send_template_mail
 class UpdateProfileView(LoginRequiredMixin, FormView):
     template_name = 'registration/update_profile.html'
     form_class = UpdateProfileForm
-    success_url = '/'
+    success_url = '/accounts/profile/update/'
 
     def get_form(self, form_class):
         return form_class(instance=self.request.user,
@@ -20,6 +21,9 @@ class UpdateProfileView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         if form.is_valid():
             form.save()
+            messages.add_message(
+                self.request, messages.SUCCESS,
+                'Your profile information was successfully updated.')
         return HttpResponseRedirect(self.get_success_url())
 
 
