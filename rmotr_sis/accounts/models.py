@@ -146,3 +146,11 @@ class User(TimeStampedModel, AbstractBaseUser, PermissionsMixin):
         Sends an email to this User.
         """
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    @property
+    def has_updated_profile(self):
+        """Returns True if the user has already updated some of the profile fields, False otherwise"""
+        fields = ['gender', 'timezone', 'birth_date',
+                  'github_handle', 'cloud9_handle', 'twitter_handle',
+                  'linkedin_profile_url', 'objective', 'occupation']
+        return len([f for f in fields if getattr(self, f)]) > 0
