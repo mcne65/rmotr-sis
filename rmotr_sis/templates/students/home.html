@@ -1,6 +1,14 @@
 {% extends 'bare.html' %}
 
 {% block main_container %}
+{% if not user.has_updated_profile %}
+<div class="row">
+    <div class="message-alert alert alert-warning" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    Hey {{user.first_name}}, please take a minute to update your profile information <a href="{% url 'update_profile' %}">here</a>.
+    </div>
+</div>
+{% endif %}
 <div class="row">
     <div class="jumbotron">
       <h2>Hello, {{ user.get_full_name }}!</h2>
