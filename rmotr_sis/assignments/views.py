@@ -30,6 +30,7 @@ class ResolveAssignmentView(LoginRequiredMixin, FormView):
         context = super(ResolveAssignmentView, self).get_context_data(**kwargs)
         context['next'] = self.request.GET.get('next')
         context['assignment'] = self.assignment
+        context['assignment_status'] = self.assignment.get_status(self.request.user)
 
         context['previous_attempts'] = AssignmentAttempt.objects.filter(
             assignment=self.assignment,
@@ -87,6 +88,7 @@ if not result.wasSuccessful():
         else:
             # mark the assignment as resolved
             attempt.resolved = True
+            context['assignment_status'] = 'resolved'
 
         attempt.save()
 

@@ -47,4 +47,12 @@ $(function() {
     $('.js-show-test-cases-modal').on('click', function(evt){
         testCasesModal.modal('show');
     });
+
+    // show modal with solution
+    var solutionModal = $('.js-solution-modal').modal({
+        show: false
+    });
+    $('.js-show-solution-modal').on('click', function(evt){
+        solutionModal.modal('show');
+    });
 });
