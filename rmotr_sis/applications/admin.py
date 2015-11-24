@@ -3,6 +3,18 @@ from django.contrib import admin
 from applications.models import ApplicationReferral, Application
 
 
+def mark_unselected(modeladmin, request, queryset):
+    queryset.update(selected=False)
+
+mark_unselected.short_description = "Un-Select applications (selected=False)"
+
+
+def mark_selected(modeladmin, request, queryset):
+    queryset.update(selected=True)
+
+mark_selected.short_description = "Select applications (selected=True)"
+
+
 @admin.register(ApplicationReferral)
 class ApplicationReferralAdmin(admin.ModelAdmin):
     list_display = ('name', 'active')
@@ -38,3 +50,5 @@ class ApplicationAdmin(admin.ModelAdmin):
                      'email',
                      'first_name',
                      'last_name')
+
+    actions = [mark_selected, mark_unselected]
