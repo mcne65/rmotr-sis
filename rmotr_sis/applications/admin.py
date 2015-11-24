@@ -1,18 +1,10 @@
+import csv
+from datetime import datetime
+
 from django.contrib import admin
+from django.http import HttpResponse
 
 from applications.models import ApplicationReferral, Application
-
-
-def mark_unselected(modeladmin, request, queryset):
-    queryset.update(selected=False)
-
-mark_unselected.short_description = "Un-Select applications (selected=False)"
-
-
-def mark_selected(modeladmin, request, queryset):
-    queryset.update(selected=True)
-
-mark_selected.short_description = "Select applications (selected=True)"
 
 
 @admin.register(ApplicationReferral)
@@ -51,4 +43,34 @@ class ApplicationAdmin(admin.ModelAdmin):
                      'first_name',
                      'last_name')
 
-    actions = [mark_selected, mark_unselected]
+    actions = ['mark_selected', 'mark_unselected', 'export_to_csv']
+
+    def mark_unselected(self, request, queryset):
+        rows_updated = queryset.update(selected=False)
+        self.message_user(request, "{} application(s) updated".format(
+            rows_updated))
+
+    mark_unselected.short_description = ("Un-Select applications"
+                                         " (selected=False)")
+
+    def mark_selected(self, request, queryset):
+        rows_updated = queryset.update(selected=True)
+        self.message_user(request, "{} application(s) updated".format(
+            rows_updated))
+
+    mark_selected.short_description = "Select applications (selected=True)"
+
+    def export_to_csv(self, request, queryset):
+        response = HttpResponse(content_type='text/csv')
+        file_name = 'attachment; filename="applications-{}.csv"'.format(
+            datetime.now().strftime("%Y-%m-%dT%H:%M:%S"))
+        response['Content-Disposition'] = file_name
+
+        writer = csv.writer(response)
+        writer.writerow(['id', 'First Name', 'Last Name', 'email'])
+        for app in queryset:
+            writer.writerow([app.id, app.first_name, app.last_name, app.email])
+
+        return response
+
+    export_to_csv.short_description = "Export to CSV"
