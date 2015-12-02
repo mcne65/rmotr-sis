@@ -6,21 +6,7 @@ from accounts.models import (User, TIMEZONE_CHOICES, GENDER_CHOICES,
                              OBJECTIVE_CHOICES, OCCUPATION_CHOICES)
 
 
-class UpdateProfileForm(forms.ModelForm):
-
-    class Meta:
-        model = User
-        fields = [
-            # personal data
-            'gender', 'timezone', 'birth_date',
-
-            # accounts
-            'github_handle', 'cloud9_handle', 'twitter_handle',
-            'linkedin_profile_url',
-
-            # extra info
-            'objective', 'occupation',
-        ]
+class BaseProfileForm(forms.ModelForm):
 
     gender = forms.CharField(
         max_length=15, widget=forms.Select(choices=GENDER_CHOICES),
@@ -53,39 +39,35 @@ class UpdateProfileForm(forms.ModelForm):
             label='Which is your current occupation?', required=False)
 
 
-class UserSignupForm(forms.ModelForm):
+class UpdateProfileForm(BaseProfileForm):
 
-    # auth data
-    email = forms.EmailField(label='Google account email',
-                             help_text=('We require Google account emails to '
-                                        'use them in our Hangout sessions.'))
-    password = forms.CharField(max_length=128, widget=forms.PasswordInput())
-    repeat_password = forms.CharField(max_length=128, widget=forms.PasswordInput())
+    class Meta:
+        model = User
+        fields = [
+            # personal data
+            'gender', 'timezone', 'birth_date',
 
-    # personal data
+            # accounts
+            'github_handle', 'cloud9_handle', 'twitter_handle',
+            'linkedin_profile_url',
+
+            # extra info
+            'objective', 'occupation',
+        ]
+
+
+class UserSignupForm(BaseProfileForm):
+
+    email = forms.EmailField(
+        label='Google account email',
+        help_text=('We require Google account emails to '
+                   'use them in our Hangout sessions.'))
+    password = forms.CharField(
+        max_length=128, widget=forms.PasswordInput())
+    repeat_password = forms.CharField(
+        max_length=128, widget=forms.PasswordInput())
     first_name = forms.CharField(max_length=30)
     last_name = forms.CharField(max_length=30)
-    gender = forms.CharField(
-        max_length=15, widget=forms.Select(choices=GENDER_CHOICES))
-    timezone = forms.CharField(
-        max_length=150, widget=forms.Select(choices=TIMEZONE_CHOICES))
-    birth_date = forms.DateField(label="Birth date (MM/DD/YYYY)")
-
-    # accounts
-    github_handle = forms.CharField(max_length=50, label='Github username')
-    cloud9_handle = forms.CharField(max_length=50, label='Cloud9 username')
-    twitter_handle = forms.CharField(max_length=50, label='Twitter username',
-                                     required=False)
-    linkedin_profile_url = forms.URLField(label='URL to your LinkedIn profile',
-                                          required=False)
-
-    # extra info
-    objective = forms.CharField(
-            max_length=150, widget=forms.Select(choices=OBJECTIVE_CHOICES),
-            label='Which is your primary objective in joining this course?')
-    occupation = forms.CharField(
-            max_length=150, widget=forms.Select(choices=OCCUPATION_CHOICES),
-            label='Are you currently')
 
     class Meta:
         model = User
@@ -103,6 +85,20 @@ class UserSignupForm(forms.ModelForm):
             # extra info
             'objective', 'occupation',
         ]
+
+    def __init__(self, *args, **kwargs):
+        super(UserSignupForm, self).__init__(*args, **kwargs)
+        required_fields = (
+            'gender',
+            'timezone',
+            'birth_date',
+            'github_handle',
+            'cloud9_handle',
+            'objective',
+            'occupation',
+        )
+        for field in required_fields:
+            self.fields[field].required = True
 
     def clean_email(self):
         email = self.cleaned_data['email']
