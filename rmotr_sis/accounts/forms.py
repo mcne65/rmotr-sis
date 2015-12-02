@@ -9,7 +9,8 @@ from accounts.models import (User, TIMEZONE_CHOICES, GENDER_CHOICES,
 class BaseProfileForm(forms.ModelForm):
 
     gender = forms.CharField(
-        max_length=15, widget=forms.Select(choices=GENDER_CHOICES),
+        max_length=15,
+        widget=forms.Select(choices=GENDER_CHOICES),
         required=False)
     timezone = forms.CharField(
         max_length=150, widget=forms.Select(choices=TIMEZONE_CHOICES),
