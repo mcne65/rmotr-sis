@@ -2,8 +2,9 @@ from __future__ import division, unicode_literals, absolute_import
 
 from django import forms
 
-from accounts.models import (User, TIMEZONE_CHOICES, GENDER_CHOICES,
-                             OBJECTIVE_CHOICES, OCCUPATION_CHOICES)
+from accounts.models import User
+from rmotr_sis.models import (TIMEZONE_CHOICES, GENDER_CHOICES,
+                              OBJECTIVE_CHOICES, OCCUPATION_CHOICES)
 
 
 class BaseProfileForm(forms.ModelForm):

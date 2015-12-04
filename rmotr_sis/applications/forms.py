@@ -2,9 +2,9 @@ from django import forms
 
 from applications.models import ApplicationReferral, Application
 from courses.models import Batch, CourseInstance
-from accounts.models import (TIMEZONE_CHOICES, GENDER_CHOICES,
-                             OBJECTIVE_CHOICES, OCCUPATION_CHOICES,
-                             EXPERIENCE_CHOICES, AVAILABILITY_CHOICES)
+from rmotr_sis.models import (TIMEZONE_CHOICES, GENDER_CHOICES,
+                              OBJECTIVE_CHOICES, OCCUPATION_CHOICES,
+                              EXPERIENCE_CHOICES, AVAILABILITY_CHOICES)
 
 
 class ApplicationFormStep1(forms.ModelForm):

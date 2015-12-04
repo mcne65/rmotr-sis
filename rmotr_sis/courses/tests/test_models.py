@@ -30,7 +30,12 @@ class TestCourseInstance(TestCase):
             name="Advanced Python",
             description="Learn advanced python techniques",
             code="12345")
-        professor = User.objects.create(username='professor', is_staff=True)
+
+        professor = User(username='professor', email='professor@rmotr.com',
+                         is_staff=True)
+        professor.set_password('123')
+        professor.save()
+
         instance = CourseInstance.objects.create(
             course=course, professor=professor, lecture_weekday='0',
             batch=batch, lecture_utc_time=timezone.now())
@@ -43,7 +48,12 @@ class TestLecture(TestCase):
     def setUp(self):
         self.batch = Batch.objects.create(number=1, start_date=date.today())
         self.course = Course.objects.create(name="Advanced Python")
-        self.professor = User.objects.create(username='professor', is_staff=True)
+
+        self.professor = User(username='professor', email='professor@rmotr.com',
+                              is_staff=True)
+        self.professor.set_password('123')
+        self.professor.save()
+
         self.instance = CourseInstance.objects.create(
             course=self.course, professor=self.professor, batch=self.batch,
             lecture_utc_time=timezone.now(), lecture_weekday='0')

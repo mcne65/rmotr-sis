@@ -5,9 +5,9 @@ from django.db import models
 from django.conf import settings
 
 from rmotr_sis.models import TimeStampedModel
-from accounts.models import (TIMEZONE_CHOICES, GENDER_CHOICES,
-                             OBJECTIVE_CHOICES, OCCUPATION_CHOICES,
-                             EXPERIENCE_CHOICES, AVAILABILITY_CHOICES)
+from rmotr_sis.models import (TIMEZONE_CHOICES, GENDER_CHOICES,
+                              OBJECTIVE_CHOICES, OCCUPATION_CHOICES,
+                              EXPERIENCE_CHOICES, AVAILABILITY_CHOICES)
 from courses.models import Batch, CourseInstance
 
 
