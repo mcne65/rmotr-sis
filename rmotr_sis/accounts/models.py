@@ -77,11 +77,13 @@ class User(TimeStampedModel, AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(_('date joined'),
                                        default=django_timezone.now)
     last_activity = models.DateTimeField(blank=True, null=True)
+    application = models.ForeignKey('applications.Application',
+                                    blank=True, null=True)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'username']
+    REQUIRED_FIELDS = ['email']
 
     def get_full_name(self):
         """

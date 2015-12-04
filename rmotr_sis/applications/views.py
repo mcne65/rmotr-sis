@@ -449,6 +449,7 @@ class ApplicationSignUpView(FormView):
         user = form.save(commit=False)
         user.is_active = False
         user.set_password(form.cleaned_data['password'])
+        user.application = self.application
         user.save()
 
         return render(
