@@ -1,63 +1,16 @@
 from __future__ import division, unicode_literals, absolute_import
 
-import pytz
 
 from django.db import models
 from django.core import validators
-from django.utils.text import slugify
 from django.core.mail import send_mail
 from django.utils import timezone as django_timezone
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
                                         UserManager)
 
-from rmotr_sis.models import TimeStampedModel
-
-TIMEZONE_CHOICES = tuple([(tz, tz) for tz in pytz.common_timezones])
-
-GENDER_CHOICES = (
-    ('male', 'Male'),
-    ('female', 'Female'),
-    ('not-disclosed', 'Prefer not to disclose'),
-)
-
-OBJECTIVE_CHOICES = tuple([(slugify(t), t) for t in [
-    'Get a job as a programmer',
-    'Start my own company',
-    'Get a promotion in my current job',
-    'Personal enrichment'
-]])
-
-OCCUPATION_CHOICES = tuple([(slugify(t), t) for t in [
-    'Studing full-time',
-    'Studing part-time',
-    'Unemployed and looking for job',
-    'Unemployed but not looking for job',
-    'Self-employeed',
-    'Working part-time',
-    'Working full-time',
-    'Both working and studing'
-]])
-
-EXPERIENCE_CHOICES = tuple([(slugify(t), t) for t in [
-    'Never studied before',
-    'Less than 1 month',
-    'Between 1 and 3 months',
-    'Between 3 and 6 months',
-    'Between 6 and 12 months',
-    'Between 1 and 2 years',
-    'More than 2 years'
-]])
-
-AVAILABILITY_CHOICES = tuple([(slugify(t), t) for t in [
-    'Less than 10hours/week',
-    '20hours/week',
-    '30hours/week',
-    '40hours/week',
-    '50hours/week',
-    '60hours/week',
-    '70hours/week',
-]])
+from rmotr_sis.models import (TimeStampedModel, TIMEZONE_CHOICES, GENDER_CHOICES,
+                              OBJECTIVE_CHOICES, OCCUPATION_CHOICES)
 
 
 class User(TimeStampedModel, AbstractBaseUser, PermissionsMixin):
@@ -124,6 +77,8 @@ class User(TimeStampedModel, AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(_('date joined'),
                                        default=django_timezone.now)
     last_activity = models.DateTimeField(blank=True, null=True)
+    application = models.ForeignKey('applications.Application',
+                                    blank=True, null=True)
 
     objects = UserManager()
 
@@ -154,3 +109,8 @@ class User(TimeStampedModel, AbstractBaseUser, PermissionsMixin):
                   'github_handle', 'cloud9_handle', 'twitter_handle',
                   'linkedin_profile_url', 'objective', 'occupation']
         return len([f for f in fields if getattr(self, f)]) > 0
+
+    def save(self, *args, **kwargs):
+        # force a full validation of all fields before saving
+        self.full_clean()
+        super(User, self).save(*args, **kwargs)

@@ -84,13 +84,14 @@
 
 {% block main_container %}
 
-{% if user.is_staff %}
 <div class="row">
-    <div class="col-sm-12 text-right">
-        <a href="{% url assignment|admin_url:'change' assignment.id %}" target="_blank" class="btn btn-danger">Edit Assignment</a>
-    </div>
+  <div class="col-sm-12">
+    <h3>{{assignment.title}}</h3>
+    {% if user.is_staff %}
+    <a href="{% url assignment|admin_url:'change' assignment.id %}" target="_blank" class="btn btn-danger">Edit Assignment</a>
+    {% endif %}
+  </div>
 </div>
-{% endif %}
 
 {% if execution %}
     <div class="row">

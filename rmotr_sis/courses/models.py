@@ -42,12 +42,12 @@ class Batch(TimeStampedModel):
     def get_current_batch(cls):
         return cls.objects.filter(accepting_applications=True).first() or None
 
-    def save(self):
+    def save(self, *args, **kwargs):
         count = Batch.objects.filter(accepting_applications=True).count()
         if count and self.accepting_applications:
             raise ValidationError('Only one batch must be accepting '
                                   'applications at the same time')
-        super(Batch, self).save()
+        super(Batch, self).save(*args, **kwargs)
 
 
 class Course(TimeStampedModel):

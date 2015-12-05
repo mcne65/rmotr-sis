@@ -21,6 +21,7 @@ from applications.forms import (ApplicationFormStep1,
 from applications.models import Application
 from applications.forms import SKILLS_ASSESSMENT
 from courses.models import Batch
+from accounts.forms import UserSignupForm
 
 
 class ApplicationStep1View(FormView):
@@ -422,3 +423,38 @@ class SkillsAssessmentAnswersView(TemplateView):
         kwargs['answered_questions'] = answered_questions
         kwargs['application'] = self.application
         return kwargs
+
+
+class ApplicationSignUpView(FormView):
+    form_class = UserSignupForm
+    template_name = 'applications/signup.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            self.application = get_object_or_404(Application, id=self.kwargs['uuid'])
+        except ValueError:
+            raise Http404
+
+        if not self.application.selected and not self.application.charge_id:
+            # only show the signup form to selected applicants
+            raise Http404
+
+        return super(ApplicationSignUpView, self).dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        # fill the form with the application data
+        return self.application.__dict__
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.is_active = False
+        user.set_password(form.cleaned_data['password'])
+        user.application = self.application
+        user.save()
+
+        return render(
+            self.request,
+            'applications/signup-success.html',
+            context={
+                'application': self.application
+            })

@@ -22,6 +22,9 @@ urlpatterns = patterns(
 
     # stripe checkout
     url(r'^(?P<uuid>[\w.-]+)/checkout$', views.ApplicationCheckoutView.as_view(), name="application-checkout"),
+
+    # signup the student in SIS
+    url(r'^(?P<uuid>[\w.-]+)/signup$', views.ApplicationSignUpView.as_view(), name="application-signup"),
 )
 
 if settings.DEBUG:
