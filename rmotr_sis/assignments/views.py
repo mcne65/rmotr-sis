@@ -97,6 +97,8 @@ if not result.wasSuccessful():
             'error_count': report.get_count(),
             'error_output': pep8_output
         }
+        attempt.pep8_error_count = report.get_count()
+        attempt.pep8_output = pep8_output
 
         attempt.save()
 
