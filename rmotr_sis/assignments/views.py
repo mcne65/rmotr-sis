@@ -6,9 +6,9 @@ from django.shortcuts import get_object_or_404
 
 from braces.views import LoginRequiredMixin
 
-from .models import Assignment, AssignmentAttempt
-from .forms import ResolveAssignmentForm
-from .utils import run_code
+from assignments.models import Assignment, AssignmentAttempt
+from assignments.forms import ResolveAssignmentForm
+from assignments.utils import run_code, check_pep8_errors, format_pep8_report
 
 
 class ResolveAssignmentView(LoginRequiredMixin, FormView):
@@ -89,6 +89,14 @@ if not result.wasSuccessful():
             # mark the assignment as resolved
             attempt.resolved = True
             context['assignment_status'] = 'resolved'
+
+        # check pep8 errors
+        report = check_pep8_errors(form.cleaned_data['source'])
+        pep8_output = format_pep8_report(report)
+        context['execution']['pep8'] = {
+            'error_count': report.get_count(),
+            'error_output': pep8_output
+        }
 
         attempt.save()
 
