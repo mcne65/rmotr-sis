@@ -68,3 +68,7 @@ class AssignmentAttempt(TimeStampedModel):
     output = models.TextField(null=True, blank=True)
     errors = models.TextField(null=True, blank=True)
     execution_time = models.FloatField(null=True, blank=True)
+
+    # PEP8 details
+    pep8_error_count = models.IntegerField(default=0)
+    pep8_output = models.TextField(null=True, blank=True)

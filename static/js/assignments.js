@@ -35,11 +35,6 @@ $(function() {
         });
     });
 
-    // toggle row with execution errors
-    $('.js-show-execution-errors').on('click', function(evt){
-        $('pre.execution-traceback').toggle();
-    });
-
     // show modal with test cases
     var testCasesModal = $('.js-test-cases-modal').modal({
         show: false

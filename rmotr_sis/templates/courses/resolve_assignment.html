@@ -94,19 +94,23 @@
 </div>
 
 {% if execution %}
-    <div class="row">
-        <div class="col-sm-12">
+  <div class="row">
+    <div class="col-sm-12">
     {% if execution.success %}
-        <div class="alert alert-success" role="alert"><strong>Well done!</strong> You resolved the assignment</div>
+      <div class="alert alert-success" role="alert"><strong>Well done!</strong> You resolved the assignment</div>
     {% else %}
-        <div class="alert alert-danger" role="alert"><strong>Oh snap!</strong> Something went wrong while executing your code</div>
-        <div>
-            <pre class="execution-traceback">{{execution.traceback}}</pre>
-            <button type="button" class="pull-right btn btn-default js-show-execution-errors">Toggle errors</button>
-        </div>
+      <div class="alert alert-danger" role="alert"><strong>Oh snap!</strong> Something went wrong while executing your code</div>
+      <pre class="execution-traceback">{{execution.traceback}}</pre>
     {% endif %}
-        </div>
+
+    {% if execution.pep8.error_count %}
+      <div class="alert alert-warning" role="alert"><strong>Warning!</strong> We found {{execution.pep8.error_count}} PEP8 errors in your code</div>
+      <pre>{{execution.pep8.error_output}}</pre>
+    {% else %}
+      <div class="alert alert-success" role="alert"><strong>Awesome!</strong> There're no PEP8 errors in your code</div>
+    {% endif %}
     </div>
+  </div>
 {% endif %}
 
 <div class="row">
