@@ -2,7 +2,9 @@ var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("id_source"),
     lineNumbers: true,
     mode: 'python',
     indentWithTabs: false,
-    indentUnit: 4
+    indentUnit: 4,
+    showTrailingSpace: true,
+    rulers: [79],
 });
 
 $(function() {

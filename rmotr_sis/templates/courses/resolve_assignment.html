@@ -5,6 +5,13 @@
 {% block extra_header_styles %}
     <link href="{% static 'css/codemirror.css' %}" rel="stylesheet">
     <link href="{% static 'bower_components/prism/themes/prism.css' %}" rel="stylesheet">
+    <style type="text/css">
+      .cm-trailingspace {
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAYAAAB/qH1jAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QUXCToH00Y1UgAAACFJREFUCNdjPMDBUc/AwNDAAAFMTAwMDA0OP34wQgX/AQBYgwYEx4f9lQAAAABJRU5ErkJggg==);
+        background-position: bottom left;
+        background-repeat: repeat-x;
+      }
+    </style>
 {% endblock %}
 
 {% block extra_hidden_html %}
@@ -179,5 +186,7 @@
     <script src="{% static 'bower_components/prism/prism.js' %}"></script>
     <script src="{% static 'bower_components/prism/components/prism-python.min.js' %}"></script>
 
+    <script src="{% static 'js/trailingspace.js' %}"></script>
+    <script src="{% static 'js/rulers.js' %}"></script>
     <script src="{% static 'js/assignments.js' %}"></script>
 {% endblock %}
