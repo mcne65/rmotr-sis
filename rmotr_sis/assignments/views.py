@@ -82,7 +82,12 @@ if not result.wasSuccessful():
 
         context = self.get_context_data(form=form)
         context['execution'] = {'success': True, 'traceback': None}
-        if result.get('errors'):
+
+        timeout_error = 'Execution Timed Out'
+        if timeout_error in result.get('output', '') and not result.get('time'):
+            # the execution timed out, probably infinite loop
+            context['execution'] = {'success': False, 'traceback': timeout_error}
+        elif result.get('errors'):
             # tests execution failed, send traceback to the template
             context['execution'] = {'success': False, 'traceback': result['errors']}
         else:
