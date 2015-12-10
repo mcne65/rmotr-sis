@@ -11,5 +11,6 @@ urlpatterns = patterns('',
     url(r'^assignments/', include('assignments.urls', namespace="assignments")),
     url(r'^students/', include('students.urls', namespace="students")),
     url(r'^applications/', include('applications.urls', namespace="applications")),
+    url(r'^social/', include('social.apps.django_app.urls', namespace='social')),
     url(r'^$', views.StudentHomeView.as_view(), name='student_home'),
 )

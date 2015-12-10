@@ -29,6 +29,7 @@ INSTALLED_APPS = (
     'taggit',
     'dbbackup',
     'crispy_forms',
+    'social.apps.django_app.default',
 
     # Own apps
     'rmotr_sis',
@@ -120,3 +121,11 @@ SCHOLARSHIP_ASSIGNMENTS = {
 COURSE_PRICE = 30000  # 300.00 USD
 
 MIXPANEL_TRACKING_ENABLED = True
+
+AUTHENTICATION_BACKENDS = (
+    'social.backends.github.GithubOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+SOCIAL_AUTH_GITHUB_KEY = 'GITHUB_API_KEY'
+SOCIAL_AUTH_GITHUB_SECRET = 'GITHUB_API_SECRET'
+SOCIAL_AUTH_GITHUB_SCOPE = ['user:email', 'public_repo']
