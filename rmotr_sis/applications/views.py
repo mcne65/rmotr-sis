@@ -6,6 +6,7 @@ import stripe
 from django.db.models import Q
 from django.views.generic import View, FormView, TemplateView
 from django.http import HttpResponseRedirect, Http404
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
 from django.conf import settings
@@ -430,14 +431,11 @@ class ApplicationSignUpView(FormView):
     template_name = 'applications/signup.html'
 
     def dispatch(self, request, *args, **kwargs):
-        try:
-            self.application = get_object_or_404(Application, id=self.kwargs['uuid'])
-        except ValueError:
-            raise Http404
+        self.application = get_object_or_404(Application, id=self.kwargs['uuid'])
 
         if not self.application.selected and not self.application.charge_id:
             # only show the signup form to selected applicants
-            raise Http404
+            raise PermissionDenied()
 
         return super(ApplicationSignUpView, self).dispatch(request, *args, **kwargs)
 
