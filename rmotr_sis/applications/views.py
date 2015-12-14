@@ -431,7 +431,10 @@ class ApplicationSignUpView(FormView):
     template_name = 'applications/signup.html'
 
     def dispatch(self, request, *args, **kwargs):
-        self.application = get_object_or_404(Application, id=self.kwargs['uuid'])
+        try:
+            self.application = get_object_or_404(Application, id=self.kwargs['uuid'])
+        except ValueError:
+            raise Http404
 
         if not self.application.selected and not self.application.charge_id:
             # only show the signup form to selected applicants
