@@ -2,9 +2,12 @@ import re
 import pep8
 import requests
 try:
-    from cStringIO import StringIO
-except:
-    from StringIO import StringIO
+    from io import StringIO
+except ImportError:
+    try:
+        from cStringIO import StringIO
+    except ImportError:
+        from StringIO import StringIO
 
 
 def run_code(code):
