@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'courses',
     'assignments',
     'applications',
+    'tracks'
 )
 
 MIDDLEWARE_CLASSES = (
